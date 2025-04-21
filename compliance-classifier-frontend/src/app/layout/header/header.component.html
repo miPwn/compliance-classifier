@@ -22,6 +22,14 @@
       </ul>
     </nav>
     
+    <!-- Online Status Indicator -->
+    <div class="online-status-container">
+      <div class="online-indicator" [ngClass]="{'online': isOnline, 'offline': !isOnline}">
+        <i class="pi" [ngClass]="{'pi-wifi': isOnline, 'pi-ban': !isOnline}"></i>
+        <span>{{ isOnline ? 'Online' : 'Offline' }}</span>
+      </div>
+    </div>
+    
     <!-- Theme Toggle -->
     <div class="theme-toggle-container">
       <button
@@ -41,20 +49,12 @@
     
     <!-- AI Provider Dropdown -->
     <div class="ai-provider-container">
-      <p-dropdown
-        [options]="aiProviders"
-        [(ngModel)]="selectedProvider"
-        (onChange)="onProviderChange($event)"
-        optionLabel="label"
-        optionValue="value"
-        styleClass="p-dropdown-sm">
-        <ng-template pTemplate="selectedItem">
-          <div class="flex align-items-center">
-            <i class="pi pi-server mr-2"></i>
-            <span>{{ selectedProvider | titlecase }}</span>
-          </div>
-        </ng-template>
-      </p-dropdown>
+      <button class="header-button" (click)="aiMenu.toggle($event)">
+        <i class="pi pi-server"></i>
+        <span>{{ selectedProvider | titlecase }}</span>
+        <i class="pi pi-chevron-down" style="margin-left: 0.5rem; margin-right: 0;"></i>
+      </button>
+      <p-menu #aiMenu [popup]="true" [model]="aiProviderItems" styleClass="ai-provider-menu"></p-menu>
     </div>
     
     <!-- Create Batch Button -->

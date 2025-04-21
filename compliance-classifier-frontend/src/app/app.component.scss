@@ -8,14 +8,14 @@
   display: flex;
   flex: 1;
   margin-top: 60px; // Header height
-  margin-bottom: 50px; // Footer height
+  margin-bottom: 130px; // Footer height + status bar height
 }
 
 .main-content {
   flex: 1;
   padding: 1.5rem;
   transition: margin-left 0.3s ease;
-  position: relative; // For positioning the offline indicator
+  position: relative;
   
   &.with-sidebar {
     margin-left: 250px; // Sidebar width
@@ -26,25 +26,6 @@
   }
 }
 
-// Offline indicator container
-.offline-indicator-container {
-  position: fixed;
-  bottom: 60px; // Above footer
-  right: 20px;
-  z-index: 1000; // Ensure it's above other content
-  max-width: 300px;
-  background-color: rgba(255, 255, 255, 0.95);
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  
-  // Responsive adjustments
-  @media (max-width: 768px) {
-    bottom: 70px;
-    right: 10px;
-    max-width: 250px;
-  }
-}
 
 // Skip link for accessibility
 .skip-link {

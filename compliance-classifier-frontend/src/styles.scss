@@ -21,10 +21,15 @@
   padding: 0;
 }
 
+/* Set Roboto as the default font */
+:root {
+  --font-family: 'Roboto', sans-serif;
+}
+
 html, body {
   height: 100%;
   width: 100%;
-  font-family: var(--font-family);
+  font-family: 'Roboto', sans-serif;
   font-size: 14px;
   color: var(--text-color);
   background-color: var(--surface-ground);

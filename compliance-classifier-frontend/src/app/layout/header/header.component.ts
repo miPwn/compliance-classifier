@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { ThemeService } from '../../core/services/theme.service';
+import { OfflineService } from '../../core/services/offline.service';
 import { SelectItem } from 'primeng/api';
 
 // PrimeNG imports
@@ -45,6 +46,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   isDarkTheme = false;
   showThemeNotification = false;
   
+  // Online status
+  isOnline = true;
+  
   // Menu items
   menuItems = [
     {label: 'Profile', icon: 'pi pi-user'},
@@ -60,10 +64,30 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     { label: 'Google AI', value: 'google' }
   ];
   selectedProvider: string = 'openai';
+  
+  // AI Provider menu items
+  aiProviderItems = [
+    {
+      label: 'OpenAI',
+      icon: 'pi pi-server',
+      command: () => this.onProviderChange('openai')
+    },
+    {
+      label: 'Azure AI',
+      icon: 'pi pi-server',
+      command: () => this.onProviderChange('azure')
+    },
+    {
+      label: 'Google AI',
+      icon: 'pi pi-server',
+      command: () => this.onProviderChange('google')
+    }
+  ];
 
   constructor(
     private authService: AuthService,
     private themeService: ThemeService,
+    private offlineService: OfflineService,
     private router: Router
   ) { }
 
@@ -83,6 +107,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     
     // Initialize theme from localStorage
     this.initTheme();
+    
+    // Initialize online status
+    this.initOnlineStatus();
   }
   
   /**
@@ -139,12 +166,35 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
       document.body.classList.remove('dark-theme');
     }
   }
+  
+  /**
+   * Initialize online status and set up event listeners
+   */
+  private initOnlineStatus(): void {
+    // Set initial online status
+    this.isOnline = this.offlineService.isOnline();
+    
+    // Add event listeners for online/offline events
+    window.addEventListener('online', () => this.updateOnlineStatus(true));
+    window.addEventListener('offline', () => this.updateOnlineStatus(false));
+  }
+  
+  /**
+   * Update online status
+   */
+  private updateOnlineStatus(isOnline: boolean): void {
+    this.isOnline = isOnline;
+  }
 
   ngOnDestroy(): void {
     // Unsubscribe to prevent memory leaks
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
+    
+    // Remove event listeners
+    window.removeEventListener('online', () => this.updateOnlineStatus(true));
+    window.removeEventListener('offline', () => this.updateOnlineStatus(false));
   }
   
   ngAfterViewInit(): void {
@@ -214,9 +264,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
     this.selectedProvider = 'openai';
   }
   
-  onProviderChange(event: any): void {
+  onProviderChange(provider: string): void {
     // This would typically update the provider in a config service
-    this.selectedProvider = event.value;
+    this.selectedProvider = provider;
     console.log('AI Provider changed to:', this.selectedProvider);
   }
   

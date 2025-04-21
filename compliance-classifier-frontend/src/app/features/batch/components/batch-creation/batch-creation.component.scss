@@ -101,6 +101,58 @@
     .p-button {
       margin-right: 0.5rem;
     }
+    
+    /* Custom styling for file upload buttons */
+    .header-button {
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      background-color: var(--surface-100) !important;
+      border: none !important;
+      color: var(--text-color) !important;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      
+      &:hover {
+        background-color: var(--surface-200) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      
+      .p-button-icon {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+      }
+      
+      .p-button-label {
+        font-size: 0.9rem;
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        
+        &:hover {
+          transform: none;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+      }
+      
+      body.dark-theme & {
+        background-color: var(--dark-surface-100) !important;
+        color: var(--dark-text-color) !important;
+      }
+    }
   }
 }
 

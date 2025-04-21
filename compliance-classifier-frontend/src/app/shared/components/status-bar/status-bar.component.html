@@ -1,0 +1,43 @@
+<div class="status-bar" [ngClass]="{'has-messages': messages.length > 0}">
+  <div class="status-bar-content">
+    <!-- Default status message when no messages -->
+    <div *ngIf="messages.length === 0" class="status-default">
+      <div class="status-message info">
+        <div class="message-icon">
+          <i class="pi pi-info-circle"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-summary">System Status</div>
+          <div class="message-detail">Ready</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="status-messages" *ngIf="messages.length > 0">
+      <div *ngFor="let message of messages; let i = index" class="status-message" [ngClass]="message.severity">
+        <div class="message-icon">
+          <i class="pi" [ngClass]="{
+            'pi-info-circle': message.severity === 'info',
+            'pi-check-circle': message.severity === 'success',
+            'pi-exclamation-triangle': message.severity === 'warn',
+            'pi-times-circle': message.severity === 'error'
+          }"></i>
+        </div>
+        <div class="message-content">
+          <div class="message-summary">{{ message.summary }}</div>
+          <div class="message-detail">{{ message.detail }}</div>
+        </div>
+        <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+        <button class="message-close" (click)="removeMessage(i)">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="status-actions" *ngIf="messages.length > 0">
+      <button class="clear-all-button" (click)="clearMessages()">
+        <i class="pi pi-trash"></i>
+        <span>Clear All</span>
+      </button>
+    </div>
+  </div>
+</div>

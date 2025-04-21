@@ -82,6 +82,54 @@
   }
 }
 
+.online-status-container {
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.online-indicator {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background-color: var(--surface-100);
+  color: var(--text-color);
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  i {
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+  }
+  
+  span {
+    font-size: 0.9rem;
+  }
+  
+  &.online {
+    border-left: 3px solid var(--green-500);
+    
+    i {
+      color: var(--green-500);
+    }
+  }
+  
+  &.offline {
+    border-left: 3px solid var(--red-500);
+    
+    i {
+      color: var(--red-500);
+    }
+  }
+  
+  body.dark-theme & {
+    background-color: var(--dark-surface-100);
+    color: var(--dark-text-color);
+  }
+}
+
 .theme-toggle-container {
   margin: 0 1rem;
   display: flex;
@@ -193,59 +241,58 @@
 
 .ai-provider-container {
   margin: 0 1rem;
+  position: relative;
   
-  ::ng-deep .p-dropdown {
-    border-radius: 4px;
-    
-    &:hover {
-      box-shadow: 0 0 0 2px var(--primary-100);
-    }
-    
-    /* Theme notification */
-    .theme-notification {
-      position: fixed;
-      top: 80px;
-      right: 20px;
-      background-color: var(--surface-0);
-      color: var(--text-color);
-      padding: 12px 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      z-index: 1100;
-      transform: translateY(-20px);
-      opacity: 0;
-      visibility: hidden;
-      transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
-      border-left: 4px solid var(--primary-color);
+  ::ng-deep .ai-provider-menu {
+    .p-menu {
+      border-radius: 8px !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+      min-width: 200px !important;
       
-      &.show {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-      }
-      
-      &.dark {
-        background-color: var(--dark-surface-100);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      }
-      
-      i {
-        font-size: 1.2rem;
-        
-        &.pi-sun {
-          color: var(--yellow-500);
-        }
-        
-        &.pi-moon {
-          color: var(--primary-color);
+      .p-menuitem {
+        .p-menuitem-link {
+          padding: 0.75rem 1rem !important;
+          transition: background-color 0.2s !important;
+          
+          .p-menuitem-icon {
+            margin-right: 0.75rem !important;
+            font-size: 1.1rem !important;
+            color: var(--text-color-secondary) !important;
+          }
+          
+          .p-menuitem-text {
+            color: var(--text-color) !important;
+            font-weight: 500 !important;
+          }
+          
+          &:hover {
+            background-color: var(--surface-100) !important;
+          }
+          
+          &:focus {
+            box-shadow: inset 0 0 0 0.15rem var(--primary-100) !important;
+          }
         }
       }
       
-      span {
-        font-weight: 500;
+      body.dark-theme & {
+        background-color: var(--dark-surface-0) !important;
+        
+        .p-menuitem {
+          .p-menuitem-link {
+            .p-menuitem-icon {
+              color: var(--dark-text-color-secondary) !important;
+            }
+            
+            .p-menuitem-text {
+              color: var(--dark-text-color) !important;
+            }
+            
+            &:hover {
+              background-color: var(--dark-surface-100) !important;
+            }
+          }
+        }
       }
     }
   }
@@ -284,7 +331,8 @@
 // Responsive adjustments
 @media (max-width: 992px) {
   .ai-provider-container,
-  .theme-toggle-container {
+  .theme-toggle-container,
+  .online-status-container {
     margin: 0 0.5rem;
   }
   
@@ -306,6 +354,7 @@
   
   .ai-provider-container,
   .theme-toggle-container,
+  .online-status-container,
   .create-batch-container,
   .user-menu-container {
     margin: 0 0.25rem;

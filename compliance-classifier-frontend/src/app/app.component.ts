@@ -4,15 +4,13 @@ import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 
-// PrimeNG imports
-import { ToastModule } from 'primeng/toast';
 
 // Import components used in the template
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
 import { FooterComponent } from './layout/footer/footer.component';
-import { OfflineIndicatorComponent } from './shared/components/offline-indicator/offline-indicator.component';
 import { AccessibilityPanelComponent } from './shared/components/accessibility-panel/accessibility-panel.component';
+import { StatusBarComponent } from './shared/components/status-bar/status-bar.component';
 
 @Component({
   selector: 'app-root',
@@ -25,9 +23,8 @@ import { AccessibilityPanelComponent } from './shared/components/accessibility-p
     HeaderComponent,
     SidebarComponent,
     FooterComponent,
-    OfflineIndicatorComponent,
     AccessibilityPanelComponent,
-    ToastModule
+    StatusBarComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

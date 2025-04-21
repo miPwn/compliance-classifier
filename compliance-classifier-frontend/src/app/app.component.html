@@ -7,11 +7,6 @@
     <app-sidebar *ngIf="isAuthenticated"></app-sidebar>
     
     <main id="main-content" class="main-content" [ngClass]="{'with-sidebar': isAuthenticated}">
-      <!-- Offline indicator for better user experience -->
-      <div class="offline-indicator-container">
-        <app-offline-indicator></app-offline-indicator>
-      </div>
-      
       <router-outlet></router-outlet>
     </main>
   </div>
@@ -22,5 +17,6 @@
 <!-- Accessibility panel for enhanced user experience -->
 <app-accessibility-panel></app-accessibility-panel>
 
-<!-- Toast notifications for theme changes and other system messages -->
-<p-toast position="top-right"></p-toast>
+<!-- Status bar for system messages -->
+<app-status-bar></app-status-bar>
+

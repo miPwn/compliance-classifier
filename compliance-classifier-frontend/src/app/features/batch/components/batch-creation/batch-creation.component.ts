@@ -10,7 +10,6 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextarea } from 'primeng/inputtextarea';
-import { ToastModule } from 'primeng/toast';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -37,7 +36,6 @@ import { ThemeService, Theme } from '../../../../core/services/theme.service';
     ButtonModule,
     InputTextModule,
     InputTextarea,
-    ToastModule,
     ProgressSpinnerModule,
     ProgressBarModule,
     FileUploadModule,
@@ -46,8 +44,7 @@ import { ThemeService, Theme } from '../../../../core/services/theme.service';
     TagModule,
     ChipModule,
     RippleModule
-  ],
-  providers: [MessageService]
+  ]
 })
 export class BatchCreationComponent implements OnInit, OnDestroy {
   batchForm: FormGroup;

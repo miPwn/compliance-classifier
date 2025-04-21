@@ -1,14 +1,13 @@
 <div class="batch-creation-container" [ngClass]="{'dark-theme-container': currentTheme === 'dark'}">
-  <p-toast></p-toast>
-  
   <p-card>
     <ng-template pTemplate="header">
       <div class="flex justify-content-between align-items-center">
         <div class="flex align-items-center">
-          <button pButton pRipple icon="pi pi-arrow-left"
-            class="p-button-text mr-2"
-            (click)="goBack()"
-            pTooltip="Return to Batches">
+          <button
+            class="header-button mr-2"
+            (click)="goBack()">
+            <i class="pi pi-arrow-left"></i>
+            <span>Back</span>
           </button>
           <h2>Create New Batch</h2>
         </div>
@@ -49,10 +48,12 @@
               </div>
               
               <div class="flex justify-content-end mt-4">
-                <button pButton pRipple label="Create Batch"
-                  class="p-button-primary"
+                <button
+                  class="header-button"
                   type="submit"
                   [disabled]="isLoading || createdBatchId !== null">
+                  <i class="pi pi-check"></i>
+                  <span>Create Batch</span>
                 </button>
               </div>
             </form>
@@ -66,10 +67,11 @@
                 </div>
               </div>
               <div class="mt-3">
-                <button pButton pRipple label="View Batch Details"
-                  class="p-button-outlined"
-                  icon="pi pi-eye"
+                <button
+                  class="header-button"
                   (click)="viewBatch()">
+                  <i class="pi pi-eye"></i>
+                  <span>View Batch Details</span>
                 </button>
               </div>
             </div>
@@ -145,6 +147,10 @@
                 (onError)="onError($event)"
                 (onClear)="onClear()"
                 [disabled]="!createdBatchId && !batchForm.valid"
+                styleClass="custom-file-upload"
+                chooseStyleClass="header-button"
+                uploadStyleClass="header-button"
+                cancelStyleClass="header-button"
                 chooseLabel="Browse Files"
                 uploadLabel="Upload All"
                 cancelLabel="Clear">
@@ -180,10 +186,12 @@
                   <div *ngIf="uploadingFiles" class="upload-progress-container mt-3">
                     <div class="flex justify-content-between align-items-center mb-2">
                       <h5 class="m-0">Uploading Files ({{ currentFileIndex }} of {{ totalFiles }})</h5>
-                      <button pButton pRipple type="button" icon="pi pi-times"
-                        class="p-button-rounded p-button-text p-button-sm"
-                        (click)="cancelUpload()"
-                        pTooltip="Cancel Upload"></button>
+                      <button
+                        class="header-button"
+                        (click)="cancelUpload()">
+                        <i class="pi pi-times"></i>
+                        <span>Cancel</span>
+                      </button>
                     </div>
                     
                     <p-progressBar [value]="uploadProgress" [showValue]="true"></p-progressBar>

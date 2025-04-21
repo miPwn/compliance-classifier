@@ -8,8 +8,6 @@ import { BatchService, Batch } from '../../../core/services/batch.service';
 import { ClassificationService, ClassificationCategory, CategoryDistribution } from '../../../core/services/classification.service';
 import { DocumentService, Document } from '../../../core/services/document.service';
 
-// PrimeNG imports
-import { ToastModule } from 'primeng/toast';
 
 // Custom components
 import { PipelineTimelineComponent } from './pipeline-timeline/pipeline-timeline.component';
@@ -30,13 +28,11 @@ interface CategoryWithCount extends ClassificationCategory {
   standalone: true,
   imports: [
     CommonModule,
-    ToastModule,
     PipelineTimelineComponent,
     RecentBatchesComponent,
     CategorySummaryComponent,
     FileUploadComponent
-  ],
-  providers: [MessageService]
+  ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
   @ViewChild('fileUpload') fileUpload!: FileUploadComponent;
@@ -234,10 +230,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loadAllData();
     
     this.messageService.add({
-      severity: 'info',
+      severity: 'success',
       summary: 'Refreshed',
-      detail: 'Dashboard data has been refreshed',
-      life: 3000
+      detail: 'Dashboard data has been refreshed'
     });
   }
   
