@@ -1,27 +1,29 @@
 .header {
   background-color: var(--surface-0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 60px;
+  height: 64px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .header-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 100%;
   padding: 0 1.5rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
+  margin-right: 2rem;
 }
 
 .logo {
@@ -31,12 +33,22 @@
   color: var(--primary-color);
   font-weight: 700;
   font-size: 1.2rem;
+  transition: transform 0.2s;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
 }
 
-.nav-container {
+.logo-image {
+  height: 40px;
+  width: auto;
+}
+
+.main-nav {
   flex: 1;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .nav-list {
@@ -57,10 +69,11 @@
   text-decoration: none;
   font-weight: 500;
   border-radius: 4px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
   
   &:hover {
     background-color: var(--surface-100);
+    transform: translateY(-2px);
   }
   
   &.active {
@@ -69,27 +82,73 @@
   }
 }
 
-.auth-container {
-  display: flex;
-  align-items: center;
+.ai-provider-container {
+  margin: 0 1rem;
+  
+  ::ng-deep .p-dropdown {
+    border-radius: 4px;
+    
+    &:hover {
+      box-shadow: 0 0 0 2px var(--primary-100);
+    }
+  }
 }
 
-.user-menu {
-  display: flex;
-  align-items: center;
+.create-batch-container {
+  margin: 0 1rem;
+  
+  ::ng-deep .p-button {
+    transition: transform 0.2s, box-shadow 0.2s;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+.user-menu-container {
+  margin-left: auto;
   
   .username {
     margin-left: 0.5rem;
     font-weight: 500;
   }
+  
+  ::ng-deep .p-button {
+    transition: transform 0.2s;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 992px) {
+  .ai-provider-container {
+    margin: 0 0.5rem;
+  }
+  
+  .create-batch-container button {
+    ::ng-deep .p-button-label {
+      display: none;
+    }
+  }
 }
 
 @media (max-width: 768px) {
-  .nav-container {
+  .main-nav {
     display: none;
   }
   
   .header-container {
-    padding: 0 1rem;
+    justify-content: space-between;
+  }
+  
+  .ai-provider-container,
+  .create-batch-container,
+  .user-menu-container {
+    margin: 0 0.25rem;
   }
 }

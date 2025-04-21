@@ -1,0 +1,211 @@
+<div class="batch-details-container">
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+  
+  <div *ngIf="isLoading" class="loading-container">
+    <p-progressBar mode="indeterminate"></p-progressBar>
+  </div>
+  
+  <div *ngIf="error" class="error-message p-message p-message-error mb-3">
+    <span class="p-message-text">{{ error }}</span>
+  </div>
+  
+  <div *ngIf="!isLoading && !error && batch">
+    <!-- Batch Header -->
+    <p-card styleClass="mb-4">
+      <ng-template pTemplate="header">
+        <div class="flex justify-content-between align-items-center">
+          <div class="flex align-items-center">
+            <button pButton pRipple icon="pi pi-arrow-left" 
+              class="p-button-text mr-2" 
+              routerLink="/batches">
+            </button>
+            <h2>{{ batch.name }}</h2>
+          </div>
+          
+          <div class="flex gap-2">
+            <button pButton pRipple label="Upload Documents" 
+              icon="pi pi-upload" 
+              (click)="uploadDocuments()">
+            </button>
+            <button pButton pRipple label="Download Report" 
+              icon="pi pi-file-pdf" 
+              class="p-button-success"
+              (click)="downloadReport()">
+            </button>
+            <button pButton pRipple icon="pi pi-trash" 
+              class="p-button-danger p-button-outlined" 
+              pTooltip="Delete Batch"
+              (click)="confirmDeleteBatch()">
+            </button>
+          </div>
+        </div>
+      </ng-template>
+      
+      <div class="batch-info">
+        <div class="flex flex-column md:flex-row gap-4">
+          <div class="flex-1">
+            <h3>Batch Information</h3>
+            <div class="info-row">
+              <span class="info-label">Created:</span>
+              <span class="info-value">{{ batch.createdAt | date:'medium' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Documents:</span>
+              <span class="info-value">{{ batch.documentCount }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Description:</span>
+              <span class="info-value">{{ batch.description || 'No description provided' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">AI Provider:</span>
+              <span class="info-value ai-provider">{{ aiProvider }}</span>
+            </div>
+          </div>
+          
+          <div class="flex-1" *ngIf="classificationStats">
+            <h3>Classification Summary</h3>
+            <div class="info-row">
+              <span class="info-label">Classified:</span>
+              <span class="info-value">{{ classificationStats.classifiedDocuments }} of {{ classificationStats.totalDocuments }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Pending:</span>
+              <span class="info-value">{{ classificationStats.pendingDocuments }}</span>
+            </div>
+            <div class="category-distribution" *ngIf="classificationStats.categoryDistribution.length > 0">
+              <h4>Category Distribution</h4>
+              <div *ngFor="let category of classificationStats.categoryDistribution" class="category-item">
+                <span class="category-name">{{ category.category }}:</span>
+                <span class="category-value">{{ category.count }} ({{ category.percentage | number:'1.0-0' }}%)</span>
+                <div class="category-bar">
+                  <div class="category-fill" [style.width.%]="category.percentage"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-card>
+    
+    <!-- Tabs for Documents and Pipeline -->
+    <p-tabView [(activeIndex)]="activeTabIndex">
+      <!-- Documents Tab -->
+      <p-tabPanel header="Documents">
+        <p-table 
+          [value]="documents" 
+          [paginator]="true" 
+          [rows]="10" 
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} documents"
+          [rowsPerPageOptions]="[10, 25, 50]"
+          [globalFilterFields]="['filename']"
+          styleClass="p-datatable-sm">
+          
+          <ng-template pTemplate="caption">
+            <div class="flex justify-content-between align-items-center">
+              <span>Documents in Batch</span>
+              <span class="p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" placeholder="Search documents..." />
+              </span>
+            </div>
+          </ng-template>
+          
+          <ng-template pTemplate="header">
+            <tr>
+              <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
+              <th pSortableColumn="uploadedAt">Uploaded <p-sortIcon field="uploadedAt"></p-sortIcon></th>
+              <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+              <th pSortableColumn="fileSize">Size <p-sortIcon field="fileSize"></p-sortIcon></th>
+              <th style="width: 150px">Actions</th>
+            </tr>
+          </ng-template>
+          
+          <ng-template pTemplate="body" let-document>
+            <tr>
+              <td>{{ document.filename }}</td>
+              <td>{{ document.uploadedAt | date:'medium' }}</td>
+              <td>
+                <span class="document-status" [ngClass]="'status-' + document.status">
+                  {{ document.status }}
+                </span>
+              </td>
+              <td>{{ document.fileSize | number }} KB</td>
+              <td>
+                <div class="flex justify-content-start">
+                  <button pButton pRipple 
+                    icon="pi pi-eye" 
+                    class="p-button-rounded p-button-text mr-2"
+                    pTooltip="View Document">
+                  </button>
+                  <button pButton pRipple 
+                    icon="pi pi-refresh" 
+                    class="p-button-rounded p-button-text p-button-success mr-2"
+                    pTooltip="Reclassify"
+                    (click)="reclassifyDocument(document.id)">
+                  </button>
+                  <button pButton pRipple 
+                    icon="pi pi-trash" 
+                    class="p-button-rounded p-button-text p-button-danger"
+                    pTooltip="Delete Document"
+                    (click)="confirmDeleteDocument(document.id)">
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+          
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="text-center">
+                No documents found in this batch.
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-tabPanel>
+      
+      <!-- Pipeline View Tab -->
+      <p-tabPanel header="Pipeline View">
+        <div class="pipeline-container">
+          <h3>Document Processing Pipeline</h3>
+          <p class="pipeline-description">
+            Real-time view of document processing status through the classification pipeline.
+          </p>
+          
+          <div class="pipeline-timeline">
+            <p-timeline [value]="pipelineEvents" align="alternate">
+              <ng-template pTemplate="content" let-event>
+                <div class="pipeline-event-card">
+                  <div class="event-header" [style.color]="event.color">
+                    <span class="event-status">{{ event.status | titlecase }}</span>
+                  </div>
+                  <div class="event-body">
+                    <div class="event-filename">{{ event.document.filename }}</div>
+                    <div class="event-time">{{ event.date | date:'medium' }}</div>
+                  </div>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="opposite" let-event>
+                <div class="pipeline-stage" [style.color]="event.color">
+                  <i [class]="event.icon"></i>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="marker" let-event>
+                <span class="custom-marker" [style.backgroundColor]="event.color">
+                  <i [class]="event.icon"></i>
+                </span>
+              </ng-template>
+            </p-timeline>
+          </div>
+          
+          <div *ngIf="pipelineEvents.length === 0" class="empty-pipeline">
+            <p>No documents have been processed yet.</p>
+          </div>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+</div>

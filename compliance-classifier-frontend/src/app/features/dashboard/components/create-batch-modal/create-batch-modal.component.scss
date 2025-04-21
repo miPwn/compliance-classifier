@@ -1,0 +1,101 @@
+:host ::ng-deep {
+  .p-dialog {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    
+    .p-dialog-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--surface-200);
+      
+      .p-dialog-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+      
+      .p-dialog-header-icon {
+        width: 2rem;
+        height: 2rem;
+        
+        &:focus {
+          box-shadow: 0 0 0 2px var(--surface-100), 0 0 0 4px var(--primary-300);
+        }
+      }
+    }
+    
+    .p-dialog-content {
+      padding: 1.5rem;
+    }
+    
+    .p-dialog-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--surface-200);
+    }
+  }
+  
+  .p-button {
+    border-radius: 2rem;
+    
+    &.p-button-primary {
+      background-color: var(--primary-color);
+      
+      &:hover {
+        background-color: var(--primary-600);
+      }
+      
+      &:focus {
+        box-shadow: 0 0 0 2px var(--surface-100), 0 0 0 4px var(--primary-300);
+      }
+    }
+  }
+  
+  .p-inputtext {
+    border-radius: 0.375rem;
+    
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-300);
+    }
+    
+    &.ng-invalid.ng-dirty {
+      border-color: var(--red-500);
+    }
+  }
+  
+  .p-inputtextarea {
+    border-radius: 0.375rem;
+    
+    &:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 1px var(--primary-300);
+    }
+    
+    &.ng-invalid.ng-dirty {
+      border-color: var(--red-500);
+    }
+  }
+}
+
+.field {
+  margin-bottom: 1.5rem;
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+  
+  .required-indicator {
+    color: var(--red-500);
+  }
+  
+  small.p-error {
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
+
+.p-fluid .field {
+  .p-inputtext, .p-inputtextarea {
+    width: 100%;
+  }
+}

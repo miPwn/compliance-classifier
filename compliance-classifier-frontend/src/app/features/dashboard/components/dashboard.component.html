@@ -1,63 +1,52 @@
 <div class="dashboard-container">
-  <div class="p-grid">
-    <div class="p-col-12">
-      <p-card styleClass="mb-4">
-        <ng-template pTemplate="header">
-          <div class="p-d-flex p-jc-between p-ai-center">
-            <h2>Dashboard</h2>
-            <p-button label="Create New Batch" icon="pi pi-plus" (onClick)="createNewBatch()"></p-button>
-          </div>
-        </ng-template>
-        
-        <div class="p-grid">
-          <div class="p-col-12 p-md-6">
-            <h3>Recent Batches</h3>
-            <p-progressBar *ngIf="isLoading" mode="indeterminate"></p-progressBar>
-            
-            <div *ngIf="error" class="p-message p-message-error">
-              <span class="p-message-text">{{ error }}</span>
-            </div>
-            
-            <div *ngIf="!isLoading && !error">
-              <div *ngFor="let batch of recentBatches" class="batch-card p-card p-mb-3">
-                <div class="p-card-body">
-                  <div class="p-d-flex p-jc-between p-ai-center">
-                    <div>
-                      <h4>{{ batch.name }}</h4>
-                      <p>Created: {{ batch.createdAt | date:'medium' }}</p>
-                      <p>Documents: {{ batch.documentCount }}</p>
-                    </div>
-                    <p-button icon="pi pi-eye" (onClick)="viewBatchDetails(batch.id)" 
-                      styleClass="p-button-rounded p-button-text"></p-button>
-                  </div>
-                </div>
-              </div>
-              
-              <div *ngIf="recentBatches.length === 0" class="p-text-center p-my-4">
-                <p>No batches found. Create a new batch to get started.</p>
-              </div>
-            </div>
-          </div>
-          
-          <div class="p-col-12 p-md-6">
-            <h3>Classification Categories</h3>
-            <div class="p-grid">
-              <div *ngFor="let category of classificationCategories" class="p-col-12 p-md-6">
-                <div class="category-item p-card p-mb-3">
-                  <div class="p-card-body">
-                    <h4>{{ category.name }}</h4>
-                    <p>{{ category.description }}</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div *ngIf="classificationCategories.length === 0" class="p-col-12 p-text-center p-my-4">
-                <p>No classification categories available.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </p-card>
+  <p-toast></p-toast>
+  
+  <div class="grid">
+    <!-- Pipeline Timeline (Left Section) -->
+    <div class="col-12 lg:col-6 xl:col-7">
+      <app-pipeline-timeline
+        [pipelineEvents]="pipelineEvents"
+        [isLoading]="isLoading"
+        [autoRefresh]="autoRefresh"
+        (refreshToggle)="toggleAutoRefresh($event)"
+        (manualRefresh)="refreshData()">
+      </app-pipeline-timeline>
+    </div>
+    
+    <!-- Recent Batches (Right Section) -->
+    <div class="col-12 lg:col-6 xl:col-5">
+      <app-recent-batches
+        [batches]="recentBatches"
+        [isLoading]="isLoading"
+        [error]="error"
+        (viewDetails)="viewBatchDetails($event)"
+        (uploadDocuments)="uploadToBatch($event)"
+        (deleteBatch)="deleteBatch($event)"
+        (createBatch)="createNewBatch()">
+      </app-recent-batches>
+    </div>
+    
+    <!-- File Upload Section (Conditional) -->
+    <div class="col-12" *ngIf="selectedBatchId">
+      <app-file-upload
+        #fileUpload
+        [batchId]="selectedBatchId"
+        (uploadComplete)="onUploadComplete($event)">
+      </app-file-upload>
+    </div>
+    
+    <!-- Classification Category Summary (Bottom Section) -->
+    <div class="col-12">
+      <app-category-summary
+        [categories]="classificationCategoriesWithCounts"
+        [isLoading]="isLoading">
+      </app-category-summary>
     </div>
   </div>
+  
+  <!-- Create Batch Modal -->
+  <app-create-batch-modal
+    #createBatchModal
+    (batchCreated)="onBatchCreated($event)">
+  </app-create-batch-modal>
 </div>

@@ -1,0 +1,112 @@
+.categories-card {
+  height: 100%;
+}
+
+.category-content {
+  margin-top: 1rem;
+}
+
+.chart-container {
+  margin-bottom: 2rem;
+  
+  h4 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+}
+
+.category-card {
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 8px;
+  overflow: hidden;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.category-card-header {
+  padding: 0.75rem;
+  color: white;
+  
+  h5 {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.category-stats {
+  display: flex;
+  align-items: baseline;
+  margin-top: 0.5rem;
+  
+  .document-count {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+  }
+  
+  .document-label {
+    color: var(--text-color-secondary);
+    font-size: 0.875rem;
+  }
+}
+
+.risk-level {
+  display: flex;
+  align-items: center;
+  
+  .risk-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    
+    &.risk-high {
+      background-color: var(--red-100);
+      color: var(--red-700);
+    }
+    
+    &.risk-medium {
+      background-color: var(--yellow-100);
+      color: var(--yellow-700);
+    }
+    
+    &.risk-low {
+      background-color: var(--green-100);
+      color: var(--green-700);
+    }
+  }
+  
+  .risk-label {
+    color: var(--text-color-secondary);
+    font-size: 0.75rem;
+  }
+}
+
+.empty-categories {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  color: var(--text-color-secondary);
+  text-align: center;
+  
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .chart-container {
+    margin-bottom: 1.5rem;
+  }
+}

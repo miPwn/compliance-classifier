@@ -1,0 +1,68 @@
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false" 
+  [style]="{width: '500px'}" 
+  header="Create New Batch" 
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (onHide)="hide()">
+  
+  <form [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+    <div class="p-fluid">
+      <!-- Batch Name -->
+      <div class="field">
+        <label for="name" class="font-medium">Batch Name <span class="required-indicator">*</span></label>
+        <input 
+          id="name" 
+          type="text" 
+          pInputText 
+          formControlName="name" 
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('name')}"
+          placeholder="Enter batch name">
+        <small *ngIf="isFieldInvalid('name')" class="p-error">{{ getErrorMessage('name') }}</small>
+      </div>
+      
+      <!-- Batch Description -->
+      <div class="field">
+        <label for="description" class="font-medium">Description</label>
+        <textarea 
+          id="description" 
+          pInputTextarea 
+          formControlName="description" 
+          [rows]="5" 
+          [autoResize]="true"
+          [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('description')}"
+          placeholder="Enter batch description"></textarea>
+        <small *ngIf="isFieldInvalid('description')" class="p-error">{{ getErrorMessage('description') }}</small>
+      </div>
+    </div>
+  </form>
+  
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end">
+      <button 
+        pButton 
+        pRipple 
+        type="button" 
+        label="Cancel" 
+        icon="pi pi-times" 
+        class="p-button-outlined p-button-secondary mr-2" 
+        (click)="hide()"
+        [disabled]="submitting">
+      </button>
+      <button 
+        pButton 
+        pRipple 
+        type="button" 
+        label="Create Batch" 
+        icon="pi pi-check" 
+        class="p-button-primary" 
+        (click)="onSubmit()"
+        [loading]="submitting"
+        [disabled]="submitting">
+      </button>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,79 @@
+<p-card styleClass="upload-card">
+  <ng-template pTemplate="header">
+    <div class="flex justify-content-between align-items-center">
+      <h3>
+        <i class="pi pi-upload mr-2"></i>
+        Upload Documents
+      </h3>
+    </div>
+  </ng-template>
+
+  <p-fileUpload #fileUpload
+    [customUpload]="true"
+    [multiple]="multiple"
+    [maxFileSize]="maxFileSize"
+    [accept]="accept"
+    [showCancelButton]="false"
+    [showUploadButton]="true"
+    [disabled]="uploading"
+    (onSelect)="onSelect($event)"
+    (uploadHandler)="onUpload($event)"
+    chooseLabel="Select Files"
+    uploadLabel="Upload to Batch"
+    styleClass="upload-component">
+    
+    <ng-template pTemplate="content">
+      <div class="upload-content">
+        <!-- Drag and drop area -->
+        <div class="drag-drop-area" *ngIf="!uploading">
+          <i class="pi pi-cloud-upload upload-icon"></i>
+          <h4>Drag and drop files here</h4>
+          <p>or click the Select Files button</p>
+          <p class="file-types">Supported file types: PDF, DOCX, TXT</p>
+        </div>
+        
+        <!-- Upload progress -->
+        <div class="upload-progress" *ngIf="uploading">
+          <h4>Uploading files...</h4>
+          <p-progressBar [value]="totalProgress" [showValue]="true" styleClass="mb-3"></p-progressBar>
+          
+          <div class="file-progress-list">
+            <div class="file-progress-item" *ngFor="let file of uploadedFiles">
+              <div class="flex align-items-center justify-content-between">
+                <div class="flex align-items-center">
+                  <p-badge [value]="getFileTypeLabel(file.name)" [severity]="getFileTypeBadge(file.name)" styleClass="mr-2"></p-badge>
+                  <span class="filename">{{ file.name }}</span>
+                </div>
+                <span class="file-size">{{ formatFileSize(file.size) }}</span>
+              </div>
+              <p-progressBar [value]="uploadProgress[file.name] || 0" [showValue]="false" styleClass="file-progress"></p-progressBar>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Uploaded files list -->
+        <div class="uploaded-files" *ngIf="uploadedFiles.length > 0 && !uploading">
+          <h4>Uploaded Files</h4>
+          <div class="file-list">
+            <div class="file-item" *ngFor="let file of uploadedFiles">
+              <div class="flex align-items-center justify-content-between">
+                <div class="flex align-items-center">
+                  <p-badge [value]="getFileTypeLabel(file.name)" [severity]="getFileTypeBadge(file.name)" styleClass="mr-2"></p-badge>
+                  <span class="filename">{{ file.name }}</span>
+                </div>
+                <span class="file-size">{{ formatFileSize(file.size) }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="flex justify-content-end mt-3">
+            <button pButton pRipple label="Clear Files" icon="pi pi-trash" 
+              class="p-button-outlined p-button-danger" 
+              (click)="clearUploadedFiles()">
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-fileUpload>
+</p-card>

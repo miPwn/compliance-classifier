@@ -1,54 +1,83 @@
 <header class="header">
   <div class="header-container">
+    <!-- Logo -->
     <div class="logo-container">
       <a routerLink="/" class="logo">
-        <span class="logo-text">Compliance Classifier</span>
+        <img src="assets/images/cube-logo.svg" alt="CUBE Logo" class="logo-image" />
       </a>
     </div>
     
-    <div class="nav-container">
-      <nav class="main-nav">
-        <ul class="nav-list">
-          <li class="nav-item">
-            <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="/batches" routerLinkActive="active" class="nav-link">Batches</a>
-          </li>
-          <li class="nav-item">
-            <a routerLink="/reports" routerLinkActive="active" class="nav-link">Reports</a>
-          </li>
-        </ul>
-      </nav>
+    <!-- Navigation -->
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li class="nav-item">
+          <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/batches" routerLinkActive="active" class="nav-link">Batches</a>
+        </li>
+        <li class="nav-item">
+          <a routerLink="/reports" routerLinkActive="active" class="nav-link">Reports</a>
+        </li>
+      </ul>
+    </nav>
+    
+    <!-- AI Provider Dropdown -->
+    <div class="ai-provider-container">
+      <p-dropdown
+        [options]="aiProviders"
+        [(ngModel)]="selectedProvider"
+        (onChange)="onProviderChange($event)"
+        optionLabel="label"
+        optionValue="value"
+        styleClass="p-dropdown-sm">
+        <ng-template pTemplate="selectedItem">
+          <div class="flex align-items-center">
+            <i class="pi pi-server mr-2"></i>
+            <span>{{ selectedProvider | titlecase }}</span>
+          </div>
+        </ng-template>
+      </p-dropdown>
     </div>
     
-    <div class="auth-container">
+    <!-- Create Batch Button -->
+    <div class="create-batch-container">
+      <button
+        pButton
+        pRipple
+        label="Create New Batch"
+        icon="pi pi-plus"
+        class="p-button-rounded"
+        (click)="createNewBatch()">
+      </button>
+    </div>
+    
+    <!-- User Menu -->
+    <div class="user-menu-container">
       <ng-container *ngIf="!isAuthenticated">
-        <button pButton 
-          label="Login" 
-          icon="pi pi-sign-in" 
-          class="p-button-text login-button" 
+        <button pButton
+          label="Login"
+          icon="pi pi-sign-in"
+          class="p-button-text login-button"
           (click)="login()">
         </button>
       </ng-container>
       
       <ng-container *ngIf="isAuthenticated">
-        <div class="user-menu">
-          <p-menu #menu [popup]="true" [model]="[
-            {label: 'Profile', icon: 'pi pi-user'},
-            {label: 'Settings', icon: 'pi pi-cog'},
-            {separator: true},
-            {label: 'Logout', icon: 'pi pi-sign-out', command: () => logout(), styleClass: 'logout-button'}
-          ]"></p-menu>
-          
-          <button pButton 
-            type="button" 
-            class="p-button-text p-button-rounded" 
-            icon="pi pi-user" 
-            (click)="menu.toggle($event)">
-            <span class="username">{{ username }}</span>
-          </button>
-        </div>
+        <p-menu #menu [popup]="true" [model]="[
+          {label: 'Profile', icon: 'pi pi-user'},
+          {label: 'Settings', icon: 'pi pi-cog'},
+          {separator: true},
+          {label: 'Logout', icon: 'pi pi-sign-out', command: () => logout(), styleClass: 'logout-button'}
+        ]"></p-menu>
+        
+        <button pButton
+          type="button"
+          class="p-button-text p-button-rounded"
+          icon="pi pi-user"
+          (click)="menu.toggle($event)">
+          <span class="username">{{ username }}</span>
+        </button>
       </ng-container>
     </div>
   </div>

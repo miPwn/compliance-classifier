@@ -1,0 +1,63 @@
+<p-card styleClass="categories-card">
+  <ng-template pTemplate="header">
+    <div class="flex align-items-center">
+      <h3>
+        <i class="pi pi-tags mr-2"></i>
+        Classification Categories
+      </h3>
+    </div>
+  </ng-template>
+  
+  <p-progressBar *ngIf="isLoading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+  
+  <div *ngIf="!isLoading" class="category-content">
+    <div *ngIf="categories.length > 0" class="grid">
+      <!-- Charts Section -->
+      <div class="col-12 md:col-6">
+        <div class="chart-container">
+          <h4>Category Distribution</h4>
+          <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" height="300px"></p-chart>
+        </div>
+      </div>
+      
+      <div class="col-12 md:col-6">
+        <div class="chart-container">
+          <h4>Document Count by Category</h4>
+          <p-chart type="bar" [data]="barChartData" [options]="barChartOptions" height="300px"></p-chart>
+        </div>
+      </div>
+      
+      <!-- Category Cards -->
+      <div class="col-12">
+        <h4>Category Details</h4>
+        <div class="grid">
+          <div *ngFor="let category of categories; let i = index" class="col-12 md:col-6 lg:col-4 xl:col-3 p-2">
+            <div class="category-card p-card">
+              <div class="category-card-header" [style.backgroundColor]="pieChartData?.datasets[0]?.backgroundColor[i]">
+                <h5>{{ category.name }}</h5>
+              </div>
+              <div class="p-card-body">
+                <p>{{ category.description }}</p>
+                <div class="category-stats">
+                  <span class="document-count">{{ category.documentCount || 0 }}</span>
+                  <span class="document-label">Documents</span>
+                </div>
+                <div *ngIf="category.riskLevel" class="risk-level mt-2">
+                  <span class="risk-badge" [ngClass]="'risk-' + category.riskLevel.toLowerCase()">
+                    {{ category.riskLevel }}
+                  </span>
+                  <span class="risk-label ml-2">Risk Level</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="categories.length === 0" class="empty-categories">
+      <i class="pi pi-chart-pie empty-icon"></i>
+      <p>No classification categories available.</p>
+    </div>
+  </div>
+</p-card>

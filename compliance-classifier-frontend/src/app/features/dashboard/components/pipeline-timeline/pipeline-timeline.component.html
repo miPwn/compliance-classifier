@@ -1,0 +1,54 @@
+<p-card styleClass="pipeline-card">
+  <ng-template pTemplate="header">
+    <div class="flex justify-content-between align-items-center">
+      <h3>
+        <i class="pi pi-clock mr-2"></i>
+        Real-Time Processing Pipeline
+      </h3>
+      <div class="refresh-controls flex align-items-center">
+        <p-inputSwitch [(ngModel)]="autoRefresh" (onChange)="toggleAutoRefresh()"></p-inputSwitch>
+        <span class="ml-2 mr-3">Auto-refresh</span>
+        <button pButton pRipple icon="pi pi-refresh"
+          class="p-button-rounded p-button-text"
+          (click)="refresh()"
+          [disabled]="isLoading"
+          pTooltip="Refresh data">
+        </button>
+      </div>
+    </div>
+  </ng-template>
+  
+  <p-progressBar *ngIf="isLoading" mode="indeterminate" [style]="{'height': '6px'}"></p-progressBar>
+  
+  <div class="pipeline-content">
+    <p-timeline [value]="pipelineEvents" align="alternate" styleClass="pipeline-timeline">
+      <ng-template pTemplate="content" let-event>
+        <div class="pipeline-event-card" [ngClass]="event.status">
+          <div class="event-header" [style.color]="event.color">
+            <span class="event-status">{{ event.status | titlecase }}</span>
+          </div>
+          <div class="event-body">
+            <div class="event-batch">{{ event.batchName }}</div>
+            <div class="event-filename">{{ event.filename }}</div>
+            <div class="event-time">{{ event.time | date:'short' }}</div>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="opposite" let-event>
+        <div class="pipeline-stage" [style.color]="event.color">
+          <i [class]="event.icon"></i>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="marker" let-event>
+        <span class="custom-marker" [style.backgroundColor]="event.color">
+          <i [class]="event.icon"></i>
+        </span>
+      </ng-template>
+    </p-timeline>
+    
+    <div *ngIf="pipelineEvents.length === 0" class="empty-pipeline">
+      <i class="pi pi-inbox empty-icon"></i>
+      <p>No recent document processing activity.</p>
+    </div>
+  </div>
+</p-card>
