@@ -1,10 +1,13 @@
-<p-dialog 
-  [(visible)]="visible" 
-  [modal]="true" 
-  [draggable]="false" 
-  [resizable]="false" 
-  [style]="{width: '500px'}" 
-  header="Create New Batch" 
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{width: '500px', backgroundColor: 'var(--surface-card)', zIndex: '1000'}"
+  [contentStyle]="{backgroundColor: 'var(--surface-card)'}"
+  [baseZIndex]="1000"
+  [position]="'center'"
+  header="Create New Batch"
   [closeOnEscape]="true"
   [dismissableMask]="true"
   (onHide)="hide()">
@@ -27,14 +30,15 @@
       <!-- Batch Description -->
       <div class="field">
         <label for="description" class="font-medium">Description</label>
-        <textarea 
-          id="description" 
-          pInputTextarea 
-          formControlName="description" 
-          [rows]="5" 
+        <textarea
+          id="description"
+          pTextarea
+          formControlName="description"
+          [rows]="5"
           [autoResize]="true"
           [ngClass]="{'ng-invalid ng-dirty': isFieldInvalid('description')}"
-          placeholder="Enter batch description"></textarea>
+          placeholder="Enter batch description"
+          class="p-inputtextarea"></textarea>
         <small *ngIf="isFieldInvalid('description')" class="p-error">{{ getErrorMessage('description') }}</small>
       </div>
     </div>

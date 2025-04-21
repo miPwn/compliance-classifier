@@ -1,0 +1,162 @@
+:root {
+  /* Typography */
+  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --font-family-secondary: 'Nunito Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-family-monospace: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --font-family: var(--font-family-primary);
+  
+  /* Typography Scale */
+  --font-size-base: 1rem;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  /* Line Heights */
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Light Theme Variables */
+  --light-primary-color: #3B82F6;
+  --light-primary-color-hover: #2563EB;
+  --light-primary-color-text: #FFFFFF;
+  --light-primary-50: rgba(59, 130, 246, 0.1);
+  --light-primary-100: rgba(59, 130, 246, 0.2);
+  
+  --light-surface-0: #FFFFFF;
+  --light-surface-50: #FAFAFA;
+  --light-surface-100: #F5F5F5;
+  --light-surface-200: #EEEEEE;
+  --light-surface-300: #E0E0E0;
+  --light-surface-400: #BDBDBD;
+  --light-surface-500: #9E9E9E;
+  --light-surface-ground: #F8F9FA;
+  --light-surface-card: #FFFFFF;
+  --light-surface-border: #DEE2E6;
+  --light-surface-hover: #F8F9FA;
+  
+  --light-text-color: #495057;
+  --light-text-color-secondary: #6C757D;
+  
+  --light-green-100: #D1FAE5;
+  --light-green-500: #34D399;
+  --light-yellow-100: #FEF3C7;
+  --light-yellow-500: #F59E0B;
+  --light-red-100: #FECACA;
+  --light-red-500: #EF4444;
+  --light-blue-100: #DBEAFE;
+  --light-blue-500: #3B82F6;
+  
+  /* Dark Theme Variables */
+  --dark-primary-color: #60A5FA;
+  --dark-primary-color-hover: #93C5FD;
+  --dark-primary-color-text: #FFFFFF;
+  --dark-primary-50: rgba(96, 165, 250, 0.1);
+  --dark-primary-100: rgba(96, 165, 250, 0.2);
+  
+  --dark-surface-0: #1E1E1E;
+  --dark-surface-50: #252525;
+  --dark-surface-100: #2D2D2D;
+  --dark-surface-200: #333333;
+  --dark-surface-300: #404040;
+  --dark-surface-400: #4D4D4D;
+  --dark-surface-500: #666666;
+  --dark-surface-ground: #121212;
+  --dark-surface-card: #1E1E1E;
+  --dark-surface-border: #383838;
+  --dark-surface-hover: #2A2A2A;
+  
+  --dark-text-color: #E0E0E0;
+  --dark-text-color-secondary: #AAAAAA;
+  
+  --dark-green-100: #065F46;
+  --dark-green-500: #10B981;
+  --dark-yellow-100: #78350F;
+  --dark-yellow-500: #F59E0B;
+  --dark-red-100: #7F1D1D;
+  --dark-red-500: #EF4444;
+  --dark-blue-100: #1E3A8A;
+  --dark-blue-500: #60A5FA;
+  
+  /* Default to light theme */
+  --primary-color: var(--light-primary-color);
+  --primary-color-hover: var(--light-primary-color-hover);
+  --primary-color-text: var(--light-primary-color-text);
+  --primary-50: var(--light-primary-50);
+  --primary-100: var(--light-primary-100);
+  
+  --surface-0: var(--light-surface-0);
+  --surface-50: var(--light-surface-50);
+  --surface-100: var(--light-surface-100);
+  --surface-200: var(--light-surface-200);
+  --surface-300: var(--light-surface-300);
+  --surface-400: var(--light-surface-400);
+  --surface-500: var(--light-surface-500);
+  --surface-ground: var(--light-surface-ground);
+  --surface-card: var(--light-surface-card);
+  --surface-border: var(--light-surface-border);
+  --surface-hover: var(--light-surface-hover);
+  
+  --text-color: var(--light-text-color);
+  --text-color-secondary: var(--light-text-color-secondary);
+  
+  --green-100: var(--light-green-100);
+  --green-500: var(--light-green-500);
+  --yellow-100: var(--light-yellow-100);
+  --yellow-500: var(--light-yellow-500);
+  --red-100: var(--light-red-100);
+  --red-500: var(--light-red-500);
+  --blue-100: var(--light-blue-100);
+  --blue-500: var(--light-blue-500);
+}
+
+/* Dark Theme Class */
+.dark-theme {
+  --primary-color: var(--dark-primary-color);
+  --primary-color-hover: var(--dark-primary-color-hover);
+  --primary-color-text: var(--dark-primary-color-text);
+  --primary-50: var(--dark-primary-50);
+  --primary-100: var(--dark-primary-100);
+  
+  --surface-0: var(--dark-surface-0);
+  --surface-50: var(--dark-surface-50);
+  --surface-100: var(--dark-surface-100);
+  --surface-200: var(--dark-surface-200);
+  --surface-300: var(--dark-surface-300);
+  --surface-400: var(--dark-surface-400);
+  --surface-500: var(--dark-surface-500);
+  --surface-ground: var(--dark-surface-ground);
+  --surface-card: var(--dark-surface-card);
+  --surface-border: var(--dark-surface-border);
+  --surface-hover: var(--dark-surface-hover);
+  
+  --text-color: var(--dark-text-color);
+  --text-color-secondary: var(--dark-text-color-secondary);
+  
+  --green-100: var(--dark-green-100);
+  --green-500: var(--dark-green-500);
+  --yellow-100: var(--dark-yellow-100);
+  --yellow-500: var(--dark-yellow-500);
+  --red-100: var(--dark-red-100);
+  --red-500: var(--dark-red-500);
+  --blue-100: var(--dark-blue-100);
+  --blue-500: var(--dark-blue-500);
+}

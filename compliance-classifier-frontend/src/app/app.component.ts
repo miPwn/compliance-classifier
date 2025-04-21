@@ -5,7 +5,11 @@ import { Subscription } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 
 // Import components used in the template
+import { HeaderComponent } from './layout/header/header.component';
+import { SidebarComponent } from './layout/sidebar/sidebar.component';
+import { FooterComponent } from './layout/footer/footer.component';
 import { OfflineIndicatorComponent } from './shared/components/offline-indicator/offline-indicator.component';
+import { AccessibilityPanelComponent } from './shared/components/accessibility-panel/accessibility-panel.component';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +19,11 @@ import { OfflineIndicatorComponent } from './shared/components/offline-indicator
   imports: [
     CommonModule,
     RouterModule,
-    OfflineIndicatorComponent
+    HeaderComponent,
+    SidebarComponent,
+    FooterComponent,
+    OfflineIndicatorComponent,
+    AccessibilityPanelComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

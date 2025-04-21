@@ -6,8 +6,13 @@
         Real-Time Processing Pipeline
       </h3>
       <div class="refresh-controls flex align-items-center">
-        <p-inputSwitch [(ngModel)]="autoRefresh" (onChange)="toggleAutoRefresh()"></p-inputSwitch>
-        <span class="ml-2 mr-3">Auto-refresh</span>
+        <button pButton pRipple
+          [class]="autoRefresh ? 'p-button-success' : 'p-button-secondary'"
+          [icon]="autoRefresh ? 'pi pi-check' : 'pi pi-times'"
+          (click)="toggleAutoRefresh()"
+          pTooltip="Toggle auto-refresh">
+        </button>
+        <span class="ml-2 mr-3">Auto-refresh: {{ autoRefresh ? 'ON' : 'OFF' }}</span>
         <button pButton pRipple icon="pi pi-refresh"
           class="p-button-rounded p-button-text"
           (click)="refresh()"

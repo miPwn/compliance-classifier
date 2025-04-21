@@ -2,7 +2,7 @@
 
 /* Card styles */
 .p-card {
-  background-color: #ffffff;
+  background-color: var(--surface-card);
   border-radius: 4px;
   box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 1px 3px 0 rgba(0,0,0,0.12);
   margin-bottom: 1rem;
@@ -14,99 +14,106 @@
 
 .p-card .p-card-header {
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--surface-border);
 }
 
 /* Button styles */
 .p-button {
-  color: #ffffff;
-  background-color: #3B82F6;
-  border: 1px solid #3B82F6;
+  color: var(--primary-color-text);
+  background-color: var(--primary-color);
+  border: 1px solid var(--primary-color);
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: var(--font-size-base);
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-medium);
   border-radius: 4px;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .p-button:hover {
-  background-color: #2563EB;
-  border-color: #2563EB;
+  background-color: var(--primary-color-hover);
+  border-color: var(--primary-color-hover);
 }
 
 .p-button.p-button-text {
   background-color: transparent;
-  color: #3B82F6;
+  color: var(--primary-color);
   border-color: transparent;
 }
 
 .p-button.p-button-text:hover {
-  background-color: rgba(59, 130, 246, 0.04);
-  color: #2563EB;
+  background-color: var(--primary-50);
+  color: var(--primary-color-hover);
   border-color: transparent;
 }
 
 .p-button.p-button-danger {
-  background-color: #EF4444;
-  border-color: #EF4444;
+  background-color: var(--red-500);
+  border-color: var(--red-500);
 }
 
 .p-button.p-button-danger:hover {
-  background-color: #DC2626;
-  border-color: #DC2626;
+  background-color: var(--red-500);
+  filter: brightness(0.9);
+  border-color: var(--red-500);
 }
 
 .p-button.p-button-danger.p-button-text {
   background-color: transparent;
-  color: #EF4444;
+  color: var(--red-500);
   border-color: transparent;
 }
 
 .p-button.p-button-danger.p-button-text:hover {
-  background-color: rgba(239, 68, 68, 0.04);
-  color: #DC2626;
+  background-color: var(--red-100);
+  color: var(--red-500);
   border-color: transparent;
 }
 
 /* Table styles */
 .p-datatable {
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--surface-border);
   border-radius: 4px;
 }
 
 .p-datatable .p-datatable-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
+  background-color: var(--surface-card);
+  border-bottom: 1px solid var(--surface-border);
   padding: 1rem;
 }
 
 .p-datatable .p-datatable-thead > tr > th {
-  background-color: #f8f9fa;
-  color: #495057;
-  border: 1px solid #dee2e6;
+  background-color: var(--surface-card);
+  color: var(--text-color);
+  border: 1px solid var(--surface-border);
   border-width: 0 0 1px 0;
   padding: 0.75rem 1rem;
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
 }
 
 .p-datatable .p-datatable-tbody > tr {
-  background-color: #ffffff;
-  color: #495057;
+  background-color: var(--surface-card);
+  color: var(--text-color);
   transition: background-color 0.2s;
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--surface-border);
   border-width: 0 0 1px 0;
   padding: 0.75rem 1rem;
 }
 
 .p-datatable .p-datatable-tbody > tr:hover {
-  background-color: #f8f9fa;
+  background-color: var(--surface-hover);
 }
 
 .p-datatable .p-paginator {
-  background-color: #ffffff;
-  border-top: 1px solid #dee2e6;
+  background-color: var(--surface-card);
+  border-top: 1px solid var(--surface-border);
   padding: 0.5rem 1rem;
 }
 
@@ -117,10 +124,10 @@
 }
 
 .p-message.p-message-error {
-  background-color: #FECACA;
-  border: solid #F87171;
+  background-color: var(--red-100);
+  border: solid var(--red-500);
   border-width: 0 0 0 6px;
-  color: #B91C1C;
+  color: var(--red-500);
 }
 
 .p-message .p-message-text {
@@ -132,32 +139,37 @@
 /* Progress bar styles */
 .p-progressbar {
   height: 0.5rem;
-  background-color: #E5E7EB;
+  background-color: var(--surface-200);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .p-progressbar .p-progressbar-value {
-  background-color: #3B82F6;
+  background-color: var(--primary-color);
 }
 
 .p-progressbar.p-progressbar-indeterminate .p-progressbar-value::before {
-  background-color: #3B82F6;
+  background-color: var(--primary-color);
 }
 
 /* Input styles */
 .p-inputtext {
   padding: 0.5rem 0.75rem;
-  border: 1px solid #ced4da;
+  border: 1px solid var(--surface-border);
   border-radius: 4px;
+  background-color: var(--surface-0);
+  color: var(--text-color);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
 .p-inputtext:enabled:focus {
   outline: 0 none;
   outline-offset: 0;
-  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
-  border-color: #3B82F6;
+  box-shadow: 0 0 0 0.2rem var(--primary-100);
+  border-color: var(--primary-color);
 }
 
 /* Toast styles */
@@ -172,15 +184,15 @@
 }
 
 .p-toast .p-toast-message.p-toast-message-success {
-  background-color: #D1FAE5;
-  border: solid #34D399;
+  background-color: var(--green-100);
+  border: solid var(--green-500);
   border-width: 0 0 0 6px;
-  color: #065F46;
+  color: var(--green-500);
 }
 
 .p-toast .p-toast-message.p-toast-message-error {
-  background-color: #FECACA;
-  border: solid #F87171;
+  background-color: var(--red-100);
+  border: solid var(--red-500);
   border-width: 0 0 0 6px;
-  color: #B91C1C;
+  color: var(--red-500);
 }

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
+import { ThemeService } from '../../core/services/theme.service';
 import { SelectItem } from 'primeng/api';
 
 // PrimeNG imports
@@ -13,6 +14,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { MenuModule } from 'primeng/menu';
 import { RippleModule } from 'primeng/ripple';
 import { AvatarModule } from 'primeng/avatar';
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-header',
@@ -27,13 +30,26 @@ import { AvatarModule } from 'primeng/avatar';
     DropdownModule,
     MenuModule,
     RippleModule,
-    AvatarModule
+    AvatarModule,
+    InputSwitchModule,
+    TooltipModule
   ]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
   isAuthenticated = false;
   username: string | null = null;
   private authSubscription: Subscription | null = null;
+  
+  // Theme state
+  isDarkTheme = false;
+  
+  // Menu items
+  menuItems = [
+    {label: 'Profile', icon: 'pi pi-user'},
+    {label: 'Settings', icon: 'pi pi-cog'},
+    {separator: true},
+    {label: 'Logout', icon: 'pi pi-sign-out', command: () => this.logout(), styleClass: 'logout-button'}
+  ];
   
   // AI Provider options
   aiProviders: SelectItem[] = [
@@ -45,6 +61,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
+    private themeService: ThemeService,
     private router: Router
   ) { }
 
@@ -61,6 +78,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     
     // Load current AI provider (would typically come from a config service)
     this.loadCurrentProvider();
+    
+    // Subscribe to theme changes
+    this.themeService.getTheme().subscribe(theme => {
+      this.isDarkTheme = theme === 'dark';
+    });
   }
 
   ngOnDestroy(): void {
@@ -79,6 +101,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     } else {
       this.username = null;
     }
+  }
+  
+  /**
+   * Toggle between light and dark themes
+   */
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
   
   loadCurrentProvider(): void {

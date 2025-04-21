@@ -1,10 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 
+/* Import theme variables */
+@import "assets/styles/theme-variables.css";
+
 /* Import PrimeNG styles */
-@import "primeng/resources/themes/lara-light-blue/theme.css";
 @import "primeng/resources/primeng.css";
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
+@import "assets/styles/primeng-theme.css";
 
 /* Global styles */
 html, body {
@@ -12,9 +15,84 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family);
-  font-size: 14px;
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
   color: var(--text-color);
   background-color: var(--surface-ground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography */
+h1, .h1 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: 1.5rem;
+}
+
+h2, .h2 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: 1.25rem;
+}
+
+h3, .h3 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  margin-bottom: 1rem;
+}
+
+h4, .h4 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin-bottom: 0.75rem;
+}
+
+h5, .h5 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin-bottom: 0.5rem;
+}
+
+h6, .h6 {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-normal);
+  margin-bottom: 0.5rem;
+}
+
+p {
+  margin-bottom: 1rem;
+  line-height: var(--line-height-relaxed);
+}
+
+.lead {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-relaxed);
+}
+
+.small {
+  font-size: var(--font-size-sm);
+}
+
+code, pre, .code {
+  font-family: var(--font-family-monospace);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-tight);
 }
 
 /* Custom scrollbar */
@@ -212,13 +290,19 @@ html, body {
 }
 
 .p-card .p-card-title {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+  letter-spacing: var(--letter-spacing-tight);
   margin-bottom: 0.5rem;
 }
 
 .p-card .p-card-subtitle {
-  font-weight: 400;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
   margin-bottom: 1rem;
   color: var(--text-color-secondary);
 }
@@ -236,7 +320,10 @@ html, body {
   border: 1px solid var(--surface-border);
   border-width: 1px 1px 0 1px;
   padding: 1rem;
-  font-weight: 600;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
   color: var(--text-color);
 }
 
@@ -245,19 +332,28 @@ html, body {
   border: 1px solid var(--surface-border);
   border-width: 0 1px 1px 1px;
   padding: 1rem;
-  font-weight: 600;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
   color: var(--text-color);
 }
 
 .p-datatable .p-datatable-thead > tr > th {
   background-color: var(--surface-card);
   color: var(--text-color);
-  font-weight: 600;
+  font-family: var(--font-family-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+  letter-spacing: var(--letter-spacing-wide);
   padding: 0.75rem 1rem;
 }
 
 .p-datatable .p-datatable-tbody > tr > td {
   padding: 0.75rem 1rem;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  line-height: var(--line-height-normal);
 }
 
 .p-datatable .p-datatable-tbody > tr:nth-child(even) {
@@ -270,6 +366,10 @@ html, body {
 
 .p-button {
   margin-right: 0.5rem;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-normal);
 }
 
 .p-button:last-child {
@@ -278,6 +378,9 @@ html, body {
 
 .p-inputtext {
   width: 100%;
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
 }
 
 .p-dropdown {

@@ -3,7 +3,7 @@
     <!-- Logo -->
     <div class="logo-container">
       <a routerLink="/" class="logo">
-        <img src="assets/images/cube-logo.svg" alt="CUBE Logo" class="logo-image" />
+        <img [src]="'assets/images/CUBE-Logo.png'" alt="CUBE Logo" class="logo-image" />
       </a>
     </div>
     
@@ -21,6 +21,18 @@
         </li>
       </ul>
     </nav>
+    
+    <!-- Theme Toggle -->
+    <div class="theme-toggle-container">
+      <div class="theme-toggle-wrapper" pTooltip="Toggle dark mode" tooltipPosition="bottom">
+        <i class="pi" [ngClass]="isDarkTheme ? 'pi-moon' : 'pi-sun'"></i>
+        <p-inputSwitch
+          [(ngModel)]="isDarkTheme"
+          (onChange)="toggleTheme()"
+          styleClass="theme-switch">
+        </p-inputSwitch>
+      </div>
+    </div>
     
     <!-- AI Provider Dropdown -->
     <div class="ai-provider-container">
@@ -64,12 +76,7 @@
       </ng-container>
       
       <ng-container *ngIf="isAuthenticated">
-        <p-menu #menu [popup]="true" [model]="[
-          {label: 'Profile', icon: 'pi pi-user'},
-          {label: 'Settings', icon: 'pi pi-cog'},
-          {separator: true},
-          {label: 'Logout', icon: 'pi pi-sign-out', command: () => logout(), styleClass: 'logout-button'}
-        ]"></p-menu>
+        <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
         
         <button pButton
           type="button"

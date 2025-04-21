@@ -2,10 +2,13 @@
   .p-dialog {
     border-radius: 0.5rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background-color: var(--surface-card) !important;
+    opacity: 1 !important;
     
     .p-dialog-header {
       padding: 1.5rem;
       border-bottom: 1px solid var(--surface-200);
+      background-color: var(--surface-card) !important;
       
       .p-dialog-title {
         font-size: 1.25rem;
@@ -24,11 +27,14 @@
     
     .p-dialog-content {
       padding: 1.5rem;
+      background-color: var(--surface-card) !important;
+      opacity: 1 !important;
     }
     
     .p-dialog-footer {
       padding: 1rem 1.5rem;
       border-top: 1px solid var(--surface-200);
+      background-color: var(--surface-card) !important;
     }
   }
   
@@ -97,5 +103,20 @@
 .p-fluid .field {
   .p-inputtext, .p-inputtextarea {
     width: 100%;
+    background-color: var(--surface-50) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--surface-300);
+    
+    &:focus {
+      background-color: var(--surface-0) !important;
+      border-color: var(--primary-color);
+    }
   }
+}
+
+/* Ensure form controls are visible */
+::ng-deep .p-inputtext, ::ng-deep .p-inputtextarea {
+  opacity: 1 !important;
+  background-color: var(--surface-50) !important;
+  color: var(--text-color) !important;
 }

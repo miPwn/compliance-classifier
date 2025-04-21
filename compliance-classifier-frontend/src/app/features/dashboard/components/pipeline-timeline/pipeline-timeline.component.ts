@@ -40,6 +40,9 @@ export class PipelineTimelineComponent {
   /**
    * Toggle auto-refresh and emit the new state
    */
+  /**
+   * Toggle auto-refresh and emit the new state
+   */
   toggleAutoRefresh(): void {
     this.autoRefresh = !this.autoRefresh;
     this.refreshToggle.emit(this.autoRefresh);

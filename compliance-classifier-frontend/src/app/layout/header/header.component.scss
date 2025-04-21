@@ -82,6 +82,49 @@
   }
 }
 
+.theme-toggle-container {
+  margin: 0 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.theme-toggle-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  background-color: var(--surface-100);
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: var(--surface-200);
+  }
+  
+  .pi {
+    margin-right: 0.5rem;
+    font-size: 1.1rem;
+    color: var(--text-color);
+  }
+  
+  .pi-sun {
+    color: var(--yellow-500);
+  }
+  
+  .pi-moon {
+    color: var(--primary-color);
+  }
+}
+
+::ng-deep .theme-switch {
+  .p-inputswitch-slider {
+    background-color: var(--surface-200);
+  }
+  
+  &.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+    background-color: var(--primary-color);
+  }
+}
+
 .ai-provider-container {
   margin: 0 1rem;
   
@@ -126,7 +169,8 @@
 
 // Responsive adjustments
 @media (max-width: 992px) {
-  .ai-provider-container {
+  .ai-provider-container,
+  .theme-toggle-container {
     margin: 0 0.5rem;
   }
   
@@ -147,6 +191,7 @@
   }
   
   .ai-provider-container,
+  .theme-toggle-container,
   .create-batch-container,
   .user-menu-container {
     margin: 0 0.25rem;
