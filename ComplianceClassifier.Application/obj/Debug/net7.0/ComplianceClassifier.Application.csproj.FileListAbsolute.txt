@@ -1,0 +1,15 @@
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\bin\Debug\net7.0\ComplianceClassifier.Application.deps.json
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\bin\Debug\net7.0\ComplianceClassifier.Application.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\bin\Debug\net7.0\ComplianceClassifier.Application.pdb
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\bin\Debug\net7.0\ComplianceClassifier.Domain.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\bin\Debug\net7.0\ComplianceClassifier.Domain.pdb
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.csproj.AssemblyReference.cache
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.GeneratedMSBuildEditorConfig.editorconfig
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.AssemblyInfoInputs.cache
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.AssemblyInfo.cs
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.csproj.CoreCompileInputs.cache
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.csproj.CopyComplete
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\refint\ComplianceClassifier.Application.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ComplianceClassifier.Application.pdb
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Application\obj\Debug\net7.0\ref\ComplianceClassifier.Application.dll

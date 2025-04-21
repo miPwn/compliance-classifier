@@ -1,0 +1,12 @@
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\bin\Debug\net7.0\ComplianceClassifier.Domain.deps.json
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\bin\Debug\net7.0\ComplianceClassifier.Domain.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\bin\Debug\net7.0\ComplianceClassifier.Domain.pdb
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.csproj.AssemblyReference.cache
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.GeneratedMSBuildEditorConfig.editorconfig
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.AssemblyInfoInputs.cache
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.AssemblyInfo.cs
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.csproj.CoreCompileInputs.cache
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\refint\ComplianceClassifier.Domain.dll
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ComplianceClassifier.Domain.pdb
+G:\DEVELOPMENT\FALCON_LOCAL\compliance-classifier\ComplianceClassifier.Domain\obj\Debug\net7.0\ref\ComplianceClassifier.Domain.dll
