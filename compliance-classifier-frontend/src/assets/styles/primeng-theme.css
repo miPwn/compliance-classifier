@@ -1,0 +1,186 @@
+/* PrimeNG Theme CSS */
+
+/* Card styles */
+.p-card {
+  background-color: #ffffff;
+  border-radius: 4px;
+  box-shadow: 0 2px 1px -1px rgba(0,0,0,0.2), 0 1px 1px 0 rgba(0,0,0,0.14), 0 1px 3px 0 rgba(0,0,0,0.12);
+  margin-bottom: 1rem;
+}
+
+.p-card .p-card-body {
+  padding: 1.25rem;
+}
+
+.p-card .p-card-header {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+/* Button styles */
+.p-button {
+  color: #ffffff;
+  background-color: #3B82F6;
+  border: 1px solid #3B82F6;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.p-button:hover {
+  background-color: #2563EB;
+  border-color: #2563EB;
+}
+
+.p-button.p-button-text {
+  background-color: transparent;
+  color: #3B82F6;
+  border-color: transparent;
+}
+
+.p-button.p-button-text:hover {
+  background-color: rgba(59, 130, 246, 0.04);
+  color: #2563EB;
+  border-color: transparent;
+}
+
+.p-button.p-button-danger {
+  background-color: #EF4444;
+  border-color: #EF4444;
+}
+
+.p-button.p-button-danger:hover {
+  background-color: #DC2626;
+  border-color: #DC2626;
+}
+
+.p-button.p-button-danger.p-button-text {
+  background-color: transparent;
+  color: #EF4444;
+  border-color: transparent;
+}
+
+.p-button.p-button-danger.p-button-text:hover {
+  background-color: rgba(239, 68, 68, 0.04);
+  color: #DC2626;
+  border-color: transparent;
+}
+
+/* Table styles */
+.p-datatable {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+}
+
+.p-datatable .p-datatable-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  padding: 1rem;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-width: 0 0 1px 0;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+  background-color: #ffffff;
+  color: #495057;
+  transition: background-color 0.2s;
+}
+
+.p-datatable .p-datatable-tbody > tr > td {
+  border: 1px solid #dee2e6;
+  border-width: 0 0 1px 0;
+  padding: 0.75rem 1rem;
+}
+
+.p-datatable .p-datatable-tbody > tr:hover {
+  background-color: #f8f9fa;
+}
+
+.p-datatable .p-paginator {
+  background-color: #ffffff;
+  border-top: 1px solid #dee2e6;
+  padding: 0.5rem 1rem;
+}
+
+/* Message styles */
+.p-message {
+  margin: 0 0 1rem 0;
+  border-radius: 4px;
+}
+
+.p-message.p-message-error {
+  background-color: #FECACA;
+  border: solid #F87171;
+  border-width: 0 0 0 6px;
+  color: #B91C1C;
+}
+
+.p-message .p-message-text {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 1rem;
+}
+
+/* Progress bar styles */
+.p-progressbar {
+  height: 0.5rem;
+  background-color: #E5E7EB;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.p-progressbar .p-progressbar-value {
+  background-color: #3B82F6;
+}
+
+.p-progressbar.p-progressbar-indeterminate .p-progressbar-value::before {
+  background-color: #3B82F6;
+}
+
+/* Input styles */
+.p-inputtext {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.p-inputtext:enabled:focus {
+  outline: 0 none;
+  outline-offset: 0;
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+  border-color: #3B82F6;
+}
+
+/* Toast styles */
+.p-toast {
+  opacity: 1;
+}
+
+.p-toast .p-toast-message {
+  margin: 0 0 1rem 0;
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.2), 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
+
+.p-toast .p-toast-message.p-toast-message-success {
+  background-color: #D1FAE5;
+  border: solid #34D399;
+  border-width: 0 0 0 6px;
+  color: #065F46;
+}
+
+.p-toast .p-toast-message.p-toast-message-error {
+  background-color: #FECACA;
+  border: solid #F87171;
+  border-width: 0 0 0 6px;
+  color: #B91C1C;
+}

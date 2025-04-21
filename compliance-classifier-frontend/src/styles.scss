@@ -1,9 +1,8 @@
 /* PrimeNG Theme Import */
 @import "@angular/cdk/overlay-prebuilt.css";
-/* Remove PrimeNG theme import temporarily to fix build errors */
-/* We'll need to find the correct import path for PrimeNG 19.x */
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
+@import "assets/styles/primeng-theme.css";
 
 /* Import accessibility styles */
 @import "assets/styles/accessibility.scss";

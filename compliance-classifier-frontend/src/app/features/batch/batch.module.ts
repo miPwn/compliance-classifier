@@ -7,12 +7,12 @@ const routes: Routes = [
   {
     path: '',
     component: BatchListComponent
-  }
+  },
   // These routes will be implemented later
-  // {
-  //   path: 'create',
-  //   loadChildren: () => import('./components/create-batch/create-batch.module').then(m => m.CreateBatchModule)
-  // },
+  {
+    path: 'create',
+    loadChildren: () => import('./components/create-batch/create-batch.module').then(m => m.CreateBatchModule)
+  }
   // {
   //   path: ':id',
   //   loadChildren: () => import('./components/batch-details/batch-details.module').then(m => m.BatchDetailsModule)

@@ -4,6 +4,7 @@ import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, withFetch
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
+import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
 import { SecurityInterceptor } from './core/interceptors/security.interceptor';
@@ -35,6 +36,10 @@ export const appConfig: ApplicationConfig = {
       withFetch() // Use the Fetch API for better performance
     ),
     provideAnimations(),
+    providePrimeNG({
+      ripple: true,
+      inputStyle: 'filled'
+    }),
     // Conditionally provide ServiceWorker based on environment configuration
     ...(environment.features.serviceWorker ? [
       provideServiceWorker('ngsw-worker.js', {
