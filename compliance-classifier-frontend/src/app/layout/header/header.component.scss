@@ -319,6 +319,30 @@
     font-weight: 500;
   }
   
+  .user-button {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    cursor: default; // Remove pointer cursor since it's not clickable
+    
+    .user-avatar {
+      margin-right: 0.5rem;
+    }
+    
+    ::ng-deep .user-avatar-image {
+      width: 32px;
+      height: 32px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 2px solid white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    .username {
+      font-weight: 600;
+    }
+  }
+  
   ::ng-deep .p-button {
     transition: transform 0.2s;
     

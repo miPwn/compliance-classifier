@@ -1,0 +1,2 @@
+This is a placeholder file to ensure the 'users' directory exists.
+Replace the 'rich-pashley.jpg' file in this directory with your actual user image.

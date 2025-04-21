@@ -69,25 +69,19 @@
     
     <!-- User Menu -->
     <div class="user-menu-container">
-      <ng-container *ngIf="!isAuthenticated">
-        <button
-          class="header-button"
-          (click)="login()">
-          <i class="pi pi-sign-in"></i>
-          <span>Login</span>
-        </button>
-      </ng-container>
-      
-      <ng-container *ngIf="isAuthenticated">
-        <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
-        
-        <button
-          class="header-button"
-          (click)="menu.toggle($event)">
-          <i class="pi pi-user"></i>
-          <span class="username">{{ username }}</span>
-        </button>
-      </ng-container>
+      <!-- User profile button with avatar and name only -->
+      <button
+        class="header-button user-button">
+        <div class="user-avatar">
+          <!-- Use the base64 encoded SVG as the avatar -->
+          <p-avatar
+            [image]="userAvatarUrl"
+            styleClass="user-avatar-image"
+            shape="circle">
+          </p-avatar>
+        </div>
+        <span class="username">{{ username }}</span>
+      </button>
     </div>
   </div>
 </header>

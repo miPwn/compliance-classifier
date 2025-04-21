@@ -38,8 +38,9 @@ import { TooltipModule } from 'primeng/tooltip';
 })
 export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('themeToggleBtn') themeToggleBtn!: ElementRef;
-  isAuthenticated = false;
-  username: string | null = null;
+  isAuthenticated = true; // Set to true to show the logout button
+  username: string = 'Rich Pashley'; // Set the username
+  userAvatarUrl: string = 'assets/images/users/rich-pashley.jpg'; // Path to the user's image
   private authSubscription: Subscription | null = null;
   
   // Theme state
@@ -209,14 +210,9 @@ export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private updateAuthState(isAuthenticated: boolean): void {
-    this.isAuthenticated = isAuthenticated;
-    
-    if (isAuthenticated) {
-      const user = this.authService.getCurrentUser();
-      this.username = user?.username || null;
-    } else {
-      this.username = null;
-    }
+    // Keep the hardcoded values for demo purposes
+    this.isAuthenticated = true;
+    this.username = 'Rich Pashley';
   }
   
   /**
