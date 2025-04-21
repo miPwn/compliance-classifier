@@ -24,14 +24,19 @@
     
     <!-- Theme Toggle -->
     <div class="theme-toggle-container">
-      <div class="theme-toggle-wrapper" pTooltip="Toggle dark mode" tooltipPosition="bottom">
-        <i class="pi" [ngClass]="isDarkTheme ? 'pi-moon' : 'pi-sun'"></i>
-        <p-inputSwitch
-          [(ngModel)]="isDarkTheme"
-          (onChange)="toggleTheme()"
-          styleClass="theme-switch">
-        </p-inputSwitch>
-      </div>
+      <button
+        #themeToggleBtn
+        class="header-button theme-toggle-button"
+        onclick="
+          const isDark = window.toggleTheme();
+          this.querySelector('i').classList.toggle('pi-sun');
+          this.querySelector('i').classList.toggle('pi-moon');
+          this.querySelector('span').textContent = isDark ? 'Dark' : 'Light';
+        "
+        type="button">
+        <i class="pi pi-sun"></i>
+        <span>Light</span>
+      </button>
     </div>
     
     <!-- AI Provider Dropdown -->
@@ -55,37 +60,60 @@
     <!-- Create Batch Button -->
     <div class="create-batch-container">
       <button
-        pButton
-        pRipple
-        label="Create New Batch"
-        icon="pi pi-plus"
-        class="p-button-rounded"
+        class="header-button"
         (click)="createNewBatch()">
+        <i class="pi pi-plus"></i>
+        <span>Create New Batch</span>
       </button>
     </div>
     
     <!-- User Menu -->
     <div class="user-menu-container">
       <ng-container *ngIf="!isAuthenticated">
-        <button pButton
-          label="Login"
-          icon="pi pi-sign-in"
-          class="p-button-text login-button"
+        <button
+          class="header-button"
           (click)="login()">
+          <i class="pi pi-sign-in"></i>
+          <span>Login</span>
         </button>
       </ng-container>
       
       <ng-container *ngIf="isAuthenticated">
         <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
         
-        <button pButton
-          type="button"
-          class="p-button-text p-button-rounded"
-          icon="pi pi-user"
+        <button
+          class="header-button"
           (click)="menu.toggle($event)">
+          <i class="pi pi-user"></i>
           <span class="username">{{ username }}</span>
         </button>
       </ng-container>
     </div>
   </div>
 </header>
+
+<!-- Initialize theme on page load -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Try to get theme from localStorage
+    const savedTheme = localStorage.getItem('compliance-classifier-theme');
+    const themeToggleBtn = document.querySelector('.theme-toggle-button');
+    
+    if (savedTheme === 'dark') {
+      // Update button UI
+      if (themeToggleBtn) {
+        const icon = themeToggleBtn.querySelector('i');
+        const text = themeToggleBtn.querySelector('span');
+        
+        if (icon) {
+          icon.classList.remove('pi-sun');
+          icon.classList.add('pi-moon');
+        }
+        
+        if (text) {
+          text.textContent = 'Dark';
+        }
+      }
+    }
+  });
+</script>

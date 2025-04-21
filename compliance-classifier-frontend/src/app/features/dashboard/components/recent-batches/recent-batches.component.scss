@@ -74,3 +74,54 @@
     }
   }
 }
+
+/* Apply header-button style to the Create New Batch button */
+:host ::ng-deep .recent-batch-button {
+  background-color: var(--surface-100) !important;
+  color: var(--text-color) !important;
+  border: none !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  
+  &:hover {
+    background-color: var(--surface-200) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  body.dark-theme & {
+    background-color: var(--dark-surface-100) !important;
+    color: var(--dark-text-color) !important;
+  }
+  
+  .pi-plus {
+    color: var(--primary-color) !important;
+    margin-right: 0.5rem !important;
+  }
+  
+  span {
+    font-size: 0.9rem !important;
+  }
+  
+  &.p-button {
+    background-color: var(--surface-100) !important;
+    color: var(--text-color) !important;
+    border: none !important;
+  }
+}
+
+/* Override PrimeNG button styles */
+:host ::ng-deep button.p-button.recent-batch-button {
+  background-color: var(--surface-100) !important;
+  color: var(--text-color) !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  
+  .p-button-icon {
+    margin-right: 0.5rem !important;
+  }
+  
+  .p-button-label {
+    font-size: 0.9rem !important;
+  }
+}

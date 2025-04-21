@@ -30,6 +30,91 @@ html, body {
   background-color: var(--surface-ground);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Add smooth transition for theme changes */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Apply transitions to all elements for smoother theme switching */
+* {
+  transition: background-color 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+}
+
+/* Force dark theme styles when the dark-theme class is applied to body */
+body.dark-theme {
+  background-color: var(--dark-surface-ground) !important;
+  color: var(--dark-text-color) !important;
+  
+  a {
+    color: var(--dark-primary-color) !important;
+  }
+  
+  .p-component {
+    color: var(--dark-text-color) !important;
+  }
+  
+  .p-button {
+    background-color: var(--dark-primary-color) !important;
+    color: var(--dark-primary-color-text) !important;
+  }
+  
+  .header {
+    background-color: var(--dark-surface-0) !important;
+  }
+  
+  .main-content {
+    background-color: var(--dark-surface-ground) !important;
+  }
+  
+  .nav-link {
+    color: var(--dark-text-color) !important;
+    
+    &.active {
+      color: var(--dark-primary-color) !important;
+      background-color: var(--dark-primary-50) !important;
+    }
+  }
+  
+  .theme-toggle-button {
+    background-color: var(--dark-surface-100) !important;
+    color: var(--dark-text-color) !important;
+  }
+}
+
+/* Save theme preference to localStorage */
+.theme-toggle-button {
+  position: relative;
+}
+
+.theme-toggle-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: -1;
+}
+
+/* Visual feedback during theme changes */
+body.theme-changing {
+  animation: theme-flash 0.3s ease-out;
+}
+
+@keyframes theme-flash {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 /* Focus styles for accessibility */
@@ -113,4 +198,176 @@ html, body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--surface-500);
+}
+
+/* Toast notification styles */
+.p-toast {
+  .p-toast-message {
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    
+    &.p-toast-message-info {
+      background-color: var(--surface-0);
+      border-left: 6px solid var(--primary-color);
+      color: var(--text-color);
+      
+      .p-toast-icon {
+        color: var(--primary-color);
+      }
+      
+      .p-toast-summary {
+        font-weight: 600;
+      }
+    }
+  }
+  
+  /* Custom toast styles for theme change notifications */
+  .light-toast {
+    .p-toast-icon.pi-sun {
+      color: var(--yellow-500);
+    }
+  }
+  
+  .dark-toast {
+    .p-toast-icon.pi-moon {
+      color: var(--primary-color);
+    }
+  }
+}
+
+/* Toast animations */
+.p-toast-message-enter {
+  opacity: 0;
+  transform: translateY(-20px);
+}
+
+.p-toast-message-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms ease-out;
+}
+
+.p-toast-message-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.p-toast-message-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms ease-in;
+}
+
+/* Theme change notification */
+.theme-change-notification {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background-color: var(--surface-0);
+  color: var(--text-color);
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 1100;
+  transform: translateY(-20px);
+  opacity: 0;
+  visibility: hidden;
+  transition: transform 0.3s ease, opacity 0.3s ease, visibility 0s linear 0.3s;
+  border-left: 4px solid var(--primary-color);
+  
+  &.show {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+    transition: transform 0.3s ease, opacity 0.3s ease, visibility 0s linear 0s;
+  }
+  
+  &.dark {
+    background-color: var(--dark-surface-100);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  
+  i {
+    font-size: 1.2rem;
+    
+    &.pi-sun {
+      color: var(--yellow-500);
+    }
+    
+    &.pi-moon {
+      color: var(--primary-color);
+    }
+  }
+  
+  span {
+    font-weight: 500;
+  }
+}
+
+/* Common header button style - matches the theme toggle button style */
+.header-button {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 20px !important;
+  background-color: var(--surface-100) !important;
+  border: none !important;
+  color: var(--text-color) !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  
+  &:hover {
+    background-color: var(--surface-200) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+  }
+  
+  &:active {
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .pi {
+    margin-right: 0.5rem !important;
+    font-size: 1.1rem !important;
+    transition: transform 0.5s ease, color 0.3s ease !important;
+  }
+  
+  span {
+    font-size: 0.9rem !important;
+  }
+  
+  /* Dark theme styles */
+  body.dark-theme & {
+    background-color: var(--dark-surface-100) !important;
+    color: var(--dark-text-color) !important;
+  }
+}
+
+/* Override PrimeNG button styles when using our header-button class */
+button.header-button.p-button,
+.p-button.header-button {
+  background-color: var(--surface-100) !important;
+  color: var(--text-color) !important;
+  border: none !important;
+  
+  &:hover {
+    background-color: var(--surface-200) !important;
+  }
+  
+  body.dark-theme & {
+    background-color: var(--dark-surface-100) !important;
+    color: var(--dark-text-color) !important;
+  }
+  
+  .p-button-icon {
+    margin-right: 0.5rem !important;
+  }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { Subscription, interval } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
+import { Subscription, interval, filter } from 'rxjs';
 import { MessageService } from 'primeng/api';
 
 import { BatchService, Batch } from '../../../core/services/batch.service';
@@ -16,7 +16,6 @@ import { PipelineTimelineComponent } from './pipeline-timeline/pipeline-timeline
 import { RecentBatchesComponent } from './recent-batches/recent-batches.component';
 import { CategorySummaryComponent } from './category-summary/category-summary.component';
 import { FileUploadComponent } from './file-upload/file-upload.component';
-import { CreateBatchModalComponent } from './create-batch-modal/create-batch-modal.component';
 
 // Extended interface for category summary component
 interface CategoryWithCount extends ClassificationCategory {
@@ -35,13 +34,11 @@ interface CategoryWithCount extends ClassificationCategory {
     PipelineTimelineComponent,
     RecentBatchesComponent,
     CategorySummaryComponent,
-    FileUploadComponent,
-    CreateBatchModalComponent
+    FileUploadComponent
   ],
   providers: [MessageService]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  @ViewChild('createBatchModal') createBatchModal!: CreateBatchModalComponent;
   @ViewChild('fileUpload') fileUpload!: FileUploadComponent;
   
   recentBatches: Batch[] = [];
@@ -56,6 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   autoRefresh = true;
   refreshInterval = 30000; // 30 seconds
   refreshSubscription: Subscription | null = null;
+  routerSubscription: Subscription | null = null;
   
   // Selected batch for upload
   selectedBatchId: string = '';
@@ -71,6 +69,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadAllData();
     this.setupAutoRefresh();
+    this.setupRouterListener();
   }
   
   ngOnDestroy(): void {
@@ -78,6 +77,23 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
+    if (this.routerSubscription) {
+      this.routerSubscription.unsubscribe();
+    }
+  }
+  
+  /**
+   * Set up router event listener to refresh data when navigating to dashboard
+   */
+  setupRouterListener(): void {
+    this.routerSubscription = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        // If navigating to dashboard, refresh data
+        if (event.url === '/dashboard') {
+          this.loadAllData();
+        }
+      });
   }
   
   loadAllData(): void {
@@ -224,14 +240,22 @@ export class DashboardComponent implements OnInit, OnDestroy {
       life: 3000
     });
   }
+  
+  /**
+   * Force refresh data without showing notification
+   * Used when we need to silently refresh data
+   */
+  forceRefresh(): void {
+    this.loadAllData();
+  }
 
   viewBatchDetails(batchId: string): void {
     this.router.navigate(['/batches', batchId]);
   }
 
   createNewBatch(): void {
-    // Show the create batch modal
-    this.createBatchModal.show();
+    // Navigate to the dedicated batch creation screen
+    this.router.navigate(['/batches/create']);
   }
   
   uploadToBatch(batchId: string): void {
@@ -240,23 +264,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
   
   /**
-   * Handle batch created event from the modal
-   * @param batch The newly created batch
+   * This method is no longer used since we're navigating to a dedicated batch creation screen
+   * It's kept for reference in case we need to handle batch creation events in the future
    */
-  onBatchCreated(batch: Batch): void {
-    // Refresh the batches list
-    this.loadRecentBatches();
-    
-    // Show success message
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Batch Created',
-      detail: `Batch "${batch.name}" has been created successfully`
-    });
-    
-    // Set the selected batch ID for immediate upload
-    this.selectedBatchId = batch.id;
-  }
   
   /**
    * Handle upload complete event from the file upload component

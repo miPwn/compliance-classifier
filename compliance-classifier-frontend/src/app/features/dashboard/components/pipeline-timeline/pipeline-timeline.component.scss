@@ -103,6 +103,59 @@
 .refresh-controls {
   display: flex;
   align-items: center;
+  gap: 10px;
+}
+
+/* Style for the auto-refresh button */
+.refresh-active {
+  background-color: var(--green-100) !important;
+  border-left: 3px solid var(--green-500) !important;
+  
+  i {
+    color: var(--green-500);
+  }
+  
+  body.dark-theme & {
+    background-color: rgba(87, 180, 117, 0.2) !important;
+  }
+}
+
+/* Apply header-button style to buttons in pipeline timeline */
+:host ::ng-deep .header-button {
+  background-color: var(--surface-100);
+  color: var(--text-color);
+  border: none;
+  
+  &:hover {
+    background-color: var(--surface-200);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  body.dark-theme & {
+    background-color: var(--dark-surface-100) !important;
+    color: var(--dark-text-color) !important;
+  }
+  
+  .pi-refresh {
+    color: var(--primary-color);
+  }
+  
+  .pi-check {
+    color: var(--green-500);
+  }
+  
+  .pi-times {
+    color: var(--red-500);
+  }
 }
 
 // Responsive adjustments

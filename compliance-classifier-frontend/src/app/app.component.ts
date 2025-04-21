@@ -4,6 +4,9 @@ import { RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from './core/services/auth.service';
 
+// PrimeNG imports
+import { ToastModule } from 'primeng/toast';
+
 // Import components used in the template
 import { HeaderComponent } from './layout/header/header.component';
 import { SidebarComponent } from './layout/sidebar/sidebar.component';
@@ -23,7 +26,8 @@ import { AccessibilityPanelComponent } from './shared/components/accessibility-p
     SidebarComponent,
     FooterComponent,
     OfflineIndicatorComponent,
-    AccessibilityPanelComponent
+    AccessibilityPanelComponent,
+    ToastModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })

@@ -27,9 +27,399 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Direct theme styles -->
+  <style>
+    /* Theme variables */
+    :root {
+      /* Light theme (default) */
+      --light-primary-color: #3B82F6;
+      --light-primary-color-hover: #2563EB;
+      --light-primary-color-text: #FFFFFF;
+      --light-surface-ground: #F8F9FA;
+      --light-surface-0: #FFFFFF;
+      --light-surface-50: #FAFAFA;
+      --light-surface-100: #F5F5F5;
+      --light-surface-200: #EEEEEE;
+      --light-surface-300: #E0E0E0;
+      --light-surface-400: #BDBDBD;
+      --light-surface-500: #9E9E9E;
+      --light-text-color: #495057;
+      --light-text-color-secondary: #6C757D;
+      
+      /* Dark theme */
+      --dark-primary-color: #60A5FA;
+      --dark-primary-color-hover: #93C5FD;
+      --dark-primary-color-text: #FFFFFF;
+      --dark-surface-ground: #1E293B;  /* Adjusted to be less dark */
+      --dark-surface-0: #293548;       /* Adjusted to be less dark */
+      --dark-surface-50: #334155;
+      --dark-surface-100: #475569;
+      --dark-surface-200: #64748B;
+      --dark-surface-300: #94A3B8;
+      --dark-surface-400: #CBD5E1;
+      --dark-surface-500: #E2E8F0;
+      --dark-text-color: #F1F5F9;
+      --dark-text-color-secondary: #CBD5E1;
+      
+      /* Set default (light) theme */
+      --primary-color: var(--light-primary-color);
+      --primary-color-hover: var(--light-primary-color-hover);
+      --primary-color-text: var(--light-primary-color-text);
+      --surface-ground: var(--light-surface-ground);
+      --surface-0: var(--light-surface-0);
+      --surface-50: var(--light-surface-50);
+      --surface-100: var(--light-surface-100);
+      --surface-200: var(--light-surface-200);
+      --surface-300: var(--light-surface-300);
+      --surface-400: var(--light-surface-400);
+      --surface-500: var(--light-surface-500);
+      --text-color: var(--light-text-color);
+      --text-color-secondary: var(--light-text-color-secondary);
+    }
+    
+    /* Dark theme class */
+    .dark-theme {
+      --primary-color: var(--dark-primary-color) !important;
+      --primary-color-hover: var(--dark-primary-color-hover) !important;
+      --primary-color-text: var(--dark-primary-color-text) !important;
+      --surface-ground: var(--dark-surface-ground) !important;
+      --surface-0: var(--dark-surface-0) !important;
+      --surface-50: var(--dark-surface-50) !important;
+      --surface-100: var(--dark-surface-100) !important;
+      --surface-200: var(--dark-surface-200) !important;
+      --surface-300: var(--dark-surface-300) !important;
+      --surface-400: var(--dark-surface-400) !important;
+      --surface-500: var(--dark-surface-500) !important;
+      --text-color: var(--dark-text-color) !important;
+      --text-color-secondary: var(--dark-text-color-secondary) !important;
+      
+      background-color: var(--dark-surface-ground) !important;
+      color: var(--dark-text-color) !important;
+    }
+    
+    /* Force dark theme for specific elements */
+    .dark-theme .header {
+      background-color: var(--dark-surface-0) !important;
+    }
+    
+    .dark-theme .p-component {
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .p-button {
+      background-color: var(--dark-primary-color) !important;
+      color: var(--dark-primary-color-text) !important;
+    }
+    
+    .dark-theme a {
+      color: var(--dark-primary-color) !important;
+    }
+    
+    .dark-theme .main-content {
+      background-color: var(--dark-surface-ground) !important;
+    }
+    
+    .dark-theme .nav-link {
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .nav-link.active {
+      color: var(--dark-primary-color) !important;
+      background-color: rgba(96, 165, 250, 0.1) !important;
+    }
+    
+    .dark-theme .theme-toggle-button {
+      background-color: var(--dark-surface-100) !important;
+      color: var(--dark-text-color) !important;
+    }
+    
+    /* Additional UI elements that need styling in dark mode */
+    .dark-theme .p-card {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .p-panel {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .p-panel .p-panel-header {
+      background-color: var(--dark-surface-100) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-panel .p-panel-content {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-tabview .p-tabview-nav {
+      background-color: var(--dark-surface-0) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-tabview .p-tabview-nav li .p-tabview-nav-link {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color-secondary) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-primary-color) !important;
+      border-color: var(--dark-primary-color) !important;
+    }
+    
+    .dark-theme .p-tabview .p-tabview-panels {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-dropdown {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-dropdown-panel {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .p-dropdown-panel .p-dropdown-items .p-dropdown-item:hover {
+      background-color: var(--dark-surface-100) !important;
+    }
+    
+    .dark-theme .p-dropdown-panel .p-dropdown-items .p-dropdown-item.p-highlight {
+      background-color: rgba(96, 165, 250, 0.1) !important;
+      color: var(--dark-primary-color) !important;
+    }
+    
+    .dark-theme .p-inputtext {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-inputtext:enabled:focus {
+      border-color: var(--dark-primary-color) !important;
+      box-shadow: 0 0 0 1px var(--dark-primary-color) !important;
+    }
+    
+    .dark-theme .p-checkbox .p-checkbox-box {
+      background-color: var(--dark-surface-0) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-checkbox .p-checkbox-box.p-highlight {
+      background-color: var(--dark-primary-color) !important;
+      border-color: var(--dark-primary-color) !important;
+    }
+    
+    .dark-theme .p-datatable {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .p-datatable .p-datatable-header,
+    .dark-theme .p-datatable .p-datatable-footer {
+      background-color: var(--dark-surface-100) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-datatable .p-datatable-thead > tr > th {
+      background-color: var(--dark-surface-100) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-datatable .p-datatable-tbody > tr {
+      background-color: var(--dark-surface-0) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-datatable .p-datatable-tbody > tr:nth-child(even) {
+      background-color: var(--dark-surface-50) !important;
+    }
+    
+    .dark-theme .p-datatable .p-datatable-tbody > tr:hover {
+      background-color: var(--dark-surface-100) !important;
+    }
+    
+    .dark-theme .p-datatable .p-datatable-tbody > tr > td {
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-paginator {
+      background-color: var(--dark-surface-100) !important;
+      color: var(--dark-text-color) !important;
+      border-color: var(--dark-surface-200) !important;
+    }
+    
+    .dark-theme .p-paginator .p-paginator-element {
+      color: var(--dark-text-color) !important;
+    }
+    
+    .dark-theme .p-paginator .p-paginator-element.p-highlight {
+      background-color: var(--dark-primary-color) !important;
+      color: var(--dark-primary-color-text) !important;
+    }
+  </style>
+  
+  <!-- Theme initialization script -->
+  <script>
+    // Initialize theme from localStorage
+    (function() {
+      const savedTheme = localStorage.getItem('compliance-classifier-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark-theme');
+        document.body.classList.add('dark-theme');
+      }
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>
   <noscript>Please enable JavaScript to continue using this application.</noscript>
+  
+  <!-- Theme toggle button removed - using only the header component button -->
+  
+  <!-- Global theme toggle function -->
+  <script>
+    // Initialize theme from localStorage
+    (function() {
+      const savedTheme = localStorage.getItem('compliance-classifier-theme');
+      if (savedTheme === 'dark') {
+        document.documentElement.classList.add('dark-theme');
+        document.body.classList.add('dark-theme');
+        
+        // Update direct toggle button
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
+        if (themeIcon) themeIcon.textContent = '🌙';
+        if (themeText) themeText.textContent = 'Dark';
+      }
+    })();
+    
+    // Set up direct toggle button
+    document.addEventListener('DOMContentLoaded', function() {
+      const directToggleBtn = document.getElementById('direct-theme-toggle');
+      if (directToggleBtn) {
+        directToggleBtn.addEventListener('click', function() {
+          // Toggle dark theme class on body and html
+          document.documentElement.classList.toggle('dark-theme');
+          const isDark = document.body.classList.toggle('dark-theme');
+          
+          // Save preference to localStorage
+          localStorage.setItem('compliance-classifier-theme', isDark ? 'dark' : 'light');
+          
+          // Update button UI
+          const themeIcon = document.getElementById('theme-icon');
+          const themeText = document.getElementById('theme-text');
+          if (themeIcon) themeIcon.textContent = isDark ? '🌙' : '☀️';
+          if (themeText) themeText.textContent = isDark ? 'Dark' : 'Light';
+          
+          // Show notification
+          const notification = document.createElement('div');
+          notification.className = 'theme-change-notification' + (isDark ? ' dark' : '');
+          notification.innerHTML = `<span>${isDark ? '🌙' : '☀️'}</span><span>Switched to ${isDark ? 'Dark' : 'Light'} Mode</span>`;
+          notification.style.cssText = `
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background-color: ${isDark ? 'var(--dark-surface-0)' : 'var(--light-surface-0)'};
+            color: ${isDark ? 'var(--dark-text-color)' : 'var(--light-text-color)'};
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border-left: 4px solid ${isDark ? 'var(--dark-primary-color)' : 'var(--light-primary-color)'};
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+          `;
+          document.body.appendChild(notification);
+          
+          // Animate notification
+          setTimeout(() => {
+            notification.style.transform = 'translateY(0)';
+            notification.style.opacity = '1';
+          }, 10);
+          
+          setTimeout(() => {
+            notification.style.transform = 'translateY(-20px)';
+            notification.style.opacity = '0';
+            setTimeout(() => notification.remove(), 300);
+          }, 3000);
+        });
+      }
+    });
+    
+    window.toggleTheme = function() {
+      // Toggle dark theme class on body and html
+      document.documentElement.classList.toggle('dark-theme');
+      const isDark = document.body.classList.toggle('dark-theme');
+      
+      // Save preference to localStorage
+      localStorage.setItem('compliance-classifier-theme', isDark ? 'dark' : 'light');
+      
+      // Show notification
+      const notification = document.createElement('div');
+      notification.className = 'theme-change-notification' + (isDark ? ' dark' : '');
+      notification.innerHTML = `<span>${isDark ? '🌙' : '☀️'}</span><span>Switched to ${isDark ? 'Dark' : 'Light'} Mode</span>`;
+      notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        background-color: ${isDark ? 'var(--dark-surface-0)' : 'var(--light-surface-0)'};
+        color: ${isDark ? 'var(--dark-text-color)' : 'var(--light-text-color)'};
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, ${isDark ? '0.3' : '0.15'});
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 9999;
+        transform: translateY(-20px);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        border-left: 4px solid ${isDark ? 'var(--dark-primary-color)' : 'var(--light-primary-color)'};
+        font-family: 'Inter', sans-serif;
+        font-weight: 500;
+      `;
+      document.body.appendChild(notification);
+      
+      // Animate notification
+      setTimeout(() => {
+        notification.style.transform = 'translateY(0)';
+        notification.style.opacity = '1';
+      }, 10);
+      
+      setTimeout(() => {
+        notification.style.transform = 'translateY(-20px)';
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+      }, 3000);
+      
+      return isDark;
+    };
+  </script>
 </body>
 </html>

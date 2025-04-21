@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -35,13 +35,15 @@ import { TooltipModule } from 'primeng/tooltip';
     TooltipModule
   ]
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent implements OnInit, OnDestroy, AfterViewInit {
+  @ViewChild('themeToggleBtn') themeToggleBtn!: ElementRef;
   isAuthenticated = false;
   username: string | null = null;
   private authSubscription: Subscription | null = null;
   
   // Theme state
   isDarkTheme = false;
+  showThemeNotification = false;
   
   // Menu items
   menuItems = [
@@ -79,16 +81,80 @@ export class HeaderComponent implements OnInit, OnDestroy {
     // Load current AI provider (would typically come from a config service)
     this.loadCurrentProvider();
     
-    // Subscribe to theme changes
-    this.themeService.getTheme().subscribe(theme => {
-      this.isDarkTheme = theme === 'dark';
-    });
+    // Initialize theme from localStorage
+    this.initTheme();
+  }
+  
+  /**
+   * Initialize theme from localStorage or system preference
+   */
+  private initTheme(): void {
+    console.log('HeaderComponent: Initializing theme');
+    
+    try {
+      // Try to get theme from localStorage
+      const savedTheme = localStorage.getItem('compliance-classifier-theme');
+      console.log('HeaderComponent: Saved theme from localStorage:', savedTheme);
+      
+      if (savedTheme === 'dark') {
+        console.log('HeaderComponent: Using dark theme from localStorage');
+        this.isDarkTheme = true;
+        document.body.classList.add('dark-theme');
+        // Force update CSS variables directly
+        document.documentElement.style.setProperty('--primary-color', 'var(--dark-primary-color)');
+        document.documentElement.style.setProperty('--text-color', 'var(--dark-text-color)');
+        document.documentElement.style.setProperty('--surface-ground', 'var(--dark-surface-ground)');
+      } else if (savedTheme === 'light') {
+        console.log('HeaderComponent: Using light theme from localStorage');
+        this.isDarkTheme = false;
+        document.body.classList.remove('dark-theme');
+        // Reset CSS variables to light theme
+        document.documentElement.style.setProperty('--primary-color', 'var(--light-primary-color)');
+        document.documentElement.style.setProperty('--text-color', 'var(--light-text-color)');
+        document.documentElement.style.setProperty('--surface-ground', 'var(--light-surface-ground)');
+      } else {
+        // Check if user prefers dark mode
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        console.log('HeaderComponent: No saved theme, user prefers dark mode:', prefersDark);
+        this.isDarkTheme = prefersDark;
+        
+        if (prefersDark) {
+          document.body.classList.add('dark-theme');
+          // Force update CSS variables directly
+          document.documentElement.style.setProperty('--primary-color', 'var(--dark-primary-color)');
+          document.documentElement.style.setProperty('--text-color', 'var(--dark-text-color)');
+          document.documentElement.style.setProperty('--surface-ground', 'var(--dark-surface-ground)');
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('compliance-classifier-theme', prefersDark ? 'dark' : 'light');
+      }
+      
+      console.log('HeaderComponent: Theme initialized, isDarkTheme =', this.isDarkTheme);
+      console.log('HeaderComponent: Body classes after init:', document.body.className);
+    } catch (error) {
+      console.error('HeaderComponent: Error initializing theme:', error);
+      // Fallback to light theme
+      this.isDarkTheme = false;
+      document.body.classList.remove('dark-theme');
+    }
   }
 
   ngOnDestroy(): void {
     // Unsubscribe to prevent memory leaks
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
+    }
+  }
+  
+  ngAfterViewInit(): void {
+    // Add a direct event listener to the button as a fallback
+    if (this.themeToggleBtn && this.themeToggleBtn.nativeElement) {
+      console.log('HeaderComponent: Adding direct event listener to theme toggle button');
+      this.themeToggleBtn.nativeElement.addEventListener('click', () => {
+        console.log('HeaderComponent: Direct button click detected');
+        this.toggleTheme();
+      });
     }
   }
 
@@ -107,7 +173,39 @@ export class HeaderComponent implements OnInit, OnDestroy {
    * Toggle between light and dark themes
    */
   toggleTheme(): void {
-    this.themeService.toggleTheme();
+    console.log('HeaderComponent: toggleTheme called');
+    
+    // Toggle the isDarkTheme value directly
+    this.isDarkTheme = !this.isDarkTheme;
+    console.log('HeaderComponent: Toggled isDarkTheme to:', this.isDarkTheme);
+    
+    // Apply theme directly to DOM
+    if (this.isDarkTheme) {
+      console.log('HeaderComponent: Adding dark-theme class to body');
+      document.body.classList.add('dark-theme');
+      // Force update CSS variables directly
+      document.documentElement.style.setProperty('--primary-color', 'var(--dark-primary-color)');
+      document.documentElement.style.setProperty('--text-color', 'var(--dark-text-color)');
+      document.documentElement.style.setProperty('--surface-ground', 'var(--dark-surface-ground)');
+    } else {
+      console.log('HeaderComponent: Removing dark-theme class from body');
+      document.body.classList.remove('dark-theme');
+      // Reset CSS variables to light theme
+      document.documentElement.style.setProperty('--primary-color', 'var(--light-primary-color)');
+      document.documentElement.style.setProperty('--text-color', 'var(--light-text-color)');
+      document.documentElement.style.setProperty('--surface-ground', 'var(--light-surface-ground)');
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('compliance-classifier-theme', this.isDarkTheme ? 'dark' : 'light');
+    
+    // Add visual feedback
+    document.body.classList.add('theme-changing');
+    setTimeout(() => {
+      document.body.classList.remove('theme-changing');
+    }, 300);
+    
+    console.log('HeaderComponent: Theme toggled, body classes:', document.body.className);
   }
   
   loadCurrentProvider(): void {

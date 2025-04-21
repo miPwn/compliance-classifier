@@ -5,6 +5,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideServiceWorker } from '@angular/service-worker';
 import { providePrimeNG } from 'primeng/config';
+import { MessageService } from 'primeng/api';
 
 import { routes } from './app.routes';
 import { SecurityInterceptor } from './core/interceptors/security.interceptor';
@@ -53,6 +54,8 @@ export const appConfig: ApplicationConfig = {
       multi: true
     },
     // Register the SelectivePreloadingStrategy provider
-    SelectivePreloadingStrategy
+    SelectivePreloadingStrategy,
+    // Provide MessageService for toast notifications
+    MessageService
   ]
 };

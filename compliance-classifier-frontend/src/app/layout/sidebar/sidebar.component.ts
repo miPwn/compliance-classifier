@@ -28,7 +28,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
     {
       label: 'Batches',
       icon: 'pi pi-folder',
-      route: '/batches'
+      route: '/batches',
+      children: [
+        {
+          label: 'All Batches',
+          icon: 'pi pi-list',
+          route: '/batches'
+        },
+        {
+          label: 'Create Batch',
+          icon: 'pi pi-plus',
+          route: '/batches/create'
+        }
+      ]
     },
     {
       label: 'Documents',
@@ -94,6 +106,10 @@ export class SidebarComponent implements OnInit, OnDestroy {
   }
 
   isActive(route: string): boolean {
+    // Special case for the root batches route to avoid highlighting when on child routes
+    if (route === '/batches' && this.currentRoute !== '/batches') {
+      return false;
+    }
     return this.currentRoute.startsWith(route);
   }
 }

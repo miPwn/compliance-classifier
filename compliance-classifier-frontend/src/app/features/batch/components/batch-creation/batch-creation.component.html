@@ -1,0 +1,215 @@
+<div class="batch-creation-container" [ngClass]="{'dark-theme-container': currentTheme === 'dark'}">
+  <p-toast></p-toast>
+  
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="flex justify-content-between align-items-center">
+        <div class="flex align-items-center">
+          <button pButton pRipple icon="pi pi-arrow-left"
+            class="p-button-text mr-2"
+            (click)="goBack()"
+            pTooltip="Return to Batches">
+          </button>
+          <h2>Create New Batch</h2>
+        </div>
+      </div>
+    </ng-template>
+    
+    <div *ngIf="isLoading" class="flex justify-content-center">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+    
+    <div *ngIf="!isLoading">
+      <div class="grid">
+        <!-- Batch Information Section -->
+        <div class="col-12 md:col-5 lg:col-4">
+          <div class="batch-info-section p-3">
+            <h3>Batch Information</h3>
+            <p class="text-secondary mb-4">Enter the details for your new batch</p>
+            
+            <form [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+              <div class="field">
+                <label for="name" class="block font-medium mb-2">Batch Name *</label>
+                <input id="name" type="text" pInputText
+                  class="w-full"
+                  formControlName="name"
+                  [ngClass]="{'ng-invalid ng-dirty': submitted && f.name.errors}"
+                  [disabled]="createdBatchId !== null">
+                <small *ngIf="submitted && f.name.errors?.required" class="p-error">Batch name is required</small>
+              </div>
+              
+              <div class="field mt-4">
+                <label for="description" class="block font-medium mb-2">Description</label>
+                <textarea id="description" pInputTextarea
+                  class="w-full"
+                  formControlName="description"
+                  rows="3"
+                  [disabled]="createdBatchId !== null">
+                </textarea>
+              </div>
+              
+              <div class="flex justify-content-end mt-4">
+                <button pButton pRipple label="Create Batch"
+                  class="p-button-primary"
+                  type="submit"
+                  [disabled]="isLoading || createdBatchId !== null">
+                </button>
+              </div>
+            </form>
+            
+            <div *ngIf="createdBatchId" class="mt-4 p-3 border-round success-container">
+              <div class="flex align-items-center">
+                <i class="pi pi-check-circle success-icon mr-2" style="font-size: 1.5rem;"></i>
+                <div>
+                  <h4 class="m-0 success-text">Batch Created Successfully</h4>
+                  <p class="m-0 mt-2">You can now upload documents to this batch.</p>
+                </div>
+              </div>
+              <div class="mt-3">
+                <button pButton pRipple label="View Batch Details"
+                  class="p-button-outlined"
+                  icon="pi pi-eye"
+                  (click)="viewBatch()">
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Metadata Form Section -->
+          <div *ngIf="createdBatchId" class="batch-info-section p-3 mt-3">
+            <h3>Document Metadata</h3>
+            <p class="text-secondary mb-4">Add metadata to be applied to all uploaded documents</p>
+            
+            <form [formGroup]="metadataForm">
+              <div class="field">
+                <label for="documentType" class="block font-medium mb-2">Document Type *</label>
+                <input id="documentType" type="text" pInputText
+                  class="w-full"
+                  formControlName="documentType"
+                  [ngClass]="{'ng-invalid ng-dirty': metadataSubmitted && m.documentType.errors}">
+                <small *ngIf="metadataSubmitted && m.documentType.errors?.required" class="p-error">Document type is required</small>
+              </div>
+              
+              <div class="field mt-3">
+                <label for="classification" class="block font-medium mb-2">Classification *</label>
+                <input id="classification" type="text" pInputText
+                  class="w-full"
+                  formControlName="classification"
+                  [ngClass]="{'ng-invalid ng-dirty': metadataSubmitted && m.classification.errors}">
+                <small *ngIf="metadataSubmitted && m.classification.errors?.required" class="p-error">Classification is required</small>
+              </div>
+              
+              <div class="field mt-3">
+                <label for="tags" class="block font-medium mb-2">Tags</label>
+                <input id="tags" type="text" pInputText
+                  class="w-full"
+                  formControlName="tags"
+                  placeholder="Comma separated tags">
+              </div>
+              
+              <div class="field mt-3">
+                <label for="notes" class="block font-medium mb-2">Notes</label>
+                <textarea id="notes" pInputTextarea
+                  class="w-full"
+                  formControlName="notes"
+                  rows="2">
+                </textarea>
+              </div>
+            </form>
+          </div>
+        </div>
+        
+        <!-- File Upload Section -->
+        <div class="col-12 md:col-7 lg:col-8">
+          <div class="file-upload-section p-3">
+            <h3>Upload Documents</h3>
+            <p class="text-secondary mb-4">Add documents to your batch by dragging and dropping files or using the file browser</p>
+            
+            <div class="upload-container"
+              [ngClass]="{'drag-over': dragOver, 'disabled': !createdBatchId && !batchForm.valid}"
+              (dragover)="onDragOver($event)"
+              (dragleave)="onDragLeave($event)"
+              (drop)="onDrop($event)">
+              
+              <p-fileUpload
+                name="documents[]"
+                [multiple]="true"
+                [showUploadButton]="true"
+                [showCancelButton]="true"
+                [fileLimit]="maxFiles"
+                [accept]="acceptedFileTypes"
+                [maxFileSize]="maxFileSize"
+                [customUpload]="true"
+                (uploadHandler)="onUpload($event)"
+                (onSelect)="onFileSelect($event)"
+                (onError)="onError($event)"
+                (onClear)="onClear()"
+                [disabled]="!createdBatchId && !batchForm.valid"
+                chooseLabel="Browse Files"
+                uploadLabel="Upload All"
+                cancelLabel="Clear">
+                <ng-template pTemplate="content">
+                  <div class="upload-instructions text-center p-4" *ngIf="!uploadingFiles && selectedFiles.length === 0">
+                    <i class="pi pi-cloud-upload text-primary" style="font-size: 3rem;"></i>
+                    <h4>Drag and Drop Files Here</h4>
+                    <p>Or click Browse Files to select from your computer</p>
+                    <p class="text-sm text-secondary mt-3">Supported file types: PDF, DOC, DOCX, TXT, RTF</p>
+                    <p class="text-sm text-secondary">Maximum file size: 10MB</p>
+                    <p class="text-sm text-secondary">Maximum files: {{ maxFiles }}</p>
+                  </div>
+                  
+                  <!-- Selected Files Preview -->
+                  <div *ngIf="selectedFiles.length > 0 && !uploadingFiles" class="selected-files-container mt-3">
+                    <div class="flex justify-content-between align-items-center mb-3">
+                      <h5 class="m-0">Selected Files ({{ selectedFiles.length }})</h5>
+                    </div>
+                    
+                    <div class="selected-file-item p-2 mb-2 border-round" *ngFor="let file of selectedFiles">
+                      <div class="flex align-items-center">
+                        <i [class]="getFileIcon(file.name)" class="mr-2" style="font-size: 1.5rem;"></i>
+                        <div class="flex-grow-1">
+                          <div class="font-medium">{{ file.name }}</div>
+                          <div class="text-sm text-secondary">{{ formatFileSize(file.size) }}</div>
+                        </div>
+                        <p-tag [value]="file.name.split('.').pop()?.toUpperCase()" [severity]="'info'" [rounded]="true"></p-tag>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <!-- Upload Progress -->
+                  <div *ngIf="uploadingFiles" class="upload-progress-container mt-3">
+                    <div class="flex justify-content-between align-items-center mb-2">
+                      <h5 class="m-0">Uploading Files ({{ currentFileIndex }} of {{ totalFiles }})</h5>
+                      <button pButton pRipple type="button" icon="pi pi-times"
+                        class="p-button-rounded p-button-text p-button-sm"
+                        (click)="cancelUpload()"
+                        pTooltip="Cancel Upload"></button>
+                    </div>
+                    
+                    <p-progressBar [value]="uploadProgress" [showValue]="true"></p-progressBar>
+                    
+                    <div class="flex justify-content-between mt-2">
+                      <span class="text-sm">
+                        <i class="pi pi-check-circle text-success mr-1"></i> {{ uploadedFiles }} uploaded
+                      </span>
+                      <span class="text-sm" *ngIf="failedFiles > 0">
+                        <i class="pi pi-times-circle text-danger mr-1"></i> {{ failedFiles }} failed
+                      </span>
+                    </div>
+                  </div>
+                </ng-template>
+              </p-fileUpload>
+              
+              <div *ngIf="!createdBatchId && !batchForm.valid" class="upload-overlay">
+                <div class="upload-overlay-content">
+                  <i class="pi pi-info-circle" style="font-size: 2rem;"></i>
+                  <p>Please create a batch first by filling in the required information</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-card>
+</div>

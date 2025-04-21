@@ -71,6 +71,17 @@ For detailed documentation on specific components, see:
 - [Document Parser Service](Documentation/DocumentParserService.md): Detailed documentation for the Document Parser Service
 - [Developer Guide](Documentation/DeveloperGuide.md): Technical details for developers who want to extend the system
 
+## Test Data
+
+The repository includes sample compliance documents for testing and demonstration purposes:
+
+- Located in the [TestData](TestData/) directory
+- Includes various document types (Data Privacy, Financial Reporting, Workplace Conduct, Health Compliance)
+- Contains metadata for classification testing
+- Available in TXT format (can be converted to PDF/DOCX)
+
+See the [TestData README](TestData/README.md) for detailed information on using these sample documents.
+
 ## Error Handling
 
 The application includes comprehensive error handling:

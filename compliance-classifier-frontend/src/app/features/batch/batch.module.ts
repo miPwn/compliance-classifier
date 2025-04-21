@@ -9,10 +9,9 @@ const routes: Routes = [
     path: '',
     component: BatchListComponent
   },
-  // These routes will be implemented later
   {
     path: 'create',
-    loadChildren: () => import('./components/create-batch/create-batch.module').then(m => m.CreateBatchModule)
+    loadChildren: () => import('./components/batch-creation/batch-creation.module').then(m => m.BatchCreationModule)
   },
   {
     path: ':id',

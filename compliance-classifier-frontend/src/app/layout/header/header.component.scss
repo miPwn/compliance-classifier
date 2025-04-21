@@ -88,40 +88,106 @@
   align-items: center;
 }
 
-.theme-toggle-wrapper {
+.theme-toggle-button {
   display: flex;
   align-items: center;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
   background-color: var(--surface-100);
-  transition: background-color 0.2s;
+  border: none;
+  color: var(--text-color);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
   
   &:hover {
     background-color: var(--surface-200);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   .pi {
     margin-right: 0.5rem;
     font-size: 1.1rem;
-    color: var(--text-color);
+    transition: transform 0.5s ease, color 0.3s ease;
   }
   
   .pi-sun {
     color: var(--yellow-500);
+    animation: rotateIn 0.5s ease-out;
   }
   
   .pi-moon {
     color: var(--primary-color);
+    animation: fadeIn 0.5s ease-out;
+  }
+  
+  span {
+    font-size: 0.9rem;
+  }
+  
+  // Add a subtle ripple effect on click
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+  }
+  
+  &:active::after {
+    animation: ripple 0.6s ease-out;
   }
 }
 
-::ng-deep .theme-switch {
-  .p-inputswitch-slider {
-    background-color: var(--surface-200);
+// Animations
+@keyframes rotateIn {
+  0% {
+    transform: rotate(-45deg) scale(0.8);
+    opacity: 0.5;
   }
-  
-  &.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
-    background-color: var(--primary-color);
+  100% {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0) translate(-50%, -50%);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(20, 20) translate(-50%, -50%);
+    opacity: 0;
   }
 }
 
@@ -133,6 +199,54 @@
     
     &:hover {
       box-shadow: 0 0 0 2px var(--primary-100);
+    }
+    
+    /* Theme notification */
+    .theme-notification {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      background-color: var(--surface-0);
+      color: var(--text-color);
+      padding: 12px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 1100;
+      transform: translateY(-20px);
+      opacity: 0;
+      visibility: hidden;
+      transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+      border-left: 4px solid var(--primary-color);
+      
+      &.show {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+      
+      &.dark {
+        background-color: var(--dark-surface-100);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      
+      i {
+        font-size: 1.2rem;
+        
+        &.pi-sun {
+          color: var(--yellow-500);
+        }
+        
+        &.pi-moon {
+          color: var(--primary-color);
+        }
+      }
+      
+      span {
+        font-weight: 500;
+      }
     }
   }
 }

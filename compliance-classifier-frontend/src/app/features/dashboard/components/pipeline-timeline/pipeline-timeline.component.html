@@ -6,18 +6,19 @@
         Real-Time Processing Pipeline
       </h3>
       <div class="refresh-controls flex align-items-center">
-        <button pButton pRipple
-          [class]="autoRefresh ? 'p-button-success' : 'p-button-secondary'"
-          [icon]="autoRefresh ? 'pi pi-check' : 'pi pi-times'"
-          (click)="toggleAutoRefresh()"
-          pTooltip="Toggle auto-refresh">
+        <button
+          class="header-button"
+          [ngClass]="{'refresh-active': autoRefresh}"
+          (click)="toggleAutoRefresh()">
+          <i [class]="autoRefresh ? 'pi pi-check' : 'pi pi-times'"></i>
+          <span>Auto-refresh: {{ autoRefresh ? 'ON' : 'OFF' }}</span>
         </button>
-        <span class="ml-2 mr-3">Auto-refresh: {{ autoRefresh ? 'ON' : 'OFF' }}</span>
-        <button pButton pRipple icon="pi pi-refresh"
-          class="p-button-rounded p-button-text"
+        <button
+          class="header-button ml-2"
           (click)="refresh()"
-          [disabled]="isLoading"
-          pTooltip="Refresh data">
+          [disabled]="isLoading">
+          <i class="pi pi-refresh"></i>
+          <span>Refresh</span>
         </button>
       </div>
     </div>

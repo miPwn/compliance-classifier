@@ -130,33 +130,51 @@
 
 /* Dark Theme Class */
 .dark-theme {
-  --primary-color: var(--dark-primary-color);
-  --primary-color-hover: var(--dark-primary-color-hover);
-  --primary-color-text: var(--dark-primary-color-text);
-  --primary-50: var(--dark-primary-50);
-  --primary-100: var(--dark-primary-100);
+  --primary-color: var(--dark-primary-color) !important;
+  --primary-color-hover: var(--dark-primary-color-hover) !important;
+  --primary-color-text: var(--dark-primary-color-text) !important;
+  --primary-50: var(--dark-primary-50) !important;
+  --primary-100: var(--dark-primary-100) !important;
   
-  --surface-0: var(--dark-surface-0);
-  --surface-50: var(--dark-surface-50);
-  --surface-100: var(--dark-surface-100);
-  --surface-200: var(--dark-surface-200);
-  --surface-300: var(--dark-surface-300);
-  --surface-400: var(--dark-surface-400);
-  --surface-500: var(--dark-surface-500);
-  --surface-ground: var(--dark-surface-ground);
-  --surface-card: var(--dark-surface-card);
-  --surface-border: var(--dark-surface-border);
-  --surface-hover: var(--dark-surface-hover);
+  --surface-0: var(--dark-surface-0) !important;
+  --surface-50: var(--dark-surface-50) !important;
+  --surface-100: var(--dark-surface-100) !important;
+  --surface-200: var(--dark-surface-200) !important;
+  --surface-300: var(--dark-surface-300) !important;
+  --surface-400: var(--dark-surface-400) !important;
+  --surface-500: var(--dark-surface-500) !important;
+  --surface-ground: var(--dark-surface-ground) !important;
+  --surface-card: var(--dark-surface-card) !important;
+  --surface-border: var(--dark-surface-border) !important;
+  --surface-hover: var(--dark-surface-hover) !important;
   
-  --text-color: var(--dark-text-color);
-  --text-color-secondary: var(--dark-text-color-secondary);
+  --text-color: var(--dark-text-color) !important;
+  --text-color-secondary: var(--dark-text-color-secondary) !important;
   
-  --green-100: var(--dark-green-100);
-  --green-500: var(--dark-green-500);
-  --yellow-100: var(--dark-yellow-100);
-  --yellow-500: var(--dark-yellow-500);
-  --red-100: var(--dark-red-100);
-  --red-500: var(--dark-red-500);
-  --blue-100: var(--dark-blue-100);
-  --blue-500: var(--dark-blue-500);
+  --green-100: var(--dark-green-100) !important;
+  --green-500: var(--dark-green-500) !important;
+  --yellow-100: var(--dark-yellow-100) !important;
+  --yellow-500: var(--dark-yellow-500) !important;
+  --red-100: var(--dark-red-100) !important;
+  --red-500: var(--dark-red-500) !important;
+  --blue-100: var(--dark-blue-100) !important;
+  --blue-500: var(--dark-blue-500) !important;
+  
+  /* Additional styles for dark theme */
+  background-color: var(--dark-surface-ground) !important;
+  color: var(--dark-text-color) !important;
+}
+
+/* Force dark theme for specific elements */
+.dark-theme .p-component {
+  color: var(--dark-text-color) !important;
+}
+
+.dark-theme .p-button {
+  background-color: var(--dark-primary-color) !important;
+  color: var(--dark-primary-color-text) !important;
+}
+
+.dark-theme a {
+  color: var(--dark-primary-color) !important;
 }
