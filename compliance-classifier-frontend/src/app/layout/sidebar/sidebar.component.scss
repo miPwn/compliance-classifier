@@ -1,0 +1,138 @@
+.sidebar {
+  position: fixed;
+  top: 60px; // Header height
+  left: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: var(--surface-0);
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  z-index: 900;
+  
+  &.collapsed {
+    width: 60px;
+  }
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  border-bottom: 1px solid var(--surface-200);
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  color: var(--text-color-secondary);
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: var(--surface-100);
+  }
+}
+
+.sidebar-content {
+  padding: 1rem 0;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-item {
+  margin-bottom: 0.5rem;
+}
+
+.menu-link {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+  
+  &:hover {
+    background-color: var(--surface-100);
+  }
+}
+
+.menu-icon {
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  width: 20px;
+  text-align: center;
+}
+
+.menu-item.active {
+  .menu-link {
+    color: var(--primary-color);
+    background-color: var(--primary-50);
+    border-left: 3px solid var(--primary-color);
+  }
+}
+
+.submenu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0 0.5rem 2.2rem;
+}
+
+.submenu-item {
+  margin-bottom: 0.25rem;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background-color 0.2s, color 0.2s;
+  border-radius: 4px;
+  
+  &:hover {
+    background-color: var(--surface-100);
+  }
+}
+
+.submenu-icon {
+  font-size: 1rem;
+  margin-right: 0.75rem;
+  width: 16px;
+  text-align: center;
+}
+
+.submenu-item.active {
+  .submenu-link {
+    color: var(--primary-color);
+    background-color: var(--primary-50);
+  }
+}
+
+// Collapsed state styles
+.sidebar.collapsed {
+  .menu-label,
+  .submenu-list {
+    display: none;
+  }
+  
+  .menu-link {
+    justify-content: center;
+    padding: 0.75rem 0;
+  }
+  
+  .menu-icon {
+    margin-right: 0;
+  }
+}

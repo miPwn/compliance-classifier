@@ -1,0 +1,73 @@
+<div class="batch-list-container">
+  <div class="batch-list-header">
+    <h1>Batches</h1>
+    <div class="actions">
+      <button pButton pRipple label="Create New Batch" icon="pi pi-plus" class="p-button-primary" (click)="createNewBatch()"></button>
+    </div>
+  </div>
+  
+  <div class="batch-list-filters">
+    <div class="filter-item">
+      <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" 
+                  placeholder="Filter by Status" (onChange)="onFilterChange()"
+                  [showClear]="true"></p-dropdown>
+    </div>
+  </div>
+  
+  <p-table [value]="batches" [paginator]="true" [rows]="pageSize" 
+           [totalRecords]="totalRecords" [loading]="loading"
+           [rowsPerPageOptions]="[5, 10, 25, 50]"
+           [lazy]="true" (onPage)="onPageChange($event)" (onSort)="onSortChange($event)"
+           [sortField]="sortField" [sortOrder]="sortOrder"
+           styleClass="p-datatable-striped">
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="batchId">Batch ID <p-sortIcon field="batchId"></p-sortIcon></th>
+        <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="uploadDate">Upload Date <p-sortIcon field="uploadDate"></p-sortIcon></th>
+        <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+        <th>Progress</th>
+        <th>Actions</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-batch>
+      <tr>
+        <td>{{ batch.batchId }}</td>
+        <td>{{ batch.name }}</td>
+        <td>{{ batch.uploadDate | date:'medium' }}</td>
+        <td>
+          <span class="status-badge" [ngClass]="'status-' + batch.status.toLowerCase()">
+            {{ batch.status }}
+          </span>
+        </td>
+        <td>
+          <div class="progress-container">
+            <p-progressBar [value]="(batch.processedDocuments / batch.totalDocuments) * 100" 
+                          [showValue]="false"></p-progressBar>
+            <span class="progress-text">{{ batch.processedDocuments }} / {{ batch.totalDocuments }}</span>
+          </div>
+        </td>
+        <td>
+          <div class="action-buttons">
+            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text" 
+                    (click)="viewBatchDetails(batch.batchId)" pTooltip="View Details"></button>
+            <button pButton pRipple icon="pi pi-upload" class="p-button-rounded p-button-text" 
+                    [routerLink]="['/batches', batch.batchId, 'upload']" pTooltip="Upload Documents"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6" class="empty-message">
+          <div class="empty-state">
+            <i class="pi pi-folder-open empty-icon"></i>
+            <p>No batches found</p>
+            <button pButton pRipple label="Create New Batch" icon="pi pi-plus" 
+                    class="p-button-outlined" (click)="createNewBatch()"></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -1,0 +1,130 @@
+<div class="batch-details-container">
+  <div class="batch-details-header">
+    <div class="header-left">
+      <h1>Batch Details</h1>
+      <div class="batch-info" *ngIf="batch">
+        <span class="batch-name">{{ batch.name }}</span>
+        <span class="status-badge" [ngClass]="'status-' + batch.status.toLowerCase()">
+          {{ batch.status }}
+        </span>
+      </div>
+    </div>
+    
+    <div class="header-actions">
+      <button pButton pRipple type="button" icon="pi pi-upload" label="Upload Documents" 
+              class="p-button-primary" (click)="uploadMoreDocuments()"></button>
+      <button pButton pRipple type="button" icon="pi pi-file-pdf" label="Generate Report" 
+              class="p-button-secondary" (click)="generateBatchReport()"></button>
+      <button pButton pRipple type="button" icon="pi pi-trash" 
+              class="p-button-danger p-button-outlined" (click)="deleteBatch()"></button>
+    </div>
+  </div>
+  
+  <div class="batch-summary" *ngIf="batch">
+    <p-card>
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">Batch ID</div>
+          <div class="summary-value">{{ batch.batchId }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Upload Date</div>
+          <div class="summary-value">{{ batch.uploadDate | date:'medium' }}</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Status</div>
+          <div class="summary-value">
+            <span class="status-badge" [ngClass]="'status-' + batch.status.toLowerCase()">
+              {{ batch.status }}
+            </span>
+          </div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Progress</div>
+          <div class="summary-value">
+            <div class="progress-container">
+              <p-progressBar [value]="(batch.processedDocuments / batch.totalDocuments) * 100" 
+                            [showValue]="false"></p-progressBar>
+              <span class="progress-text">{{ batch.processedDocuments }} / {{ batch.totalDocuments }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+  
+  <div class="documents-section">
+    <div class="section-header">
+      <h2>Documents</h2>
+      <div class="filter-container">
+        <p-dropdown [options]="statusOptions" [(ngModel)]="filterStatus" 
+                    placeholder="Filter by Status" (onChange)="onFilterChange()"
+                    [showClear]="true"></p-dropdown>
+      </div>
+    </div>
+    
+    <p-table [value]="documents" [paginator]="true" [rows]="pageSize" 
+             [totalRecords]="totalRecords" [loading]="loading"
+             [rowsPerPageOptions]="[5, 10, 25, 50]"
+             [lazy]="true" (onPage)="onPageChange($event)" (onSort)="onSortChange($event)"
+             [sortField]="sortField" [sortOrder]="sortOrder"
+             styleClass="p-datatable-striped">
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="documentId">Document ID <p-sortIcon field="documentId"></p-sortIcon></th>
+          <th pSortableColumn="fileName">File Name <p-sortIcon field="fileName"></p-sortIcon></th>
+          <th pSortableColumn="fileType">Type <p-sortIcon field="fileType"></p-sortIcon></th>
+          <th pSortableColumn="fileSize">Size <p-sortIcon field="fileSize"></p-sortIcon></th>
+          <th pSortableColumn="uploadDate">Upload Date <p-sortIcon field="uploadDate"></p-sortIcon></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+          <th *ngIf="documents.some(d => d.classification)">Classification</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-document>
+        <tr>
+          <td>{{ document.documentId }}</td>
+          <td>{{ document.fileName }}</td>
+          <td>{{ document.fileType }}</td>
+          <td>{{ document.fileSize | number }} bytes</td>
+          <td>{{ document.uploadDate | date:'short' }}</td>
+          <td>
+            <span class="status-badge" [ngClass]="'status-' + document.status.toLowerCase()">
+              {{ document.status }}
+            </span>
+          </td>
+          <td *ngIf="documents.some(d => d.classification)">
+            <div *ngIf="document.classification" class="classification-info">
+              <span class="category-badge">{{ document.classification.category }}</span>
+              <span class="risk-badge" [ngClass]="'risk-' + document.classification.riskLevel.toLowerCase()">
+                {{ document.classification.riskLevel }} Risk
+              </span>
+              <span class="confidence-score">
+                {{ document.classification.confidenceScore | percent }} confidence
+              </span>
+            </div>
+            <span *ngIf="!document.classification">-</span>
+          </td>
+          <td>
+            <button pButton pRipple icon="pi pi-eye" class="p-button-rounded p-button-text" 
+                    (click)="viewDocumentDetails(document.documentId)" pTooltip="View Details"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="8" class="empty-message">
+            <div class="empty-state">
+              <i class="pi pi-file-o empty-icon"></i>
+              <p>No documents found in this batch</p>
+              <button pButton pRipple label="Upload Documents" icon="pi pi-upload" 
+                      class="p-button-outlined" (click)="uploadMoreDocuments()"></button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>

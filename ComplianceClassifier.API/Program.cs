@@ -7,6 +7,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
+// Add CORS services
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularApp", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Register infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
@@ -20,6 +31,9 @@ if (app.Environment.IsDevelopment())
 
 // Comment out HTTPS redirection to avoid the warning
 // app.UseHttpsRedirection();
+
+// Use CORS middleware
+app.UseCors("AllowAngularApp");
 
 app.UseAuthorization();
 

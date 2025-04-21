@@ -1,0 +1,33 @@
+<div class="create-batch-container">
+  <div class="create-batch-header">
+    <h1>Create New Batch</h1>
+  </div>
+  
+  <p-card>
+    <form [formGroup]="batchForm" (ngSubmit)="onSubmit()">
+      <div class="form-field">
+        <label for="name">Batch Name <span class="required">*</span></label>
+        <input id="name" type="text" pInputText formControlName="name" 
+               [ngClass]="{'ng-invalid ng-dirty': batchForm.get('name')?.invalid && batchForm.get('name')?.touched}">
+        <small *ngIf="batchForm.get('name')?.invalid && batchForm.get('name')?.touched" class="p-error">
+          <span *ngIf="batchForm.get('name')?.errors?.['required']">Batch name is required.</span>
+          <span *ngIf="batchForm.get('name')?.errors?.['maxlength']">Batch name cannot exceed 100 characters.</span>
+        </small>
+      </div>
+      
+      <div class="form-field">
+        <label for="description">Description</label>
+        <textarea id="description" pInputTextarea formControlName="description" rows="5"
+                  [ngClass]="{'ng-invalid ng-dirty': batchForm.get('description')?.invalid && batchForm.get('description')?.touched}"></textarea>
+        <small *ngIf="batchForm.get('description')?.invalid && batchForm.get('description')?.touched" class="p-error">
+          <span *ngIf="batchForm.get('description')?.errors?.['maxlength']">Description cannot exceed 500 characters.</span>
+        </small>
+      </div>
+      
+      <div class="form-actions">
+        <button pButton pRipple type="button" label="Cancel" class="p-button-outlined" (click)="cancel()" [disabled]="submitting"></button>
+        <button pButton pRipple type="submit" label="Create Batch" icon="pi pi-check" [loading]="submitting"></button>
+      </div>
+    </form>
+  </p-card>
+</div>

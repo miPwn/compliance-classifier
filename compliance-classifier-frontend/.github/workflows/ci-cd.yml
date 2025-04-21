@@ -1,0 +1,313 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'compliance-classifier-frontend/**'
+      - '.github/workflows/ci-cd.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'compliance-classifier-frontend/**'
+      - '.github/workflows/ci-cd.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  DOCKER_REGISTRY: ghcr.io/${{ github.repository_owner }}
+  KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./compliance-classifier-frontend
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Lint
+      run: npm run lint
+      
+    - name: Run unit tests
+      run: npm run test:coverage
+      
+    - name: Upload test coverage
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-coverage
+        path: compliance-classifier-frontend/coverage
+      
+    - name: Build
+      run: npm run build
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-artifacts
+        path: compliance-classifier-frontend/dist
+
+  security-scan:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    defaults:
+      run:
+        working-directory: ./compliance-classifier-frontend
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run npm audit
+      run: npm audit --production
+      
+    - name: Run OWASP Dependency-Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'compliance-classifier-frontend'
+        path: 'compliance-classifier-frontend'
+        format: 'HTML'
+        out: 'reports'
+        
+    - name: Upload dependency check report
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-check-report
+        path: reports
+
+  e2e-tests:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./compliance-classifier-frontend
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        cache-dependency-path: '**/package-lock.json'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run E2E tests
+      run: npm run e2e:headless
+      
+    - name: Upload E2E test artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: e2e-test-artifacts
+        path: compliance-classifier-frontend/cypress/videos
+
+  build-docker-image:
+    needs: [build-and-test, security-scan, e2e-tests]
+    runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.set-image-tag.outputs.image_tag }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+      
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Set image tag
+      id: set-image-tag
+      run: |
+        if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+          echo "image_tag=production-$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+        else
+          echo "image_tag=staging-$(date +'%Y%m%d%H%M%S')-${GITHUB_SHA::8}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: ./compliance-classifier-frontend
+        push: true
+        tags: |
+          ${{ env.DOCKER_REGISTRY }}/compliance-classifier-frontend:${{ steps.set-image-tag.outputs.image_tag }}
+          ${{ env.DOCKER_REGISTRY }}/compliance-classifier-frontend:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  deploy-staging:
+    if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    needs: [build-docker-image]
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.compliance-classifier.example.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      
+    - name: Install kustomize
+      uses: imranismail/setup-kustomize@v2
+      
+    - name: Set up kubeconfig
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ env.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+        
+    - name: Update kustomization.yaml with new image tag
+      run: |
+        cd compliance-classifier-frontend/k8s/overlays/staging
+        kustomize edit set image ${DOCKER_REGISTRY}/compliance-classifier-frontend=${DOCKER_REGISTRY}/compliance-classifier-frontend:${{ needs.build-docker-image.outputs.image_tag }}
+        
+    - name: Deploy to staging
+      run: |
+        kubectl apply -k compliance-classifier-frontend/k8s/overlays/staging
+        kubectl rollout status deployment/frontend -n compliance-classifier-staging --timeout=300s
+        
+    - name: Verify deployment
+      run: |
+        kubectl get pods -n compliance-classifier-staging -l app=frontend
+        
+    - name: Notify on success
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: deployments
+        SLACK_COLOR: good
+        SLACK_TITLE: Staging Deployment Successful
+        SLACK_MESSAGE: 'Frontend deployed to staging environment with tag: ${{ needs.build-docker-image.outputs.image_tag }}'
+        SLACK_FOOTER: 'Compliance Classifier Frontend'
+
+  deploy-production:
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+    needs: [build-docker-image]
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://compliance-classifier.example.com
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      
+    - name: Install kustomize
+      uses: imranismail/setup-kustomize@v2
+      
+    - name: Set up kubeconfig
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ env.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+        
+    - name: Update kustomization.yaml with new image tag
+      run: |
+        cd compliance-classifier-frontend/k8s/overlays/production
+        kustomize edit set image ${DOCKER_REGISTRY}/compliance-classifier-frontend=${DOCKER_REGISTRY}/compliance-classifier-frontend:${{ needs.build-docker-image.outputs.image_tag }}
+        
+    - name: Deploy to production
+      run: |
+        kubectl apply -k compliance-classifier-frontend/k8s/overlays/production
+        kubectl rollout status deployment/frontend -n compliance-classifier-production --timeout=300s
+        
+    - name: Verify deployment
+      run: |
+        kubectl get pods -n compliance-classifier-production -l app=frontend
+        
+    - name: Notify on success
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: deployments
+        SLACK_COLOR: good
+        SLACK_TITLE: Production Deployment Successful
+        SLACK_MESSAGE: 'Frontend deployed to production environment with tag: ${{ needs.build-docker-image.outputs.image_tag }}'
+        SLACK_FOOTER: 'Compliance Classifier Frontend'
+
+  rollback-on-failure:
+    if: failure() && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.event_name == 'workflow_dispatch')
+    needs: [deploy-staging, deploy-production]
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v3
+      
+    - name: Set up kubeconfig
+      run: |
+        mkdir -p $HOME/.kube
+        echo "${{ env.KUBE_CONFIG_DATA }}" | base64 -d > $HOME/.kube/config
+        chmod 600 $HOME/.kube/config
+        
+    - name: Rollback staging deployment
+      if: github.ref == 'refs/heads/develop' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+      run: |
+        kubectl rollout undo deployment/frontend -n compliance-classifier-staging
+        kubectl rollout status deployment/frontend -n compliance-classifier-staging --timeout=300s
+        
+    - name: Rollback production deployment
+      if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production')
+      run: |
+        kubectl rollout undo deployment/frontend -n compliance-classifier-production
+        kubectl rollout status deployment/frontend -n compliance-classifier-production --timeout=300s
+        
+    - name: Notify on rollback
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: deployments
+        SLACK_COLOR: danger
+        SLACK_TITLE: Deployment Rollback
+        SLACK_MESSAGE: 'Deployment failed and was rolled back to the previous version'
+        SLACK_FOOTER: 'Compliance Classifier Frontend'

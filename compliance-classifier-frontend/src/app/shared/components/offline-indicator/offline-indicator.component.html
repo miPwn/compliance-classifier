@@ -1,0 +1,31 @@
+<div class="offline-indicator" *ngIf="offlineFeatureEnabled">
+  <!-- Online/Offline Status -->
+  <div class="status-indicator" [ngClass]="{'online': isOnline, 'offline': !isOnline}">
+    <i class="pi" [ngClass]="{'pi-wifi': isOnline, 'pi-ban': !isOnline}"></i>
+    <span class="status-text">{{ isOnline ? 'Online' : 'Offline' }}</span>
+  </div>
+  
+  <!-- Pending Operations Badge -->
+  <div class="pending-operations" *ngIf="pendingOperations > 0">
+    <p-badge [value]="pendingOperations.toString()" severity="warning"></p-badge>
+    <span class="pending-text">pending {{ pendingOperations === 1 ? 'operation' : 'operations' }}</span>
+    
+    <!-- Sync Button (only show when online) -->
+    <button 
+      pButton 
+      pRipple 
+      type="button" 
+      icon="pi pi-sync" 
+      class="p-button-rounded p-button-text p-button-sm" 
+      [disabled]="!isOnline"
+      (click)="syncPendingOperations()"
+      pTooltip="Sync pending operations"
+      tooltipPosition="bottom">
+    </button>
+  </div>
+  
+  <!-- Offline Mode Message -->
+  <div class="offline-message" *ngIf="!isOnline">
+    <p-message severity="info" text="Working in offline mode. Changes will sync when you're back online." [closable]="false"></p-message>
+  </div>
+</div>

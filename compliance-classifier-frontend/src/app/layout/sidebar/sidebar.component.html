@@ -1,0 +1,27 @@
+<aside class="sidebar" [ngClass]="{'collapsed': isCollapsed}" *ngIf="isAuthenticated">
+  <div class="sidebar-header">
+    <button class="toggle-button" (click)="toggleSidebar()">
+      <i class="pi" [ngClass]="isCollapsed ? 'pi-angle-right' : 'pi-angle-left'"></i>
+    </button>
+  </div>
+  
+  <div class="sidebar-content">
+    <ul class="menu-list">
+      <li *ngFor="let item of menuItems" class="menu-item" [ngClass]="{'active': isActive(item.route)}">
+        <a [routerLink]="item.route" class="menu-link">
+          <i class="menu-icon" [ngClass]="item.icon"></i>
+          <span class="menu-label" *ngIf="!isCollapsed">{{ item.label }}</span>
+        </a>
+        
+        <ul *ngIf="item.children && !isCollapsed" class="submenu-list">
+          <li *ngFor="let child of item.children" class="submenu-item" [ngClass]="{'active': isActive(child.route)}">
+            <a [routerLink]="child.route" class="submenu-link">
+              <i class="submenu-icon" [ngClass]="child.icon"></i>
+              <span class="submenu-label">{{ child.label }}</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</aside>

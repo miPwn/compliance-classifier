@@ -1,0 +1,148 @@
+.document-upload-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.document-upload-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #495057;
+  }
+}
+
+.batch-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.5rem;
+  
+  .batch-label {
+    font-weight: 600;
+    color: #6c757d;
+  }
+  
+  .batch-name {
+    color: #495057;
+  }
+}
+
+.upload-section {
+  margin-bottom: 1.5rem;
+  
+  ::ng-deep .p-fileupload {
+    .p-fileupload-buttonbar {
+      background-color: transparent;
+      border: none;
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    
+    .p-fileupload-content {
+      border: 2px dashed #dee2e6;
+      background-color: #f8f9fa;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        border-color: #adb5bd;
+        background-color: #e9ecef;
+      }
+    }
+  }
+}
+
+.upload-instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  
+  .upload-icon {
+    font-size: 3rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    margin: 0 0 0.5rem 0;
+    color: #495057;
+  }
+  
+  p {
+    margin: 0 0 1.5rem 0;
+    color: #6c757d;
+  }
+  
+  .upload-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    
+    small {
+      color: #6c757d;
+    }
+  }
+}
+
+.selected-files {
+  margin-bottom: 1.5rem;
+  
+  .files-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    
+    h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #495057;
+    }
+  }
+}
+
+.upload-progress {
+  margin-bottom: 1.5rem;
+  
+  .progress-label {
+    display: block;
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+}
+
+.upload-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .document-upload-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .upload-actions {
+    flex-direction: column-reverse;
+    
+    button {
+      width: 100%;
+    }
+  }
+}

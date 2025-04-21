@@ -1,0 +1,82 @@
+<div class="batch-list-container">
+  <p-toast></p-toast>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+  
+  <p-card styleClass="mb-4">
+    <ng-template pTemplate="header">
+      <div class="p-d-flex p-jc-between p-ai-center">
+        <h2>Batches</h2>
+        <p-button label="Create New Batch" icon="pi pi-plus" (onClick)="createBatch()"></p-button>
+      </div>
+    </ng-template>
+    
+    <p-progressBar *ngIf="isLoading" mode="indeterminate"></p-progressBar>
+    
+    <div *ngIf="error" class="error-message p-message p-message-error p-mb-3">
+      <span class="p-message-text">{{ error }}</span>
+    </div>
+    
+    <p-table 
+      [value]="batches" 
+      [paginator]="true" 
+      [rows]="10" 
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} batches"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [globalFilterFields]="['name']"
+      styleClass="p-datatable-sm"
+      *ngIf="!isLoading && !error">
+      
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex p-jc-between p-ai-center">
+          <span>Manage Batches</span>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" placeholder="Search..." />
+          </span>
+        </div>
+      </ng-template>
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="createdAt">Created <p-sortIcon field="createdAt"></p-sortIcon></th>
+          <th pSortableColumn="documentCount">Documents <p-sortIcon field="documentCount"></p-sortIcon></th>
+          <th style="width: 150px">Actions</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-batch>
+        <tr>
+          <td>{{ batch.name }}</td>
+          <td>{{ batch.createdAt | date:'medium' }}</td>
+          <td>{{ batch.documentCount }}</td>
+          <td>
+            <div class="p-d-flex p-jc-start">
+              <p-button 
+                icon="pi pi-eye" 
+                styleClass="p-button-rounded p-button-text p-mr-2"
+                pTooltip="View Details"
+                (onClick)="viewBatch(batch.id)">
+              </p-button>
+              <p-button 
+                icon="pi pi-trash" 
+                styleClass="p-button-rounded p-button-text p-button-danger"
+                pTooltip="Delete Batch"
+                (onClick)="confirmDelete(batch.id)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="4" class="p-text-center">
+            No batches found. Create a new batch to get started.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

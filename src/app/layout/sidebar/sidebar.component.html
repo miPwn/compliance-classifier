@@ -1,0 +1,18 @@
+<div class="sidebar-container" [ngClass]="{'collapsed': !visible}">
+  <div class="sidebar-toggle">
+    <button pButton pRipple type="button" 
+            icon="pi pi-bars" 
+            class="p-button-rounded p-button-text" 
+            (click)="toggleSidebar()"></button>
+  </div>
+  
+  <div class="sidebar-content" *ngIf="visible">
+    <p-panelMenu [model]="menuItems" [style]="{'width':'100%'}" [multiple]="false"></p-panelMenu>
+  </div>
+  
+  <div class="sidebar-footer" *ngIf="visible">
+    <div class="version">
+      <small>Version 1.0.0</small>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,230 @@
+// Accessibility Styles
+
+// High Contrast Mode
+.high-contrast-mode {
+  // Text and background colors
+  color: #ffffff !important;
+  background-color: #000000 !important;
+  
+  // Links
+  a, .p-button-link, .p-button-text {
+    color: #ffff00 !important;
+    text-decoration: underline !important;
+    
+    &:hover, &:focus {
+      color: #ffff99 !important;
+      text-decoration: underline !important;
+    }
+  }
+  
+  // Buttons
+  .p-button:not(.p-button-link):not(.p-button-text) {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    
+    &:hover, &:focus {
+      background-color: #ffff00 !important;
+      color: #000000 !important;
+      border-color: #ffff00 !important;
+    }
+  }
+  
+  // Form controls
+  .p-inputtext, .p-dropdown, .p-multiselect, .p-calendar {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    
+    &:focus {
+      border-color: #ffff00 !important;
+      box-shadow: 0 0 0 2px rgba(255, 255, 0, 0.5) !important;
+    }
+  }
+  
+  // Cards and panels
+  .p-card, .p-panel {
+    background-color: #000000 !important;
+    border: 2px solid #ffffff !important;
+    
+    .p-card-header, .p-panel-header {
+      background-color: #333333 !important;
+      color: #ffffff !important;
+      border-bottom: 2px solid #ffffff !important;
+    }
+  }
+  
+  // Tables
+  .p-datatable {
+    .p-datatable-header, .p-datatable-footer {
+      background-color: #333333 !important;
+      color: #ffffff !important;
+      border: 2px solid #ffffff !important;
+    }
+    
+    .p-datatable-thead > tr > th {
+      background-color: #333333 !important;
+      color: #ffffff !important;
+      border: 2px solid #ffffff !important;
+    }
+    
+    .p-datatable-tbody > tr {
+      background-color: #000000 !important;
+      color: #ffffff !important;
+      border: 2px solid #ffffff !important;
+      
+      &:hover {
+        background-color: #333333 !important;
+      }
+    }
+  }
+  
+  // Focus indicators
+  *:focus {
+    outline: 3px solid #ffff00 !important;
+    outline-offset: 2px !important;
+  }
+}
+
+// Large Text Mode
+.large-text-mode {
+  font-size: 125% !important;
+  
+  h1 {
+    font-size: 2.5rem !important;
+  }
+  
+  h2 {
+    font-size: 2rem !important;
+  }
+  
+  h3 {
+    font-size: 1.75rem !important;
+  }
+  
+  h4 {
+    font-size: 1.5rem !important;
+  }
+  
+  p, span, div, button, input, select, textarea {
+    font-size: 1.25rem !important;
+    line-height: 1.5 !important;
+  }
+  
+  // Increase spacing
+  .p-card, .p-panel {
+    .p-card-body, .p-panel-content {
+      padding: 1.5rem !important;
+    }
+  }
+  
+  // Increase form control sizes
+  .p-inputtext, .p-dropdown, .p-multiselect, .p-calendar {
+    height: auto !important;
+    padding: 0.75rem !important;
+  }
+  
+  // Increase button sizes
+  .p-button {
+    padding: 0.75rem 1.5rem !important;
+    
+    .p-button-icon {
+      font-size: 1.25rem !important;
+    }
+  }
+}
+
+// Reduced Motion Mode
+.reduced-motion-mode {
+  // Remove all animations and transitions
+  *, *::before, *::after {
+    animation-duration: 0.001s !important;
+    animation-delay: 0.001s !important;
+    transition-duration: 0.001s !important;
+    transition-delay: 0.001s !important;
+  }
+  
+  // Remove auto-scrolling and smooth scrolling
+  html, body {
+    scroll-behavior: auto !important;
+  }
+  
+  // Disable carousels and sliders auto-play
+  .p-carousel, .p-galleria {
+    .p-carousel-indicators, .p-galleria-indicators {
+      display: none !important;
+    }
+  }
+}
+
+// Screen Reader Optimized Mode
+.screen-reader-optimized {
+  // Increase focus indicators
+  *:focus {
+    outline: 3px solid #2196F3 !important;
+    outline-offset: 2px !important;
+  }
+  
+  // Make skip links visible
+  .skip-link {
+    position: absolute !important;
+    width: auto !important;
+    height: auto !important;
+    clip: auto !important;
+    clip-path: none !important;
+    overflow: visible !important;
+    white-space: normal !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    padding: 1rem !important;
+    z-index: 9999 !important;
+    border: 2px solid #000000 !important;
+    text-decoration: underline !important;
+  }
+  
+  // Ensure proper heading hierarchy
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+  }
+  
+  // Improve form accessibility
+  label {
+    display: block !important;
+    margin-bottom: 0.5rem !important;
+    font-weight: bold !important;
+  }
+  
+  // Improve table accessibility
+  table {
+    caption {
+      display: table-caption !important;
+      text-align: left !important;
+      font-weight: bold !important;
+      margin-bottom: 0.5rem !important;
+    }
+  }
+}
+
+// Utility classes for screen readers
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+}

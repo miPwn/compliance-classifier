@@ -1,0 +1,97 @@
+<div class="document-upload-container">
+  <div class="document-upload-header">
+    <h1>Upload Documents</h1>
+    <div class="batch-info" *ngIf="batch">
+      <span class="batch-label">Batch:</span>
+      <span class="batch-name">{{ batch.name }}</span>
+    </div>
+  </div>
+  
+  <p-card>
+    <div class="upload-section">
+      <p-fileUpload #fileUpload
+                   mode="advanced"
+                   [multiple]="true"
+                   [showUploadButton]="false"
+                   [showCancelButton]="false"
+                   [maxFileSize]="maxFileSize"
+                   [accept]="acceptedFileTypes.join(',')"
+                   (onSelect)="onFileSelect($event)"
+                   (onDrop)="onFileDrop($event)"
+                   [disabled]="uploading"
+                   [styleClass]="uploading ? 'p-disabled' : ''"
+                   chooseLabel="Select Files"
+                   [chooseIcon]="'pi pi-file-o'"
+                   invalidFileSizeMessageSummary="{0}: Invalid file size, "
+                   invalidFileSizeMessageDetail="maximum allowed size is {0}."
+                   invalidFileTypeMessageSummary="{0}: Invalid file type, "
+                   invalidFileTypeMessageDetail="allowed file types: {0}.">
+        <ng-template pTemplate="content">
+          <div class="upload-instructions">
+            <i class="pi pi-cloud-upload upload-icon"></i>
+            <h3>Drag and drop files here</h3>
+            <p>or click to browse</p>
+            <div class="upload-info">
+              <small>Accepted file types: {{ acceptedFileTypes.join(', ') }}</small>
+              <small>Maximum file size: {{ maxFileSize / (1024 * 1024) }}MB</small>
+              <small>Maximum files: {{ maxFiles }}</small>
+            </div>
+          </div>
+        </ng-template>
+      </p-fileUpload>
+    </div>
+    
+    <div class="selected-files" *ngIf="uploadedFiles.length > 0">
+      <div class="files-header">
+        <h3>Selected Files ({{ uploadedFiles.length }})</h3>
+        <button pButton pRipple type="button" icon="pi pi-trash" 
+                class="p-button-text p-button-danger" 
+                (click)="clearFiles()" 
+                [disabled]="uploading"
+                pTooltip="Clear All Files"></button>
+      </div>
+      
+      <p-table [value]="uploadedFiles" [scrollable]="true" scrollHeight="300px">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>File Name</th>
+            <th>Size</th>
+            <th>Type</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-file let-i="rowIndex">
+          <tr>
+            <td>{{ file.name }}</td>
+            <td>{{ file.size | number }} bytes</td>
+            <td>{{ file.type }}</td>
+            <td>
+              <button pButton pRipple type="button" icon="pi pi-times" 
+                      class="p-button-rounded p-button-text p-button-danger" 
+                      (click)="removeFile(i)" 
+                      [disabled]="uploading"
+                      pTooltip="Remove File"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    
+    <div class="upload-progress" *ngIf="uploading">
+      <p-progressBar [value]="uploadProgress" [showValue]="true"></p-progressBar>
+      <span class="progress-label">Uploading {{ uploadedFiles.length }} files...</span>
+    </div>
+    
+    <div class="upload-actions">
+      <button pButton pRipple type="button" label="Cancel" 
+              class="p-button-outlined" 
+              (click)="cancel()" 
+              [disabled]="uploading"></button>
+      <button pButton pRipple type="button" label="Upload Files" 
+              icon="pi pi-upload" 
+              (click)="uploadFiles()" 
+              [disabled]="uploadedFiles.length === 0 || uploading"
+              [loading]="uploading"></button>
+    </div>
+  </p-card>
+</div>

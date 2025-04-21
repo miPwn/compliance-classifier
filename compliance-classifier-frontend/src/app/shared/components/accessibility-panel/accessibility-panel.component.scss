@@ -1,0 +1,173 @@
+.accessibility-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: var(--primary-color-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s, transform 0.2s;
+  
+  &:hover, &:focus {
+    background-color: var(--primary-color-darker, #0056b3);
+    transform: scale(1.05);
+  }
+  
+  &:focus {
+    outline: 3px solid var(--primary-color-lighter, #66b0ff);
+    outline-offset: 2px;
+  }
+  
+  .pi {
+    font-size: 1.5rem;
+  }
+}
+
+:host ::ng-deep {
+  .p-dialog {
+    .p-dialog-header {
+      padding: 1.25rem;
+      background-color: var(--surface-50);
+      border-bottom: 1px solid var(--surface-200);
+      
+      .p-dialog-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+      }
+    }
+    
+    .p-dialog-content {
+      padding: 1.25rem;
+    }
+    
+    .p-dialog-footer {
+      padding: 1rem 1.25rem;
+      border-top: 1px solid var(--surface-200);
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+}
+
+.accessibility-options {
+  .option-item {
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .p-checkbox {
+      margin-right: 0.5rem;
+    }
+    
+    .option-label {
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      
+      .p-checkbox {
+        margin-right: 0.5rem;
+      }
+    }
+    
+    .option-description {
+      margin-top: 0.25rem;
+      margin-left: 1.75rem;
+      font-size: 0.875rem;
+      color: var(--text-color-secondary);
+    }
+  }
+}
+
+// High contrast mode styles
+:host-context(.high-contrast-mode) {
+  .accessibility-toggle {
+    background-color: #ffffff;
+    color: #000000;
+    border: 2px solid #ffffff;
+    
+    &:hover, &:focus {
+      background-color: #ffff00;
+      border-color: #ffff00;
+    }
+    
+    &:focus {
+      outline-color: #ffff00;
+    }
+  }
+  
+  ::ng-deep {
+    .p-dialog {
+      .p-dialog-header {
+        background-color: #000000;
+        border-color: #ffffff;
+        
+        .p-dialog-title {
+          color: #ffffff;
+        }
+      }
+      
+      .p-dialog-content {
+        background-color: #000000;
+        color: #ffffff;
+      }
+      
+      .p-dialog-footer {
+        background-color: #000000;
+        border-color: #ffffff;
+      }
+    }
+  }
+  
+  .accessibility-options {
+    .option-item {
+      .option-description {
+        color: #cccccc;
+      }
+    }
+  }
+}
+
+// Large text mode styles
+:host-context(.large-text-mode) {
+  .accessibility-toggle {
+    width: 60px;
+    height: 60px;
+    
+    .pi {
+      font-size: 1.75rem;
+    }
+  }
+  
+  ::ng-deep {
+    .p-dialog {
+      .p-dialog-header {
+        .p-dialog-title {
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+  
+  .accessibility-options {
+    .option-item {
+      .option-label {
+        font-size: 1.25rem;
+      }
+      
+      .option-description {
+        font-size: 1rem;
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+.document-list-container {
+  padding: 1rem;
+  
+  .error-message {
+    margin-bottom: 1rem;
+  }
+  
+  // Skeleton loading styles
+  .document-skeleton {
+    padding: 1rem;
+    
+    .skeleton-header {
+      height: 2rem;
+      background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    
+    .skeleton-row {
+      display: flex;
+      margin-bottom: 0.5rem;
+      height: 2.5rem;
+      
+      .skeleton-cell {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+        margin-right: 0.5rem;
+        
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+  
+  .loading-text {
+    padding: 1rem;
+    text-align: center;
+    color: #666;
+  }
+  
+  ::ng-deep {
+    .p-datatable {
+      .p-datatable-header {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-width: 1px 0 1px 0;
+        padding: 1rem;
+      }
+      
+      .p-datatable-thead > tr > th {
+        background: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+      }
+      
+      .p-datatable-tbody > tr {
+        &:hover {
+          background: #e9ecef;
+        }
+      }
+      
+      // Virtual scrolling optimizations
+      &.p-datatable-scrollable .p-datatable-wrapper {
+        position: relative;
+      }
+      
+      // Improve scrollbar appearance
+      .p-datatable-wrapper::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      .p-datatable-wrapper::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+      }
+      
+      .p-datatable-wrapper::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+      }
+      
+      // Optimize rendering performance
+      .p-datatable-tbody > tr > td {
+        will-change: transform;
+      }
+    }
+    
+    .p-tag {
+      &.p-tag-success {
+        background-color: #22c55e;
+      }
+      
+      &.p-tag-warning {
+        background-color: #f59e0b;
+      }
+    }
+  }
+}
+
+// Shimmer animation for skeleton loading
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

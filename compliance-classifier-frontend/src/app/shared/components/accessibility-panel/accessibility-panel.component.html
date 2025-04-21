@@ -1,0 +1,86 @@
+<button 
+  pButton 
+  icon="pi pi-universal-access" 
+  class="p-button-rounded p-button-text accessibility-toggle" 
+  (click)="show()"
+  aria-label="Open accessibility settings"
+  pTooltip="Accessibility Settings">
+</button>
+
+<p-dialog 
+  [(visible)]="visible" 
+  [modal]="true" 
+  [draggable]="false" 
+  [resizable]="false"
+  header="Accessibility Settings"
+  [style]="{width: '400px'}"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  [blockScroll]="true"
+  [focusOnShow]="true"
+  ariaLabelledBy="accessibility-dialog-title">
+  
+  <h2 id="accessibility-dialog-title" class="visually-hidden">Accessibility Settings</h2>
+  
+  <div class="accessibility-options">
+    <div class="option-item">
+      <p-checkbox 
+        [binary]="true" 
+        [(ngModel)]="preferences.highContrast" 
+        (onChange)="toggleHighContrast()"
+        inputId="high-contrast">
+      </p-checkbox>
+      <label for="high-contrast" class="option-label">High Contrast Mode</label>
+      <p class="option-description">Increases contrast for better readability</p>
+    </div>
+    
+    <div class="option-item">
+      <p-checkbox 
+        [binary]="true" 
+        [(ngModel)]="preferences.largeText" 
+        (onChange)="toggleLargeText()"
+        inputId="large-text">
+      </p-checkbox>
+      <label for="large-text" class="option-label">Large Text Mode</label>
+      <p class="option-description">Increases text size for better readability</p>
+    </div>
+    
+    <div class="option-item">
+      <p-checkbox 
+        [binary]="true" 
+        [(ngModel)]="preferences.reducedMotion" 
+        (onChange)="toggleReducedMotion()"
+        inputId="reduced-motion">
+      </p-checkbox>
+      <label for="reduced-motion" class="option-label">Reduced Motion Mode</label>
+      <p class="option-description">Reduces or eliminates animations and transitions</p>
+    </div>
+    
+    <div class="option-item">
+      <p-checkbox 
+        [binary]="true" 
+        [(ngModel)]="preferences.screenReaderOptimized" 
+        (onChange)="toggleScreenReaderOptimized()"
+        inputId="screen-reader">
+      </p-checkbox>
+      <label for="screen-reader" class="option-label">Screen Reader Optimized</label>
+      <p class="option-description">Enhances compatibility with screen readers</p>
+    </div>
+  </div>
+  
+  <ng-template pTemplate="footer">
+    <button 
+      pButton 
+      label="Reset to Defaults" 
+      icon="pi pi-refresh" 
+      class="p-button-text" 
+      (click)="resetPreferences()">
+    </button>
+    <button 
+      pButton 
+      label="Close" 
+      icon="pi pi-check" 
+      (click)="hide()">
+    </button>
+  </ng-template>
+</p-dialog>

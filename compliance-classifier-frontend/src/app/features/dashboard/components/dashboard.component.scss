@@ -1,0 +1,38 @@
+.dashboard-container {
+  padding: 1rem;
+}
+
+.batch-card {
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.category-item {
+  height: 100%;
+  transition: transform 0.2s, box-shadow 0.2s;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
+h3 {
+  margin-bottom: 1rem;
+  color: var(--primary-color);
+}
+
+h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+}
+
+p {
+  margin: 0.25rem 0;
+  color: var(--text-color-secondary);
+}

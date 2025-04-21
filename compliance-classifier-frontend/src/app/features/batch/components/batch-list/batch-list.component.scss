@@ -1,0 +1,49 @@
+.batch-list-container {
+  padding: 1rem;
+}
+
+:host ::ng-deep {
+  .p-datatable {
+    .p-datatable-header {
+      background: var(--surface-0);
+      border: 1px solid var(--surface-200);
+      border-bottom: none;
+    }
+    
+    .p-datatable-thead > tr > th {
+      background: var(--surface-0);
+      color: var(--text-color);
+      font-weight: 600;
+    }
+    
+    .p-datatable-tbody > tr {
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: var(--surface-100);
+      }
+    }
+    
+    .p-paginator {
+      background: var(--surface-0);
+      border: 1px solid var(--surface-200);
+      border-top: none;
+    }
+  }
+  
+  .p-button.p-button-text {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+}
+
+h2 {
+  margin: 0;
+  color: var(--primary-color);
+}
+
+.error-message {
+  padding: 0.5rem;
+  border-radius: 4px;
+}

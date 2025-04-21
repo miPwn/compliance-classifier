@@ -1,0 +1,107 @@
+<div class="document-list-container">
+  <p-card styleClass="mb-4">
+    <ng-template pTemplate="header">
+      <div class="p-d-flex p-jc-between p-ai-center">
+        <h2>Documents</h2>
+      </div>
+    </ng-template>
+    
+    <!-- Loading state with skeleton screen -->
+    <div *ngIf="isLoading" class="document-skeleton">
+      <div class="skeleton-header p-mb-3"></div>
+      <div *ngFor="let i of [1,2,3,4,5]" class="skeleton-row">
+        <div class="skeleton-cell" style="width: 30%"></div>
+        <div class="skeleton-cell" style="width: 15%"></div>
+        <div class="skeleton-cell" style="width: 25%"></div>
+        <div class="skeleton-cell" style="width: 15%"></div>
+        <div class="skeleton-cell" style="width: 10%"></div>
+      </div>
+    </div>
+    
+    <div *ngIf="error" class="error-message p-message p-message-error p-mb-3">
+      <span class="p-message-text">{{ error }}</span>
+    </div>
+    
+    <!-- Virtual scroll table for better performance with large datasets -->
+    <p-table
+      [value]="documents"
+      [virtualScroll]="true"
+      [virtualScrollItemSize]="48"
+      [lazy]="true"
+      [lazyLoadOnInit]="true"
+      [rows]="25"
+      [totalRecords]="totalDocuments"
+      [loading]="isLoading"
+      [paginator]="true"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} documents"
+      [rowsPerPageOptions]="[25, 50, 100]"
+      [globalFilterFields]="['filename']"
+      styleClass="p-datatable-sm"
+      [scrollable]="true"
+      scrollHeight="400px"
+      (onLazyLoad)="loadDocuments($event)"
+      *ngIf="!isLoading && !error">
+      
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex p-jc-between p-ai-center">
+          <span>All Documents</span>
+          <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="onSearch($event)" placeholder="Search..." />
+          </span>
+        </div>
+      </ng-template>
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="filename">Filename <p-sortIcon field="filename"></p-sortIcon></th>
+          <th pSortableColumn="status">Status <p-sortIcon field="status"></p-sortIcon></th>
+          <th pSortableColumn="uploadedAt">Uploaded <p-sortIcon field="uploadedAt"></p-sortIcon></th>
+          <th pSortableColumn="fileSize">Size <p-sortIcon field="fileSize"></p-sortIcon></th>
+          <th style="width: 100px">Actions</th>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="body" let-document let-scrollIndex="rowIndex">
+        <tr>
+          <td>{{ document.filename }}</td>
+          <td>
+            <p-tag
+              [value]="document.status"
+              [severity]="document.status === 'Classified' ? 'success' : 'warning'">
+            </p-tag>
+          </td>
+          <td>{{ document.uploadedAt | date:'medium' }}</td>
+          <td>{{ document.fileSize | number }} KB</td>
+          <td>
+            <div class="p-d-flex p-jc-start">
+              <p-button
+                icon="pi pi-eye"
+                styleClass="p-button-rounded p-button-text p-mr-2"
+                pTooltip="View Details"
+                (onClick)="viewDocument(document.id)">
+              </p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="loadingbody">
+        <tr>
+          <td colspan="5">
+            <div class="loading-text">Loading documents...</div>
+          </td>
+        </tr>
+      </ng-template>
+      
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="p-text-center">
+            No documents found.
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>

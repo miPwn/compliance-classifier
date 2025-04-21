@@ -1,0 +1,115 @@
+.batch-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.batch-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    color: #495057;
+  }
+}
+
+.batch-list-filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.filter-item {
+  min-width: 200px;
+}
+
+.status-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-processing {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.status-pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status-error {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 100%;
+  max-width: 200px;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: #6c757d;
+  text-align: center;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  gap: 1rem;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  color: #dee2e6;
+}
+
+.empty-message {
+  text-align: center;
+  color: #6c757d;
+}
+
+@media screen and (max-width: 768px) {
+  .batch-list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .actions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .batch-list-filters {
+    flex-direction: column;
+  }
+  
+  .filter-item {
+    width: 100%;
+  }
+}

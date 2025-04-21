@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-config
+  namespace: compliance-classifier
+data:
+  api-url: "http://api-service:5000"

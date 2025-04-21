@@ -1,0 +1,70 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  display: flex;
+  flex: 1;
+  margin-top: 60px; // Header height
+  margin-bottom: 50px; // Footer height
+}
+
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  transition: margin-left 0.3s ease;
+  position: relative; // For positioning the offline indicator
+  
+  &.with-sidebar {
+    margin-left: 250px; // Sidebar width
+    
+    @media (max-width: 768px) {
+      margin-left: 60px; // Collapsed sidebar width on mobile
+    }
+  }
+}
+
+// Offline indicator container
+.offline-indicator-container {
+  position: fixed;
+  bottom: 60px; // Above footer
+  right: 20px;
+  z-index: 1000; // Ensure it's above other content
+  max-width: 300px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    bottom: 70px;
+    right: 10px;
+    max-width: 250px;
+  }
+}
+
+// Skip link for accessibility
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #007bff;
+  color: white;
+  padding: 8px;
+  z-index: 100;
+  transition: top 0.3s ease;
+  
+  &:focus {
+    top: 0;
+  }
+}
+
+// Handle collapsed sidebar
+:host ::ng-deep {
+  .sidebar.collapsed + .main-content.with-sidebar {
+    margin-left: 60px; // Collapsed sidebar width
+  }
+}

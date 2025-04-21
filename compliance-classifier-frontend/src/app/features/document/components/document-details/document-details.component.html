@@ -1,0 +1,98 @@
+<div class="document-details-container">
+  <p-card styleClass="mb-4">
+    <ng-template pTemplate="header">
+      <div class="p-d-flex p-jc-between p-ai-center">
+        <div class="p-d-flex p-ai-center">
+          <button pButton icon="pi pi-arrow-left" class="p-button-text p-mr-2" (click)="goBack()"></button>
+          <h2>Document Details</h2>
+        </div>
+        <button pButton icon="pi pi-download" label="Download" (click)="downloadDocument()"></button>
+      </div>
+    </ng-template>
+    
+    <p-progressBar *ngIf="isLoading" mode="indeterminate"></p-progressBar>
+    
+    <div *ngIf="error" class="error-message p-message p-message-error p-mb-3">
+      <span class="p-message-text">{{ error }}</span>
+    </div>
+    
+    <div *ngIf="document && !isLoading && !error" class="document-info">
+      <div class="p-grid">
+        <div class="p-col-12 p-md-6">
+          <h3>Document Information</h3>
+          <div class="info-section">
+            <div class="info-row">
+              <span class="info-label">Filename:</span>
+              <span class="info-value">{{ document.filename }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Status:</span>
+              <span class="info-value">
+                <p-tag 
+                  [value]="document.status" 
+                  [severity]="document.status === 'Classified' ? 'success' : 'warning'">
+                </p-tag>
+              </span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Uploaded:</span>
+              <span class="info-value">{{ document.uploadedAt | date:'medium' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Size:</span>
+              <span class="info-value">{{ document.fileSize | number }} KB</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Type:</span>
+              <span class="info-value">{{ document.contentType }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="p-col-12 p-md-6">
+          <h3>Classifications</h3>
+          <div class="classifications-section">
+            <p-table [value]="classifications" styleClass="p-datatable-sm">
+              <ng-template pTemplate="header">
+                <tr>
+                  <th>Category</th>
+                  <th>Confidence</th>
+                  <th>Source</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-classification>
+                <tr>
+                  <td>{{ classification.category }}</td>
+                  <td>
+                    <p-progressBar 
+                      [value]="classification.confidence * 100" 
+                      [showValue]="true"
+                      [style]="{'height': '20px'}">
+                    </p-progressBar>
+                  </td>
+                  <td>{{ classification.isManual ? 'Manual' : 'AI' }}</td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td colspan="3" class="p-text-center">
+                    No classifications found for this document.
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+      
+      <div class="p-grid p-mt-4">
+        <div class="p-col-12">
+          <h3>Document Preview</h3>
+          <div class="document-preview">
+            <p class="p-text-center">Document preview will be implemented in the future.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-card>
+</div>
