@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 // PrimeNG imports
 import { CardModule } from 'primeng/card';
@@ -22,6 +23,7 @@ import { RippleModule } from 'primeng/ripple';
 import { BatchService, BatchCreateRequest } from '../../../../core/services/batch.service';
 import { DocumentService } from '../../../../core/services/document.service';
 import { ThemeService, Theme } from '../../../../core/services/theme.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-batch-creation',
@@ -77,7 +79,8 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
     private batchService: BatchService,
     private documentService: DocumentService,
     private messageService: MessageService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private authService: AuthService
   ) {
     this.themeSubscription = this.themeService.getTheme().subscribe(theme => {
       this.currentTheme = theme;
@@ -129,9 +132,22 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
     
     this.isLoading = true;
     
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Authentication Error',
+        detail: 'You must be logged in to create a batch',
+        life: 5000
+      });
+      this.isLoading = false;
+      return;
+    }
+
     const batchRequest: BatchCreateRequest = {
       name: this.f.name.value,
-      description: this.f.description.value
+      description: this.f.description.value,
+      userId: currentUser.id
     };
     
     this.batchService.createBatch(batchRequest)
@@ -139,23 +155,71 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
         next: (batch) => {
           this.isLoading = false;
           this.createdBatchId = batch.id;
+          
+          // Show success message in status bar
           this.messageService.add({
             severity: 'success',
             summary: 'Batch Created',
-            detail: `Batch "${batch.name}" created successfully. You can now upload documents.`,
+            detail: `Batch "${batch.name}" (ID: ${batch.id}) created successfully. You can now upload documents.`,
             life: 5000
           });
+          
+          // If no files are selected, redirect to dashboard after a short delay
+          if (this.selectedFiles.length === 0) {
+            setTimeout(() => {
+              this.router.navigate(['/dashboard']);
+            }, 3000);
+          }
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMessage = err.error?.message || 'An unexpected error occurred';
+          let errorMessage = 'An unexpected error occurred';
+          let errorDetails = '';
+          
+          // Extract detailed error information
+          if (err.error?.message) {
+            errorMessage = err.error.message;
+          } else if (err.status === 0) {
+            errorMessage = 'Network error - please check your connection';
+            errorDetails = 'Unable to connect to the server. This may indicate network issues or that the server is not running.';
+          } else if (err.status === 400) {
+            errorMessage = err.error?.message || 'Invalid batch data';
+            errorDetails = JSON.stringify(err.error);
+          } else if (err.status === 401) {
+            errorMessage = 'Authentication required';
+            errorDetails = 'Your session may have expired. Please log in again.';
+          } else if (err.status === 403) {
+            errorMessage = 'You do not have permission to create batches';
+            errorDetails = 'Contact your administrator to request access.';
+          } else if (err.status === 404) {
+            errorMessage = 'API endpoint not found';
+            errorDetails = 'The batch creation endpoint could not be reached.';
+          } else if (err.status === 500) {
+            errorMessage = 'Server error - please try again later';
+            errorDetails = err.error?.detail || 'The server encountered an internal error. This might be due to database issues.';
+          } else if (err.status === 503) {
+            errorMessage = 'Service unavailable';
+            errorDetails = 'The server is currently unavailable. This might be due to maintenance or overload.';
+          }
+          
+          // Log detailed error information to console
+          console.error('Batch creation error:', {
+            status: err.status,
+            statusText: err.statusText,
+            url: err.url,
+            message: errorMessage,
+            details: errorDetails,
+            error: err.error,
+            stack: err.error?.stack,
+            fullError: err
+          });
+          
           this.messageService.add({
             severity: 'error',
             summary: 'Batch Creation Failed',
             detail: `Failed to create batch: ${errorMessage}`,
             life: 7000
           });
-          console.error('Error creating batch:', err);
         }
       });
   }
@@ -184,7 +248,20 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
     const validFiles = Array.from(files).filter((file: File) => this.isValidFile(file));
     
     if (validFiles.length > 0) {
+      // Clear any existing files in the PrimeNG component
+      // This will be handled by the FileUpload component's internal state
+      
+      // Set our selected files array
       this.selectedFiles = validFiles as File[];
+      
+      // Create a fake event object to pass to onUpload
+      const uploadEvent = {
+        files: this.selectedFiles
+      };
+      
+      // Automatically trigger the upload process
+      this.onUpload(uploadEvent);
+      
       this.messageService.add({
         severity: 'info',
         summary: 'Files Dropped',
@@ -241,9 +318,22 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
       }
       
       this.isLoading = true;
+      const currentUser = this.authService.getCurrentUser();
+      if (!currentUser) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Authentication Error',
+          detail: 'You must be logged in to create a batch',
+          life: 5000
+        });
+        this.isLoading = false;
+        return;
+      }
+      
       const batchRequest: BatchCreateRequest = {
         name: this.f.name.value,
-        description: this.f.description.value
+        description: this.f.description.value,
+        userId: currentUser.id
       };
       
       this.batchService.createBatch(batchRequest).subscribe({
@@ -261,16 +351,55 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
           // Continue with file upload after batch is created
           this.processFileUpload(event);
         },
-        error: (err) => {
+        error: (err: HttpErrorResponse) => {
           this.isLoading = false;
-          const errorMessage = err.error?.message || 'An unexpected error occurred';
+          let errorMessage = 'An unexpected error occurred';
+          let errorDetails = '';
+          
+          // Extract detailed error information
+          if (err.error?.message) {
+            errorMessage = err.error.message;
+          } else if (err.status === 0) {
+            errorMessage = 'Network error - please check your connection';
+            errorDetails = 'Unable to connect to the server. This may indicate network issues or that the server is not running.';
+          } else if (err.status === 400) {
+            errorMessage = err.error?.message || 'Invalid batch data';
+            errorDetails = JSON.stringify(err.error);
+          } else if (err.status === 401) {
+            errorMessage = 'Authentication required';
+            errorDetails = 'Your session may have expired. Please log in again.';
+          } else if (err.status === 403) {
+            errorMessage = 'You do not have permission to create batches';
+            errorDetails = 'Contact your administrator to request access.';
+          } else if (err.status === 404) {
+            errorMessage = 'API endpoint not found';
+            errorDetails = 'The batch creation endpoint could not be reached.';
+          } else if (err.status === 500) {
+            errorMessage = 'Server error - please try again later';
+            errorDetails = err.error?.detail || 'The server encountered an internal error. This might be due to database issues.';
+          } else if (err.status === 503) {
+            errorMessage = 'Service unavailable';
+            errorDetails = 'The server is currently unavailable. This might be due to maintenance or overload.';
+          }
+          
+          // Log detailed error information to console
+          console.error('Batch creation error during file upload:', {
+            status: err.status,
+            statusText: err.statusText,
+            url: err.url,
+            message: errorMessage,
+            details: errorDetails,
+            error: err.error,
+            stack: err.error?.stack,
+            fullError: err
+          });
+          
           this.messageService.add({
             severity: 'error',
             summary: 'Batch Creation Failed',
             detail: `Failed to create batch: ${errorMessage}. Please try again.`,
             life: 7000
           });
-          console.error('Error creating batch:', err);
         }
       });
     } else {
@@ -280,6 +409,14 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
   }
   
   private processFileUpload(event: any): void {
+    if (!this.createdBatchId) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No batch ID available. Please create a batch first.'
+      });
+      return;
+    }
     
     // Validate metadata if required
     this.metadataSubmitted = true;
@@ -315,7 +452,7 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
         this.messageService.add({
           severity: 'success',
           summary: 'Upload Complete',
-          detail: `${message} Redirecting to dashboard...`,
+          detail: `${message} Batch ID: ${this.createdBatchId}. Redirecting to dashboard...`,
           life: 5000
         });
         
@@ -382,6 +519,15 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
       return Promise.resolve();
     }
     
+    if (!this.createdBatchId) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Upload Error',
+        detail: 'Batch ID is missing. Cannot upload files.'
+      });
+      return Promise.resolve();
+    }
+    
     const file = files[index];
     this.currentFileIndex = index + 1;
     
@@ -399,7 +545,15 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
               this.uploadProgress = Math.round(((index + 1) / this.totalFiles) * 100);
               resolve();
             },
-            error: (err) => {
+            error: (err: any) => {
+              // Log detailed document upload error
+              console.error('Document upload error:', {
+                file: file.name,
+                fileSize: file.size,
+                fileType: file.type,
+                error: err,
+                batchId: this.createdBatchId
+              });
               this.failedFiles++;
               this.messageService.add({
                 severity: 'error',
@@ -422,7 +576,7 @@ export class BatchCreationComponent implements OnInit, OnDestroy {
   }
   
   goBack(): void {
-    this.router.navigate(['/batches']);
+    this.router.navigate(['/dashboard']);
   }
   
   // Getter for easy access to form fields

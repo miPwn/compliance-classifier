@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 // PrimeNG imports
 import { FileUploadModule } from 'primeng/fileupload';
@@ -14,6 +15,7 @@ import { DropdownModule } from 'primeng/dropdown';
 
 import { DocumentService } from '../../../../core/services/document.service';
 import { BatchService, Batch } from '../../../../core/services/batch.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-document-upload',
@@ -47,7 +49,8 @@ export class DocumentUploadComponent implements OnInit {
   constructor(
     private documentService: DocumentService,
     private batchService: BatchService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
   
   ngOnInit(): void {
@@ -108,7 +111,24 @@ export class DocumentUploadComponent implements OnInit {
       // Create a new batch first
       try {
         this.isLoading = true;
-        const newBatch = await this.batchService.createBatch({ name: this.newBatchName.trim() }).toPromise();
+        
+        const currentUser = this.authService.getCurrentUser();
+        if (!currentUser) {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Authentication Error',
+            detail: 'You must be logged in to create a batch',
+            life: 5000
+          });
+          this.isLoading = false;
+          return;
+        }
+        
+        const newBatch = await this.batchService.createBatch({
+          name: this.newBatchName.trim(),
+          userId: currentUser.id
+        }).toPromise();
+        
         this.selectedBatchId = newBatch.id;
         this.isLoading = false;
         

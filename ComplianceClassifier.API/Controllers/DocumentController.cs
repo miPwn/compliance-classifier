@@ -1,38 +1,55 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ComplianceClassifier.Application.Documents.DTOs;
+using ComplianceClassifier.Application.Documents.Services;
 
 namespace ComplianceClassifier.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class DocumentController : ControllerBase
     {
         private readonly ILogger<DocumentController> _logger;
+        private readonly IDocumentService _documentService;
+        private readonly IBatchService _batchService;
 
-        public DocumentController(ILogger<DocumentController> logger)
+        public DocumentController(
+            ILogger<DocumentController> logger,
+            IDocumentService documentService,
+            IBatchService batchService)
         {
-            _logger = logger;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _documentService = documentService ?? throw new ArgumentNullException(nameof(documentService));
+            _batchService = batchService ?? throw new ArgumentNullException(nameof(batchService));
         }
 
         /// <summary>
         /// Creates a new batch for document processing
         /// </summary>
+        /// <param name="createBatchDto">Batch creation data</param>
         /// <returns>Batch ID</returns>
         [HttpPost("batch")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Guid>> CreateBatch()
+        public async Task<ActionResult<BatchDto>> CreateBatch([FromBody] CreateBatchDto createBatchDto)
         {
             try
             {
-                // This will be implemented with actual service calls
-                var batchId = Guid.NewGuid();
-                return Created($"/api/document/batch/{batchId}", batchId);
+                if (string.IsNullOrEmpty(createBatchDto.UserId))
+                {
+                    return BadRequest("User ID is required");
+                }
+
+                var batch = await _batchService.CreateBatchAsync(createBatchDto);
+                return Created($"/api/batch/{batch.BatchId}", batch);
             }
             catch (Exception ex)
             {
@@ -60,14 +77,19 @@ namespace ComplianceClassifier.API.Controllers
                     return BadRequest("No files provided");
                 }
 
-                // This will be implemented with actual service calls
-                var documentIds = new List<Guid>();
+                // Convert IFormFile to the format expected by the service
+                var fileData = new List<(string FileName, Stream Content, string ContentType, long Length)>();
                 foreach (var file in files)
                 {
-                    documentIds.Add(Guid.NewGuid());
+                    fileData.Add((file.FileName, file.OpenReadStream(), file.ContentType, file.Length));
                 }
 
+                var documentIds = await _documentService.UploadDocumentsAsync(batchId, fileData);
                 return Ok(documentIds);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound($"Batch with ID {batchId} not found");
             }
             catch (Exception ex)
             {
@@ -88,18 +110,12 @@ namespace ComplianceClassifier.API.Controllers
         {
             try
             {
-                // This will be implemented with actual service calls
-                var document = new DocumentDto
-                {
-                    DocumentId = id,
-                    FileName = "sample.pdf",
-                    FileType = "PDF",
-                    FileSize = 1024,
-                    UploadDate = DateTime.UtcNow,
-                    Status = "Pending"
-                };
-
+                var document = await _documentService.GetDocumentByIdAsync(id);
                 return Ok(document);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
             }
             catch (Exception ex)
             {
@@ -120,34 +136,38 @@ namespace ComplianceClassifier.API.Controllers
         {
             try
             {
-                // This will be implemented with actual service calls
-                var documents = new List<DocumentDto>
-                {
-                    new DocumentDto
-                    {
-                        DocumentId = Guid.NewGuid(),
-                        FileName = "sample1.pdf",
-                        FileType = "PDF",
-                        FileSize = 1024,
-                        UploadDate = DateTime.UtcNow,
-                        Status = "Pending"
-                    },
-                    new DocumentDto
-                    {
-                        DocumentId = Guid.NewGuid(),
-                        FileName = "sample2.docx",
-                        FileType = "DOCX",
-                        FileSize = 2048,
-                        UploadDate = DateTime.UtcNow,
-                        Status = "Pending"
-                    }
-                };
-
+                var documents = await _documentService.GetDocumentsByBatchIdAsync(batchId);
                 return Ok(documents);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error getting documents for batch {BatchId}", batchId);
+                return NotFound();
+            }
+        }
+
+        /// <summary>
+        /// Gets document with content
+        /// </summary>
+        /// <param name="id">Document ID</param>
+        /// <returns>Document with content</returns>
+        [HttpGet("{id}/content")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<DocumentDto>> GetDocumentWithContent(Guid id)
+        {
+            try
+            {
+                var document = await _documentService.GetDocumentWithContentAsync(id);
+                return Ok(document);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting document content for {DocumentId}", id);
                 return NotFound();
             }
         }

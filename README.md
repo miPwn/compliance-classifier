@@ -26,13 +26,61 @@ The application follows Clean Architecture principles with the following layers:
 ### Prerequisites
 
 - .NET 7.0 SDK or later
+- PostgreSQL 13.0 or later
 - Required NuGet packages (see project files)
 
-### Running the Application
+### Database Setup
+
+The application uses PostgreSQL as its database. Follow these steps to set up the database:
+
+#### Option 1: Using the provided scripts
+
+1. Ensure PostgreSQL is installed and running
+2. For Windows users:
+   ```powershell
+   cd ComplianceClassifier.Infrastructure/Persistence/Scripts
+   .\InitializeDatabase.ps1 -Host localhost -Port 5432 -Database comp-filer -Username postgres -Password postgres
+   ```
+
+3. For Linux/macOS users:
+   ```bash
+   cd ComplianceClassifier.Infrastructure/Persistence/Scripts
+   chmod +x initialize-database.sh
+   ./initialize-database.sh --host localhost --port 5432 --db comp-filer --user postgres --password postgres
+   ```
+
+#### Option 2: Manual setup
+
+1. Create a PostgreSQL database named `comp-filer`
+   ```sql
+   CREATE DATABASE "comp-filer";
+   ```
+
+2. Execute the SQL script to create the schema
+   ```bash
+   psql -d comp-filer -f ComplianceClassifier.Infrastructure/Persistence/Migrations/InitialCreate.sql
+   ```
+   
+   ### Verifying Database Connection
+   
+   To verify that your database connection is working correctly, you can use the provided database connection check utility:
+   
+   ```bash
+   cd ComplianceClassifier.Infrastructure/Persistence/Scripts
+   dotnet run --project CheckDatabaseConnection.csproj
+   ```
+   
+   This utility will:
+   - Attempt to connect to the database using the configured connection string
+   - Verify that the database schema is properly set up
+   - Display the current record counts in each table
+   
+   ### Running the Application
 
 1. Clone the repository
 2. Navigate to the project directory
-3. Run the application:
+3. Set up the database using one of the methods above
+4. Run the application:
 
 ```bash
 cd ComplianceClassifier.API
@@ -90,6 +138,53 @@ The application includes comprehensive error handling:
 - **Unsupported File Type**: Returns an error if the file type is not supported
 - **Parsing Errors**: Catches and logs exceptions that occur during parsing
 - **Classification Errors**: Handles errors during document classification
+
+## Database Schema
+
+The application uses a PostgreSQL database with the following main tables:
+
+### Batches
+Stores information about document batches:
+- `BatchId`: Unique identifier for the batch (UUID)
+- `UploadDate`: Date and time when the batch was created
+- `UserId`: ID of the user who created the batch
+- `Status`: Current status of the batch (Pending, Processing, Completed, Error)
+- `TotalDocuments`: Total number of documents in the batch
+- `ProcessedDocuments`: Number of documents that have been processed
+- `CompletionDate`: Date and time when the batch processing was completed
+
+### Documents
+Stores information about individual documents:
+- `DocumentId`: Unique identifier for the document (UUID)
+- `FileName`: Original name of the uploaded file
+- `FileType`: Type of the document (PDF, DOCX, TXT)
+- `FileSize`: Size of the document in bytes
+- `UploadDate`: Date and time when the document was uploaded
+- `Content`: Extracted text content of the document
+- `Status`: Current status of the document (Pending, Processing, Classified, Error)
+- `BatchId`: ID of the batch this document belongs to
+- `Metadata`: Additional document metadata (PageCount, Author, CreationDate, etc.)
+
+### Classifications
+Stores classification results for documents:
+- `ClassificationId`: Unique identifier for the classification (UUID)
+- `DocumentId`: ID of the classified document
+- `Category`: Category assigned to the document (DataPrivacy, FinancialReporting, etc.)
+- `RiskLevel`: Risk level assigned to the document (Low, Medium, High)
+- `Summary`: Summary of the classification result
+- `ClassificationDate`: Date and time when the document was classified
+- `ClassifiedBy`: ID or name of the classifier (user or system)
+- `ConfidenceScore`: Confidence score of the classification (0-1)
+- `IsOverridden`: Flag indicating if the classification was manually overridden
+
+### Reports
+Stores information about generated reports:
+- `ReportId`: Unique identifier for the report (UUID)
+- `BatchId`: ID of the batch (for batch reports)
+- `DocumentId`: ID of the document (for single document reports)
+- `GenerationDate`: Date and time when the report was generated
+- `ReportType`: Type of the report (SingleDocument, BatchSummary)
+- `FilePath`: Path to the generated report file
 
 ## Extending the System
 

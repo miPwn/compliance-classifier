@@ -1,4 +1,7 @@
+using System.Threading.RateLimiting;
+using Microsoft.AspNetCore.RateLimiting;
 using ComplianceClassifier.Infrastructure;
+using ComplianceClassifier.Application;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +21,26 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Add rate limiting
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", options =>
+    {
+        options.PermitLimit = 100;
+        options.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        options.QueueLimit = 0;
+        options.Window = TimeSpan.FromMinutes(1);
+        options.AutoReplenishment = true;
+    });
+    
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+});
+
 // Register infrastructure services
 builder.Services.AddInfrastructureServices(builder.Configuration);
+
+// Register application services
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 
@@ -29,12 +50,17 @@ if (app.Environment.IsDevelopment())
     // Swagger removed due to compatibility issues with .NET 7.0
 }
 
-// Comment out HTTPS redirection to avoid the warning
-// app.UseHttpsRedirection();
+// Enable HTTPS redirection
+app.UseHttpsRedirection();
 
 // Use CORS middleware
 app.UseCors("AllowAngularApp");
 
+// Use rate limiting
+app.UseRateLimiter();
+
+// Enable authentication and authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 // PrimeNG imports
 import { DialogModule } from 'primeng/dialog';
@@ -13,6 +14,7 @@ import { ToastModule } from 'primeng/toast';
 
 // Services
 import { BatchService, BatchCreateRequest, Batch } from '../../../../core/services/batch.service';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-create-batch-modal',
@@ -41,7 +43,8 @@ export class CreateBatchModalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private batchService: BatchService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthService
   ) {
     this.batchForm = this.fb.group({
       name: ['', [Validators.required, Validators.maxLength(100)]],
@@ -95,9 +98,22 @@ export class CreateBatchModalComponent implements OnInit {
     
     this.submitting = true;
     
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Authentication Error',
+        detail: 'You must be logged in to create a batch',
+        life: 5000
+      });
+      this.submitting = false;
+      return;
+    }
+    
     const batchRequest: BatchCreateRequest = {
       name: this.batchForm.value.name,
-      description: this.batchForm.value.description
+      description: this.batchForm.value.description,
+      userId: currentUser.id
     };
     
     this.batchService.createBatch(batchRequest)

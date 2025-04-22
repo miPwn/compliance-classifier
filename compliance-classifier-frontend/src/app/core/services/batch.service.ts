@@ -12,6 +12,14 @@ export interface Batch {
   createdAt: string;
   documentCount: number;
   documents?: Document[];
+  batchId?: string;
+  uploadDate?: string;
+  userId?: string;
+  status?: string;
+  totalDocuments?: number;
+  processedDocuments?: number;
+  completionDate?: string;
+  completionPercentage?: number;
 }
 
 export interface Document {
@@ -21,8 +29,9 @@ export interface Document {
 }
 
 export interface BatchCreateRequest {
-  name: string;
+  name?: string;
   description?: string;
+  userId: string;
 }
 
 export interface BatchUpdateRequest {
@@ -34,7 +43,7 @@ export interface BatchUpdateRequest {
   providedIn: 'root'
 })
 export class BatchService {
-  private apiUrl = `${environment.apiUrl}/batches`;
+  private apiUrl = `${environment.apiUrl}/batch`;
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
   private readonly CACHE_PREFIX = 'batch_';
 
@@ -63,7 +72,19 @@ export class BatchService {
 
   createBatch(batch: BatchCreateRequest): Observable<Batch> {
     return this.http.post<Batch>(this.apiUrl, batch).pipe(
-      tap(() => this.invalidateBatchCache())
+      tap(() => this.invalidateBatchCache()),
+      tap(response => {
+        // Map backend response to frontend Batch interface if needed
+        if (response.batchId && !response.id) {
+          response.id = response.batchId;
+        }
+        if (response.uploadDate && !response.createdAt) {
+          response.createdAt = response.uploadDate;
+        }
+        if (response.totalDocuments && !response.documentCount) {
+          response.documentCount = response.totalDocuments;
+        }
+      })
     );
   }
 
