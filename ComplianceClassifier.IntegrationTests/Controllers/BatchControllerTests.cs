@@ -7,16 +7,16 @@ using ComplianceClassifier.Application.Documents.DTOs;
 
 namespace ComplianceClassifier.IntegrationTests.Controllers
 {
-    public class BatchControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
+    public class BatchControllerTests : IClassFixture<CustomWebApplicationFactory>
     {
         private readonly HttpClient _client;
-        private readonly CustomWebApplicationFactory<Program> _factory;
+        private readonly CustomWebApplicationFactory _factory;
         private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true
         };
 
-        public BatchControllerTests(CustomWebApplicationFactory<Program> factory)
+        public BatchControllerTests(CustomWebApplicationFactory factory)
         {
             _factory = factory;
             _client = factory.CreateClient(new WebApplicationFactoryClientOptions

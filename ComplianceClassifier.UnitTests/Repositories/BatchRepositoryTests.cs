@@ -219,13 +219,4 @@ namespace ComplianceClassifier.UnitTests.Repositories
             }
         }
     }
-
-    // Test implementation of IConnectionStringProvider
-    public class TestConnectionStringProvider : IConnectionStringProvider
-    {
-        public string GetConnectionString()
-        {
-            return "Data Source=:memory:";
-        }
-    }
 }
