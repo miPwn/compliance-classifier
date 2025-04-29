@@ -1,11 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using ComplianceClassifier.Application.Documents.DTOs;
 using ComplianceClassifier.Application.Classifications.DTOs;
 
 namespace ComplianceClassifier.API.Controllers

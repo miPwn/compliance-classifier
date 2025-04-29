@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ComplianceClassifier.Application.Documents.DTOs;
 
 namespace ComplianceClassifier.Application.Documents.Services

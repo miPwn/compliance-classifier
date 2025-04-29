@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using ComplianceClassifier.Domain.ValueObjects;
 using ComplianceClassifier.Infrastructure.DocumentParsers.Base;
 using Microsoft.Extensions.Logging;

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace ComplianceClassifier.Application.Documents.DTOs
 {
     /// <summary>

@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using ComplianceClassifier.Application.Authentication.DTOs;
 
 namespace ComplianceClassifier.Application.Authentication.Interfaces

@@ -1,9 +1,5 @@
-using System;
-using ComplianceClassifier.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace ComplianceClassifier.Infrastructure.Persistence.Migrations
 {

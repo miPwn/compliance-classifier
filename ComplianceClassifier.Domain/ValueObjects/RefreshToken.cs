@@ -1,5 +1,3 @@
-using System;
-
 namespace ComplianceClassifier.Domain.ValueObjects
 {
     /// <summary>

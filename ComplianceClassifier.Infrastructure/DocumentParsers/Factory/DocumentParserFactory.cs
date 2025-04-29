@@ -1,4 +1,3 @@
-using System;
 using ComplianceClassifier.Domain.Enums;
 using ComplianceClassifier.Domain.Interfaces;
 using ComplianceClassifier.Infrastructure.DocumentParsers.Implementations;

@@ -1,6 +1,3 @@
-using System;
-using System.Threading.Tasks;
-using BCrypt.Net;
 using ComplianceClassifier.Application.Authentication.Interfaces;
 using ComplianceClassifier.Domain.Interfaces;
 using Microsoft.Extensions.Logging;

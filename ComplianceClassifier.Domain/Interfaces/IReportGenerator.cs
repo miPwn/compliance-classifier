@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using ComplianceClassifier.Domain.Aggregates.Classification;
 using ComplianceClassifier.Domain.Aggregates.Document;
 using ComplianceClassifier.Domain.Aggregates.Batch;

@@ -1,19 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using ComplianceClassifier.API;
 using ComplianceClassifier.Application.Documents.DTOs;
-using ComplianceClassifier.Domain.Enums;
-using ComplianceClassifier.Infrastructure.Persistence;
 
 namespace ComplianceClassifier.IntegrationTests.Controllers
 {

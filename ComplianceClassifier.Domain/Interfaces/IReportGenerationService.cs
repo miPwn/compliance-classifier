@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ComplianceClassifier.Domain.Aggregates.Batch;
 using ComplianceClassifier.Domain.Aggregates.Classification;
 using ComplianceClassifier.Domain.Aggregates.Document;

@@ -1,5 +1,3 @@
-using System;
-using System.IO;
 using System.Text;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,9 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ComplianceClassifier.Domain.Interfaces;
-using ComplianceClassifier.Application.Documents.DTOs;
-using ComplianceClassifier.Application.Classifications.DTOs;
-using ComplianceClassifier.Application.Reports.DTOs;
 using ComplianceClassifier.Application.Documents.Services;
 using ComplianceClassifier.Application.Authentication.Interfaces;
 using ComplianceClassifier.Application.Authentication.Models;

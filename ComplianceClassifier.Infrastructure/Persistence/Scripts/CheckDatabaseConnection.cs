@@ -1,8 +1,5 @@
-using System;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using ComplianceClassifier.Infrastructure.Persistence;
 
 namespace ComplianceClassifier.Infrastructure.Persistence.Scripts
 {

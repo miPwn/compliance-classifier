@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using ComplianceClassifier.Domain.Enums;
 using ComplianceClassifier.Domain.ValueObjects;
 

@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Threading.Tasks;
 using ComplianceClassifier.Domain.Enums;
 using ComplianceClassifier.Domain.Interfaces;
 using ComplianceClassifier.Domain.ValueObjects;

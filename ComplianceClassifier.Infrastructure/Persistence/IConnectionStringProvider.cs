@@ -1,5 +1,3 @@
-using System;
-
 namespace ComplianceClassifier.Infrastructure.Persistence
 {
     /// <summary>

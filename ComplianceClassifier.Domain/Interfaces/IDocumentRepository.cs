@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ComplianceClassifier.Domain.Aggregates.Document;
 using ComplianceClassifier.Domain.Enums;
 

@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using ComplianceClassifier.Application.Documents.DTOs;
 using ComplianceClassifier.Domain.Interfaces;
 using Microsoft.Extensions.Logging;

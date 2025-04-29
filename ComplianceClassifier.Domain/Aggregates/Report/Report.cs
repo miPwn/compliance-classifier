@@ -1,4 +1,3 @@
-using System;
 using ComplianceClassifier.Domain.Enums;
 
 namespace ComplianceClassifier.Domain.Aggregates.Report

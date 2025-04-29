@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore;
 using ComplianceClassifier.Domain.Aggregates;
 using ComplianceClassifier.Infrastructure.Persistence.Entities;
