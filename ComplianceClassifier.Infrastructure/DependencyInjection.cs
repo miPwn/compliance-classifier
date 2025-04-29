@@ -27,6 +27,7 @@ namespace ComplianceClassifier.Infrastructure
         {
             // Load environment variables from .env file if it exists
             Env.Load();
+            Env.TraversePath().Load();
 
             // Register database services
             services.AddScoped<IConnectionStringProvider, ConnectionStringProvider>();

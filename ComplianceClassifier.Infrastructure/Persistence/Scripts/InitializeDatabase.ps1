@@ -2,12 +2,15 @@
 # This script creates the PostgreSQL database and applies the initial schema
 
 param (
-    [string]$Host = "localhost",
-    [string]$Port = "5432",
+    [string]$PgHost = "localhost",
+    [string]$PgPort = "5432",
     [string]$Database = "comp-filer",
     [string]$Username = "postgres",
     [string]$Password = "postgres"
 )
+
+# Your connection logic here
+Write-Host "Connecting to database '$Database' on server '$PgHost' at port '$PgPort' with user '$Username'."
 
 # Ensure the PostgreSQL command-line tools are available
 try {
@@ -20,8 +23,8 @@ catch {
 }
 
 # Set environment variables for PostgreSQL connection
-$env:PGHOST = $Host
-$env:PGPORT = $Port
+$env:PGHOST = $PgHost
+$env:PGPORT = $PgPort
 $env:PGUSER = $Username
 $env:PGPASSWORD = $Password
 
@@ -35,12 +38,12 @@ if ($databaseExists -match "1") {
 else {
     Write-Host "Creating database '$Database'..."
     psql -c "CREATE DATABASE \"$Database\"" postgres
-    
+
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to create database."
         exit 1
     }
-    
+
     Write-Host "Database created successfully."
 }
 
@@ -50,12 +53,12 @@ $scriptPath = Join-Path $PSScriptRoot "..\Migrations\InitialCreate.sql"
 
 if (Test-Path $scriptPath) {
     psql -d $Database -f $scriptPath
-    
+
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to apply database schema."
         exit 1
     }
-    
+
     Write-Host "Database schema applied successfully."
 }
 else {
