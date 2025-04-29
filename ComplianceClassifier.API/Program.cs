@@ -13,7 +13,9 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllers();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
         // Add CORS services
         builder.Services.AddCors(options =>
@@ -52,7 +54,8 @@ public class Program
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
-            // Swagger removed due to compatibility issues with .NET 7.0
+            app.UseSwagger();
+            app.UseSwaggerUI();
         }
 
         // Enable HTTPS redirection
