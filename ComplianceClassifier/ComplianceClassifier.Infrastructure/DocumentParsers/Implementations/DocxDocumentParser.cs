@@ -69,41 +69,34 @@ public class DocxDocumentParser : BaseDocumentParser
         {
             try
             {
-                using (var document = WordprocessingDocument.Open(filePath, false))
+                using var document = WordprocessingDocument.Open(filePath, false);
+                var coreProps = document.PackageProperties;
+                var keywords = new List<string>();
+                        
+                if (coreProps?.Keywords != null)
                 {
-                    var coreProps = document.PackageProperties;
-                    var keywords = new List<string>();
-                        
-                    if (coreProps?.Keywords != null)
-                    {
-                        keywords = coreProps.Keywords.Split(',', ';')
-                            .Select(k => k.Trim())
-                            .Where(k => !string.IsNullOrWhiteSpace(k))
-                            .ToList();
-                    }
-                        
-                    // Get page count (approximate based on paragraphs)
-                    var body = document.MainDocumentPart?.Document.Body;
-                    int paragraphCount = body?.Descendants<Paragraph>().Count() ?? 0;
-                    int estimatedPageCount = Math.Max(1, (int)Math.Ceiling(paragraphCount / 40.0)); // Rough estimate
-                        
-                    // Parse creation and modification dates
-                    DateTime creationDate = coreProps?.Created != null 
-                        ? coreProps.Created.Value 
-                        : DateTime.UtcNow;
-                        
-                    DateTime modificationDate = coreProps?.Modified != null 
-                        ? coreProps.Modified.Value 
-                        : DateTime.UtcNow;
-                        
-                    return new DocumentMetadata(
-                        pageCount: estimatedPageCount,
-                        author: coreProps?.Creator ?? "Unknown",
-                        creationDate: creationDate,
-                        modificationDate: modificationDate,
-                        keywords: keywords
-                    );
+                    keywords = coreProps.Keywords.Split(',', ';')
+                        .Select(k => k.Trim())
+                        .Where(k => !string.IsNullOrWhiteSpace(k))
+                        .ToList();
                 }
+                        
+                // Get page count (approximate based on paragraphs)
+                var body = document.MainDocumentPart?.Document.Body;
+                var paragraphCount = body?.Descendants<Paragraph>().Count() ?? 0;
+                var estimatedPageCount = Math.Max(1, (int)Math.Ceiling(paragraphCount / 40.0)); // Rough estimate
+                        
+                // Parse creation and modification dates
+                DateTime creationDate = coreProps?.Created ?? DateTime.UtcNow;
+                DateTime modificationDate = coreProps?.Modified ?? DateTime.UtcNow;
+                        
+                return new DocumentMetadata(
+                    pageCount: estimatedPageCount,
+                    author: coreProps?.Creator ?? "Unknown",
+                    creationDate: creationDate,
+                    modificationDate: modificationDate,
+                    keywords: keywords
+                );
             }
             catch (Exception ex)
             {

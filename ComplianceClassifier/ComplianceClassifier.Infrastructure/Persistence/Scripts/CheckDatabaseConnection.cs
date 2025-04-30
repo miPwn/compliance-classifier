@@ -40,12 +40,12 @@ public class CheckDatabaseConnection
             optionsBuilder.UseNpgsql(connectionString);
 
             // Create and test the context
-            using (var context = new ApplicationDbContext(optionsBuilder.Options, connectionStringProvider))
+            await using (var context = new ApplicationDbContext(optionsBuilder.Options, connectionStringProvider))
             {
                 Console.WriteLine("Attempting to connect to the database...");
 
                 // Check if the database exists and can be connected to
-                bool canConnect = await context.Database.CanConnectAsync();
+                var canConnect = await context.Database.CanConnectAsync();
 
                 if (canConnect)
                 {
@@ -54,10 +54,10 @@ public class CheckDatabaseConnection
                     // Check if the schema is properly set up by querying the tables
                     try
                     {
-                        int batchCount = await context.Batches.CountAsync();
-                        int documentCount = await context.Documents.CountAsync();
-                        int classificationCount = await context.Classifications.CountAsync();
-                        int reportCount = await context.Reports.CountAsync();
+                        var batchCount = await context.Batches.CountAsync();
+                        var documentCount = await context.Documents.CountAsync();
+                        var classificationCount = await context.Classifications.CountAsync();
+                        var reportCount = await context.Reports.CountAsync();
 
                         Console.WriteLine("✅ Database schema is properly set up.");
                         Console.WriteLine($"Current record counts:");
@@ -96,11 +96,11 @@ public class CheckDatabaseConnection
             return connectionString;
 
         // Find the password part and mask it
-        int passwordIndex = connectionString.IndexOf("Password=", StringComparison.OrdinalIgnoreCase);
+        var passwordIndex = connectionString.IndexOf("Password=", StringComparison.OrdinalIgnoreCase);
         if (passwordIndex < 0)
             return connectionString;
 
-        int passwordEndIndex = connectionString.IndexOf(';', passwordIndex);
+        var passwordEndIndex = connectionString.IndexOf(';', passwordIndex);
         if (passwordEndIndex < 0)
             passwordEndIndex = connectionString.Length;
         return connectionString.Substring(0, passwordIndex + 9) + "********" +

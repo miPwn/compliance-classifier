@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using ComplianceClassifier.Domain.Aggregates.Batch;
+using ComplianceClassifier.Domain.Aggregates;
 using ComplianceClassifier.Domain.Enums;
 using ComplianceClassifier.Infrastructure.Persistence;
 using ComplianceClassifier.Infrastructure.Persistence.Repositories;
@@ -9,19 +9,13 @@ namespace ComplianceClassifier.UnitTests.Repositories;
 
 public class BatchRepositoryTests
 {
-    private readonly DbContextOptions<ApplicationDbContext> _options;
-    private readonly IConnectionStringProvider _connectionStringProvider;
+    private readonly DbContextOptions<ApplicationDbContext> _options = new DbContextOptionsBuilder<ApplicationDbContext>()
+        .UseInMemoryDatabase(databaseName: $"BatchRepositoryTests_{Guid.NewGuid()}")
+        .Options;
+    private readonly IConnectionStringProvider _connectionStringProvider = new TestConnectionStringProvider();
 
-    public BatchRepositoryTests()
-    {
-        // Use in-memory database for testing
-        _options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"BatchRepositoryTests_{Guid.NewGuid()}")
-            .Options;
-
-        // Mock connection string provider
-        _connectionStringProvider = new TestConnectionStringProvider();
-    }
+    // Use in-memory database for testing
+    // Mock connection string provider
 
     [Fact]
     public async Task AddAsync_ShouldAddBatchToDatabase()
@@ -32,14 +26,14 @@ public class BatchRepositoryTests
         var batch = new Batch(batchId, userId);
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             await repository.AddAsync(batch);
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var savedBatch = await context.Batches.FindAsync(batchId);
             Assert.NotNull(savedBatch);
@@ -59,14 +53,14 @@ public class BatchRepositoryTests
         var userId = "test-user";
         var batch = new Batch(batchId, userId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Batches.AddAsync(batch);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             var result = await repository.GetByIdAsync(batchId);
@@ -85,7 +79,7 @@ public class BatchRepositoryTests
         var nonExistentBatchId = Guid.NewGuid();
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             var result = await repository.GetByIdAsync(nonExistentBatchId);
@@ -106,14 +100,14 @@ public class BatchRepositoryTests
         var batch2 = new Batch(Guid.NewGuid(), userId);
         var batch3 = new Batch(Guid.NewGuid(), otherUserId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Batches.AddRangeAsync(batch1, batch2, batch3);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             var result = await repository.GetByUserIdAsync(userId);
@@ -133,21 +127,21 @@ public class BatchRepositoryTests
         var userId = "test-user";
         var batch = new Batch(batchId, userId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Batches.AddAsync(batch);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             await repository.UpdateStatusAsync(batchId, BatchStatus.Processing);
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var updatedBatch = await context.Batches.FindAsync(batchId);
             Assert.Equal(BatchStatus.Processing, updatedBatch.Status);
@@ -163,14 +157,14 @@ public class BatchRepositoryTests
         var batch = new Batch(batchId, userId);
         batch.AddDocuments(5); // Set total documents to 5
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Batches.AddAsync(batch);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             await repository.IncrementProcessedDocumentsAsync(batchId);
@@ -178,7 +172,7 @@ public class BatchRepositoryTests
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var updatedBatch = await context.Batches.FindAsync(batchId);
             Assert.Equal(2, updatedBatch.ProcessedDocuments);
@@ -195,14 +189,14 @@ public class BatchRepositoryTests
         var batch = new Batch(batchId, userId);
         batch.AddDocuments(2); // Set total documents to 2
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Batches.AddAsync(batch);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new BatchRepository(context);
             await repository.IncrementProcessedDocumentsAsync(batchId);
@@ -210,7 +204,7 @@ public class BatchRepositoryTests
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var updatedBatch = await context.Batches.FindAsync(batchId);
             Assert.Equal(2, updatedBatch.ProcessedDocuments);

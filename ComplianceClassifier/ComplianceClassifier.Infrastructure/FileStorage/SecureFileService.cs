@@ -48,15 +48,15 @@ public class SecureFileService : IFileService
         try
         {
             // Generate a unique file name to prevent path traversal attacks
-            string safeFileName = Path.GetRandomFileName() + Path.GetExtension(fileName);
-            string relativePath = Path.Combine(DateTime.UtcNow.ToString("yyyy-MM-dd"), safeFileName);
-            string fullPath = Path.Combine(_baseStoragePath, relativePath);
+            var safeFileName = Path.GetRandomFileName() + Path.GetExtension(fileName);
+            var relativePath = Path.Combine(DateTime.UtcNow.ToString("yyyy-MM-dd"), safeFileName);
+            var fullPath = Path.Combine(_baseStoragePath, relativePath);
 
             // Ensure the directory exists
             Directory.CreateDirectory(Path.GetDirectoryName(fullPath));
 
             // Encrypt and save the file
-            using (var outputStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            await using (var outputStream = new FileStream(fullPath, FileMode.Create, FileAccess.Write, FileShare.None))
             using (var aes = Aes.Create())
             {
                 aes.Key = Convert.FromBase64String(_encryptionKey);
@@ -65,7 +65,7 @@ public class SecureFileService : IFileService
                 // Write the IV to the beginning of the file
                 await outputStream.WriteAsync(aes.IV, 0, aes.IV.Length);
 
-                using (var cryptoStream = new CryptoStream(outputStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
+                await using (var cryptoStream = new CryptoStream(outputStream, aes.CreateEncryptor(), CryptoStreamMode.Write))
                 {
                     await fileStream.CopyToAsync(cryptoStream);
                 }
@@ -91,7 +91,7 @@ public class SecureFileService : IFileService
         try
         {
             // Prevent path traversal attacks
-            string normalizedPath = Path.GetFullPath(Path.Combine(_baseStoragePath, filePath));
+            var normalizedPath = Path.GetFullPath(Path.Combine(_baseStoragePath, filePath));
             if (!normalizedPath.StartsWith(_baseStoragePath))
             {
                 throw new UnauthorizedAccessException("Access to the path is denied.");
@@ -103,14 +103,14 @@ public class SecureFileService : IFileService
             }
 
             // Determine content type based on file extension
-            string contentType = GetContentType(Path.GetExtension(filePath));
+            var contentType = GetContentType(Path.GetExtension(filePath));
 
             // Decrypt and return the file
             var memoryStream = new MemoryStream();
-            using (var inputStream = new FileStream(normalizedPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+            await using (var inputStream = new FileStream(normalizedPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 // Read the IV from the beginning of the file
-                byte[] iv = new byte[16]; // AES IV size is 16 bytes
+                var iv = new byte[16]; // AES IV size is 16 bytes
                 await inputStream.ReadAsync(iv, 0, iv.Length);
 
                 using (var aes = Aes.Create())
@@ -118,7 +118,7 @@ public class SecureFileService : IFileService
                     aes.Key = Convert.FromBase64String(_encryptionKey);
                     aes.IV = iv;
 
-                    using (var cryptoStream = new CryptoStream(inputStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
+                    await using (var cryptoStream = new CryptoStream(inputStream, aes.CreateDecryptor(), CryptoStreamMode.Read))
                     {
                         await cryptoStream.CopyToAsync(memoryStream);
                     }
@@ -146,7 +146,7 @@ public class SecureFileService : IFileService
         try
         {
             // Prevent path traversal attacks
-            string normalizedPath = Path.GetFullPath(Path.Combine(_baseStoragePath, filePath));
+            var normalizedPath = Path.GetFullPath(Path.Combine(_baseStoragePath, filePath));
             if (!normalizedPath.StartsWith(_baseStoragePath))
             {
                 throw new UnauthorizedAccessException("Access to the path is denied.");

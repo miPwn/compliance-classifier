@@ -162,7 +162,7 @@ public class ClassificationController : ControllerBase
             // This will be implemented with actual service calls
             var classifications = new List<ClassificationDto>
             {
-                new ClassificationDto
+                new()
                 {
                     ClassificationId = Guid.NewGuid(),
                     DocumentId = Guid.NewGuid(),
@@ -174,7 +174,7 @@ public class ClassificationController : ControllerBase
                     ConfidenceScore = 0.85m,
                     IsOverridden = false
                 },
-                new ClassificationDto
+                new()
                 {
                     ClassificationId = Guid.NewGuid(),
                     DocumentId = Guid.NewGuid(),

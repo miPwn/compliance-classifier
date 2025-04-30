@@ -49,14 +49,14 @@ public class TxtDocumentParser : BaseDocumentParser
                 
             // For TXT files, we have limited metadata
             var content = await File.ReadAllTextAsync(filePath);
-            var lineCount = content.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None).Length;
+            var lineCount = content.Split(["\r\n", "\r", "\n"], StringSplitOptions.None).Length;
                 
             return new DocumentMetadata(
                 pageCount: lineCount > 0 ? (int)Math.Ceiling(lineCount / 50.0) : 1, // Estimate page count based on lines
                 author: "Unknown", // TXT files don't typically have author metadata
                 creationDate: fileInfo.CreationTimeUtc,
                 modificationDate: fileInfo.LastWriteTimeUtc,
-                keywords: new List<string>()
+                keywords: []
             );
         }
         catch (Exception ex)

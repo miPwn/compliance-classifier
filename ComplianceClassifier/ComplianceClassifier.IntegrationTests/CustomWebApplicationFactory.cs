@@ -45,24 +45,22 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
             var sp = services.BuildServiceProvider();
 
             // Create a scope to obtain a reference to the database context
-            using (var scope = sp.CreateScope())
+            using var scope = sp.CreateScope();
+            var scopedServices = scope.ServiceProvider;
+            var db = scopedServices.GetRequiredService<ApplicationDbContext>();
+            var logger = scopedServices.GetRequiredService<ILogger<CustomWebApplicationFactory>>();
+
+            // Ensure the database is created
+            db.Database.EnsureCreated();
+
+            try
             {
-                var scopedServices = scope.ServiceProvider;
-                var db = scopedServices.GetRequiredService<ApplicationDbContext>();
-                var logger = scopedServices.GetRequiredService<ILogger<CustomWebApplicationFactory>>();
-
-                // Ensure the database is created
-                db.Database.EnsureCreated();
-
-                try
-                {
-                    // Seed the database with test data if needed
-                    // InitializeDbForTests(db);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "An error occurred seeding the database. Error: {Message}", ex.Message);
-                }
+                // Seed the database with test data if needed
+                // InitializeDbForTests(db);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "An error occurred seeding the database. Error: {Message}", ex.Message);
             }
         });
     }

@@ -39,7 +39,7 @@ public class DocumentParsingService : IDocumentParsingService
         try
         {
             // Extract text content
-            string content = await _documentParserService.ParseDocumentAsync(request.FilePath, request.FileType);
+            var content = await _documentParserService.ParseDocumentAsync(request.FilePath, request.FileType);
             response.Content = content;
                 
             // Extract metadata
@@ -52,7 +52,7 @@ public class DocumentParsingService : IDocumentParsingService
                 Author = metadata.Author,
                 CreationDate = metadata.CreationDate,
                 ModificationDate = metadata.ModificationDate,
-                Keywords = metadata.Keywords?.ToArray() ?? Array.Empty<string>()
+                Keywords = metadata.Keywords?.ToArray() ?? []
             };
                 
             response.Success = true;

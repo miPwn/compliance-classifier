@@ -82,59 +82,57 @@ public class DocumentService : IDocumentService
             // Parse document content (this would typically be done asynchronously in a real system)
             try
             {
-                using (var memoryStream = new MemoryStream())
+                using var memoryStream = new MemoryStream();
+                await file.Content.CopyToAsync(memoryStream);
+                memoryStream.Position = 0;
+                        
+                // Save the file to a temporary location
+                var tempFilePath = Path.GetTempFileName();
+                await using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
                 {
-                    await file.Content.CopyToAsync(memoryStream);
-                    memoryStream.Position = 0;
+                    await memoryStream.CopyToAsync(fileStream);
+                }
                         
-                    // Save the file to a temporary location
-                    var tempFilePath = Path.GetTempFileName();
-                    using (var fileStream = new FileStream(tempFilePath, FileMode.Create))
-                    {
-                        await memoryStream.CopyToAsync(fileStream);
-                    }
+                // Parse the document
+                var parsingRequest = new DocumentParsingRequestDto
+                {
+                    DocumentId = documentId,
+                    FilePath = tempFilePath,
+                    FileType = fileType
+                };
                         
-                    // Parse the document
-                    var parsingRequest = new DocumentParsingRequestDto
-                    {
-                        DocumentId = documentId,
-                        FilePath = tempFilePath,
-                        FileType = fileType
-                    };
+                var parsingResult = await _documentParsingService.ParseDocumentAsync(parsingRequest);
                         
-                    var parsingResult = await _documentParsingService.ParseDocumentAsync(parsingRequest);
-                        
-                    if (parsingResult.Success)
-                    {
-                        await _documentRepository.UpdateContentAsync(documentId, parsingResult.Content);
+                if (parsingResult.Success)
+                {
+                    await _documentRepository.UpdateContentAsync(documentId, parsingResult.Content);
                             
-                        if (parsingResult.Metadata != null)
-                        {
-                            var metadata = new DocumentMetadata(
-                                parsingResult.Metadata.PageCount,
-                                parsingResult.Metadata.Author,
-                                parsingResult.Metadata.CreationDate,
-                                parsingResult.Metadata.ModificationDate,
-                                parsingResult.Metadata.Keywords?.ToList() ?? new List<string>());
+                    if (parsingResult.Metadata != null)
+                    {
+                        var metadata = new DocumentMetadata(
+                            parsingResult.Metadata.PageCount,
+                            parsingResult.Metadata.Author,
+                            parsingResult.Metadata.CreationDate,
+                            parsingResult.Metadata.ModificationDate,
+                            parsingResult.Metadata.Keywords?.ToList() ?? []);
                                 
-                            document = await _documentRepository.GetByIdAsync(documentId);
-                            document.EnrichMetadata(metadata);
-                            await _documentRepository.UpdateAsync(document);
-                        }
+                        document = await _documentRepository.GetByIdAsync(documentId);
+                        document.EnrichMetadata(metadata);
+                        await _documentRepository.UpdateAsync(document);
+                    }
                             
-                        await _documentRepository.UpdateStatusAsync(documentId, DocumentStatus.Classified);
-                        await _batchRepository.IncrementProcessedDocumentsAsync(batchId);
-                    }
-                    else
-                    {
-                        await _documentRepository.UpdateStatusAsync(documentId, DocumentStatus.Error);
-                    }
+                    await _documentRepository.UpdateStatusAsync(documentId, DocumentStatus.Classified);
+                    await _batchRepository.IncrementProcessedDocumentsAsync(batchId);
+                }
+                else
+                {
+                    await _documentRepository.UpdateStatusAsync(documentId, DocumentStatus.Error);
+                }
                         
-                    // Clean up temporary file
-                    if (File.Exists(tempFilePath))
-                    {
-                        File.Delete(tempFilePath);
-                    }
+                // Clean up temporary file
+                if (File.Exists(tempFilePath))
+                {
+                    File.Delete(tempFilePath);
                 }
             }
             catch (Exception)
@@ -213,7 +211,7 @@ public class DocumentService : IDocumentService
                 Author = document.Metadata.Author,
                 CreationDate = document.Metadata.CreationDate,
                 ModificationDate = document.Metadata.ModificationDate,
-                Keywords = document.Metadata.Keywords?.ToArray() ?? Array.Empty<string>()
+                Keywords = document.Metadata.Keywords?.ToArray() ?? []
             };
         }
             

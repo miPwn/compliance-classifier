@@ -35,7 +35,7 @@ public class AuthenticationService : IAuthenticationService
     }
 
     /// <inheritdoc/>
-    public async Task<AuthenticationResultDto> AuthenticateAsync(AuthenticationRequestDto request)
+    public async Task<AuthenticationResultDto> AuthenticateAsync(AuthenticationRequestDto? request)
     {
         // Validate request
         if (request == null || string.IsNullOrEmpty(request.Username) || string.IsNullOrEmpty(request.Password))
@@ -94,7 +94,7 @@ public class AuthenticationService : IAuthenticationService
     }
 
     /// <inheritdoc/>
-    public async Task<RegistrationResultDto> RegisterAsync(RegistrationRequestDto request)
+    public async Task<RegistrationResultDto> RegisterAsync(RegistrationRequestDto? request)
     {
         // Validate request
         if (request == null)
@@ -116,7 +116,7 @@ public class AuthenticationService : IAuthenticationService
                 ErrorMessage = "Username already exists",
                 ValidationErrors = new Dictionary<string, List<string>>
                 {
-                    { "Username", new List<string> { "Username already exists" } }
+                    { "Username", ["Username already exists"] }
                 }
             };
         }
@@ -131,7 +131,7 @@ public class AuthenticationService : IAuthenticationService
                 ErrorMessage = "Email already exists",
                 ValidationErrors = new Dictionary<string, List<string>>
                 {
-                    { "Email", new List<string> { "Email already exists" } }
+                    { "Email", ["Email already exists"] }
                 }
             };
         }
@@ -208,7 +208,7 @@ public class AuthenticationService : IAuthenticationService
     }
 
     /// <inheritdoc/>
-    public async Task<AuthenticationResultDto> RefreshTokenAsync(RefreshTokenRequestDto request)
+    public async Task<AuthenticationResultDto> RefreshTokenAsync(RefreshTokenRequestDto? request)
     {
         if (request == null || string.IsNullOrEmpty(request.RefreshToken))
         {
@@ -304,12 +304,12 @@ public class AuthenticationService : IAuthenticationService
         var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(JwtRegisteredClaimNames.Email, user.Email),
-            new Claim("name", user.Username),
-            new Claim("firstName", user.FirstName),
-            new Claim("lastName", user.LastName)
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email),
+            new("name", user.Username),
+            new("firstName", user.FirstName),
+            new("lastName", user.LastName)
         };
 
         // Add roles as claims
@@ -338,10 +338,8 @@ public class AuthenticationService : IAuthenticationService
     private string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
-        using (var rng = RandomNumberGenerator.Create())
-        {
-            rng.GetBytes(randomNumber);
-            return Convert.ToBase64String(randomNumber);
-        }
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }

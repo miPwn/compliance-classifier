@@ -109,14 +109,12 @@ public static class DependencyInjection
         if (string.IsNullOrEmpty(fileEncryptionKey))
         {
             // Generate a random encryption key if not provided
-            using (var aes = Aes.Create())
-            {
-                aes.GenerateKey();
-                fileEncryptionKey = Convert.ToBase64String(aes.Key);
-                // Log a warning using the logger from DI
-                var logger = services.BuildServiceProvider().GetService<ILogger<SecureFileService>>();
-                logger?.LogWarning("FILE_ENCRYPTION_KEY not found in environment variables. Generated a random key. This key will not persist across application restarts.");
-            }
+            using var aes = Aes.Create();
+            aes.GenerateKey();
+            fileEncryptionKey = Convert.ToBase64String(aes.Key);
+            // Log a warning using the logger from DI
+            var logger = services.BuildServiceProvider().GetService<ILogger<SecureFileService>>();
+            logger?.LogWarning("FILE_ENCRYPTION_KEY not found in environment variables. Generated a random key. This key will not persist across application restarts.");
         }
             
         services.AddSingleton<IFileService>(provider =>

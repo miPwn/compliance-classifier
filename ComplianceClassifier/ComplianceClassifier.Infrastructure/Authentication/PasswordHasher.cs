@@ -34,8 +34,8 @@ public class PasswordHasher : IPasswordHasher
         try
         {
             // Generate a salt and hash the password
-            string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
-            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+            var salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
 
             // Store the hashed password
             await _userPasswordRepository.StorePasswordAsync(userId, hashedPassword);
@@ -58,7 +58,7 @@ public class PasswordHasher : IPasswordHasher
         try
         {
             // Get the stored hashed password
-            string storedHash = await _userPasswordRepository.GetPasswordHashAsync(userId);
+            var storedHash = await _userPasswordRepository.GetPasswordHashAsync(userId);
             if (string.IsNullOrEmpty(storedHash))
             {
                 return false;

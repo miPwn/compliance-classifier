@@ -12,7 +12,7 @@ public class FileController : ControllerBase
     private readonly IFileService _fileService;
     private readonly ILogger<FileController> _logger;
     private readonly long _fileSizeLimit = 50 * 1024 * 1024; // 50MB
-    private readonly string[] _allowedExtensions = { ".pdf", ".doc", ".docx", ".txt", ".csv", ".xls", ".xlsx" };
+    private readonly string[] _allowedExtensions = [".pdf", ".doc", ".docx", ".txt", ".csv", ".xls", ".xlsx"];
 
     public FileController(
         IFileService fileService,
@@ -47,7 +47,7 @@ public class FileController : ControllerBase
             }
 
             // Validate file extension
-            string extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+            var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (string.IsNullOrEmpty(extension) || !Array.Exists(_allowedExtensions, e => e == extension))
             {
                 return BadRequest($"File type {extension} is not allowed");
@@ -57,9 +57,9 @@ public class FileController : ControllerBase
             // await _malwareScanner.ScanFileAsync(file.OpenReadStream());
 
             // Save file securely
-            using (var stream = file.OpenReadStream())
+            await using (var stream = file.OpenReadStream())
             {
-                string filePath = await _fileService.SaveFileAsync(stream, file.FileName, file.ContentType);
+                var filePath = await _fileService.SaveFileAsync(stream, file.FileName, file.ContentType);
                 return Ok(new { filePath });
             }
         }

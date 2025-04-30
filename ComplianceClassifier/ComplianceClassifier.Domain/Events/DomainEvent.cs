@@ -5,12 +5,6 @@ namespace ComplianceClassifier.Domain.Events;
 /// </summary>
 public abstract class DomainEvent
 {
-    public Guid Id { get; }
-    public DateTime OccurredOn { get; }
-
-    protected DomainEvent()
-    {
-        Id = Guid.NewGuid();
-        OccurredOn = DateTime.UtcNow;
-    }
+    public Guid Id { get; } = Guid.NewGuid();
+    public DateTime OccurredOn { get; } = DateTime.UtcNow;
 }

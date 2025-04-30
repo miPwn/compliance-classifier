@@ -11,7 +11,7 @@ public class Report
     public Guid? BatchId { get; private set; }
     public Guid? DocumentId { get; private set; }
     public DateTime GenerationDate { get; private set; }
-    public ReportType ReportType { get; private set; }
+    public ReportType ReportType { get; }
     public string FilePath { get; private set; }
 
     // For EF Core

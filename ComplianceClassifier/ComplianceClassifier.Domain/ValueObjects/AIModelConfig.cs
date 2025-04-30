@@ -5,10 +5,10 @@ namespace ComplianceClassifier.Domain.ValueObjects;
 /// </summary>
 public class AIModelConfig
 {
-    public string ModelName { get; private set; }
-    public decimal Temperature { get; private set; }
-    public int MaxTokens { get; private set; }
-    public string PromptTemplate { get; private set; }
+    public string ModelName { get; }
+    public decimal Temperature { get; }
+    public int MaxTokens { get; }
+    public string PromptTemplate { get; }
 
     public AIModelConfig(
         string modelName,

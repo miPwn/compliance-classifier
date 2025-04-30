@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Xunit;
-using ComplianceClassifier.Domain.Aggregates.Document;
+using ComplianceClassifier.Domain.Aggregates;
 using ComplianceClassifier.Domain.Enums;
 using ComplianceClassifier.Infrastructure.Persistence;
 using ComplianceClassifier.Infrastructure.Persistence.Repositories;
@@ -9,19 +9,13 @@ namespace ComplianceClassifier.UnitTests.Repositories;
 
 public class DocumentRepositoryTests
 {
-    private readonly DbContextOptions<ApplicationDbContext> _options;
-    private readonly IConnectionStringProvider _connectionStringProvider;
+    private readonly DbContextOptions<ApplicationDbContext> _options = new DbContextOptionsBuilder<ApplicationDbContext>()
+        .UseInMemoryDatabase(databaseName: $"DocumentRepositoryTests_{Guid.NewGuid()}")
+        .Options;
+    private readonly IConnectionStringProvider _connectionStringProvider = new TestConnectionStringProvider();
 
-    public DocumentRepositoryTests()
-    {
-        // Use in-memory database for testing
-        _options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"DocumentRepositoryTests_{Guid.NewGuid()}")
-            .Options;
-
-        // Mock connection string provider
-        _connectionStringProvider = new TestConnectionStringProvider();
-    }
+    // Use in-memory database for testing
+    // Mock connection string provider
 
     [Fact]
     public async Task AddAsync_ShouldAddDocumentToDatabase()
@@ -37,14 +31,14 @@ public class DocumentRepositoryTests
             batchId);
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             await repository.AddAsync(document);
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var savedDocument = await context.Documents.FindAsync(documentId);
             Assert.NotNull(savedDocument);
@@ -71,14 +65,14 @@ public class DocumentRepositoryTests
             1024,
             batchId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Documents.AddAsync(document);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             var result = await repository.GetByIdAsync(documentId);
@@ -98,7 +92,7 @@ public class DocumentRepositoryTests
         var nonExistentDocumentId = Guid.NewGuid();
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             var result = await repository.GetByIdAsync(nonExistentDocumentId);
@@ -119,14 +113,14 @@ public class DocumentRepositoryTests
         var document2 = new Document(Guid.NewGuid(), "doc2.pdf", FileType.PDF, 2048, batchId);
         var document3 = new Document(Guid.NewGuid(), "doc3.pdf", FileType.PDF, 3072, otherBatchId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Documents.AddRangeAsync(document1, document2, document3);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             var result = await repository.GetByBatchIdAsync(batchId);
@@ -151,21 +145,21 @@ public class DocumentRepositoryTests
             1024,
             batchId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Documents.AddAsync(document);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             await repository.UpdateStatusAsync(documentId, DocumentStatus.Processing);
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var updatedDocument = await context.Documents.FindAsync(documentId);
             Assert.Equal(DocumentStatus.Processing, updatedDocument.Status);
@@ -185,7 +179,7 @@ public class DocumentRepositoryTests
             1024,
             batchId);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Documents.AddAsync(document);
             await context.SaveChangesAsync();
@@ -193,14 +187,14 @@ public class DocumentRepositoryTests
 
         // Act
         var newContent = "This is the extracted content from the document.";
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             await repository.UpdateContentAsync(documentId, newContent);
         }
 
         // Assert
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var updatedDocument = await context.Documents.FindAsync(documentId);
             Assert.Equal(newContent, updatedDocument.Content);
@@ -223,14 +217,14 @@ public class DocumentRepositoryTests
         var content = "This is the document content.";
         document.UpdateContent(content);
 
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             await context.Documents.AddAsync(document);
             await context.SaveChangesAsync();
         }
 
         // Act
-        using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
+        await using (var context = new ApplicationDbContext(_options, _connectionStringProvider))
         {
             var repository = new DocumentRepository(context);
             var result = await repository.GetWithContentAsync(documentId);

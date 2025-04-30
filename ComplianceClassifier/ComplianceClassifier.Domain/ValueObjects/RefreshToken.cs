@@ -13,7 +13,7 @@ public class RefreshToken
     /// <summary>
     /// Gets or sets the expiration date
     /// </summary>
-    public DateTime Expires { get; private set; }
+    public DateTime Expires { get; }
 
     /// <summary>
     /// Gets or sets the creation date

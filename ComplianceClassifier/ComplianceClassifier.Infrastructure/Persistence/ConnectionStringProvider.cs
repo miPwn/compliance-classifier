@@ -25,17 +25,17 @@ public class ConnectionStringProvider : IConnectionStringProvider
     public string GetConnectionString()
     {
         // Get the connection string from configuration
-        string connectionString = _configuration.GetConnectionString("DefaultConnection");
+        var connectionString = _configuration.GetConnectionString("DefaultConnection");
             
         // If the connection string contains environment variable placeholders, replace them
         if (connectionString.Contains("${"))
         {
             // Get environment variables with no hardcoded fallbacks for sensitive data
-            string host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
-            string port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
-            string database = Environment.GetEnvironmentVariable("POSTGRES_DB");
-            string username = Environment.GetEnvironmentVariable("POSTGRES_USER");
-            string password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+            var host = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+            var port = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+            var database = Environment.GetEnvironmentVariable("POSTGRES_DB");
+            var username = Environment.GetEnvironmentVariable("POSTGRES_USER");
+            var password = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
                 
             // Validate required environment variables
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))

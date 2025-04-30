@@ -5,11 +5,14 @@ namespace ComplianceClassifier.Domain.ValueObjects;
 /// </summary>
 public class DocumentMetadata
 {
-    public int PageCount { get; private set; }
-    public string Author { get; private set; }
-    public DateTime CreationDate { get; private set; }
-    public DateTime ModificationDate { get; private set; }
-    public List<string> Keywords { get; private set; }
+    public int PageCount { get; }
+    public string Author { get; }
+    public DateTime CreationDate { get; }
+    public DateTime ModificationDate { get; }
+    public List<string> Keywords { get; }
+
+    // For EF Core
+    private DocumentMetadata() { }
 
     public DocumentMetadata(
         int pageCount,
@@ -22,7 +25,7 @@ public class DocumentMetadata
         Author = author;
         CreationDate = creationDate;
         ModificationDate = modificationDate;
-        Keywords = keywords ?? new List<string>();
+        Keywords = keywords ?? [];
     }
 
     // Value objects should be immutable, so we provide a method to create a new instance with modified values

@@ -14,7 +14,7 @@ public class Classification
     public string Summary { get; private set; }
     public DateTime ClassificationDate { get; private set; }
     public string ClassifiedBy { get; private set; }
-    public decimal ConfidenceScore { get; private set; }
+    public decimal ConfidenceScore { get; }
     public bool IsOverridden { get; private set; }
 
     // For EF Core

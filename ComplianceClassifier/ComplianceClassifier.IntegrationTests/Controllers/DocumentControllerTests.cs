@@ -13,7 +13,7 @@ public class DocumentControllerTests : IClassFixture<CustomWebApplicationFactory
 {
     private readonly HttpClient _client;
     private readonly CustomWebApplicationFactory _factory;
-    private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions
+    private readonly JsonSerializerOptions _jsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
     };

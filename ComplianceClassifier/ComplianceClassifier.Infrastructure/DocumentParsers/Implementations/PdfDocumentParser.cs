@@ -64,47 +64,45 @@ public class PdfDocumentParser : BaseDocumentParser
         {
             try
             {
-                using (var document = PdfDocument.Open(filePath))
+                using var document = PdfDocument.Open(filePath);
+                var information = document.Information;
+                var keywords = new List<string>();
+                        
+                if (!string.IsNullOrWhiteSpace(information.Keywords))
                 {
-                    var information = document.Information;
-                    var keywords = new List<string>();
-                        
-                    if (!string.IsNullOrWhiteSpace(information.Keywords))
-                    {
-                        keywords = information.Keywords.Split(',', ';')
-                            .Select(k => k.Trim())
-                            .Where(k => !string.IsNullOrWhiteSpace(k))
-                            .ToList();
-                    }
-                        
-                    // Parse creation and modification dates
-                    DateTime creationDate = DateTime.UtcNow;
-                    DateTime modificationDate = DateTime.UtcNow;
-                        
-                    if (!string.IsNullOrWhiteSpace(information.CreationDate))
-                    {
-                        if (DateTime.TryParse(information.CreationDate, out var parsedCreationDate))
-                        {
-                            creationDate = parsedCreationDate;
-                        }
-                    }
-                        
-                    if (!string.IsNullOrWhiteSpace(information.ModifiedDate))
-                    {
-                        if (DateTime.TryParse(information.ModifiedDate, out var parsedModificationDate))
-                        {
-                            modificationDate = parsedModificationDate;
-                        }
-                    }
-                        
-                    return new DocumentMetadata(
-                        pageCount: document.NumberOfPages,
-                        author: information.Author ?? "Unknown",
-                        creationDate: creationDate,
-                        modificationDate: modificationDate,
-                        keywords: keywords
-                    );
+                    keywords = information.Keywords.Split(',', ';')
+                        .Select(k => k.Trim())
+                        .Where(k => !string.IsNullOrWhiteSpace(k))
+                        .ToList();
                 }
+                        
+                // Parse creation and modification dates
+                DateTime creationDate = DateTime.UtcNow;
+                DateTime modificationDate = DateTime.UtcNow;
+                        
+                if (!string.IsNullOrWhiteSpace(information.CreationDate))
+                {
+                    if (DateTime.TryParse(information.CreationDate, out var parsedCreationDate))
+                    {
+                        creationDate = parsedCreationDate;
+                    }
+                }
+                        
+                if (!string.IsNullOrWhiteSpace(information.ModifiedDate))
+                {
+                    if (DateTime.TryParse(information.ModifiedDate, out var parsedModificationDate))
+                    {
+                        modificationDate = parsedModificationDate;
+                    }
+                }
+                        
+                return new DocumentMetadata(
+                    pageCount: document.NumberOfPages,
+                    author: information.Author ?? "Unknown",
+                    creationDate: creationDate,
+                    modificationDate: modificationDate,
+                    keywords: keywords
+                );
             }
             catch (Exception ex)
             {
