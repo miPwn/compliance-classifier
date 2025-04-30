@@ -35,6 +35,9 @@ public class RefreshToken
     /// </summary>
     public bool IsActive => Revoked == null && !IsExpired;
 
+    // For EF Core
+    private RefreshToken() { }
+
     /// <summary>
     /// Creates a new refresh token
     /// </summary>

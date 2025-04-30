@@ -50,7 +50,7 @@ public class User
     /// <summary>
     /// Gets or sets the user's refresh tokens
     /// </summary>
-    public ICollection<RefreshToken> RefreshTokens { get; private set; } = new List<RefreshToken>();
+    public List<RefreshToken> RefreshTokens { get; } = new();
 
     // Private constructor for EF Core
     private User() { }

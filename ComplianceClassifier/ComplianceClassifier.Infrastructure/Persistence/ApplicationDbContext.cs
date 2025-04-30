@@ -40,49 +40,79 @@ public class ApplicationDbContext : DbContext
         base.OnModelCreating(modelBuilder);
 
         // Configure entity relationships, indexes, etc. here
-        modelBuilder.Entity<Document>()
+        modelBuilder
+            .Entity<Document>()
             .HasOne<Batch>()
             .WithMany()
             .HasForeignKey(d => d.BatchId);
 
-        modelBuilder.Entity<Classification>()
+        modelBuilder
+            .Entity<Classification>()
             .HasOne<Document>()
             .WithOne()
             .HasForeignKey<Classification>(c => c.DocumentId);
 
         // Configure User and UserPassword entities
-        modelBuilder.Entity<User>()
+        modelBuilder
+            .Entity<User>()
             .HasKey(u => u.Id);
 
-        modelBuilder.Entity<User>()
+        modelBuilder
+            .Entity<User>()
             .Property(u => u.Username)
             .IsRequired()
             .HasMaxLength(50);
 
-        modelBuilder.Entity<User>()
+        modelBuilder
+            .Entity<User>()
             .Property(u => u.Email)
             .IsRequired()
             .HasMaxLength(100);
 
-        modelBuilder.Entity<User>()
+        modelBuilder
+            .Entity<User>()
             .HasIndex(u => u.Username)
             .IsUnique();
 
-        modelBuilder.Entity<User>()
+        modelBuilder
+            .Entity<User>()
             .HasIndex(u => u.Email)
             .IsUnique();
 
-        modelBuilder.Entity<UserPassword>()
+        modelBuilder
+            .Entity<UserPassword>()
             .HasKey(p => p.UserId);
 
-        modelBuilder.Entity<UserPassword>()
+        modelBuilder
+            .Entity<UserPassword>()
             .Property(p => p.PasswordHash)
             .IsRequired();
 
-        modelBuilder.Entity<UserPassword>()
+        modelBuilder
+            .Entity<UserPassword>()
             .HasOne<User>()
             .WithOne()
             .HasForeignKey<UserPassword>(p => p.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        // Configure Value Objects
+        modelBuilder.Entity<Document>()
+            .OwnsOne(d => d.Metadata, md =>
+            {
+                md.Property(m => m.PageCount).HasColumnName("Metadata_PageCount");
+                md.Property(m => m.Author).HasColumnName("Metadata_Author");
+                md.Property(m => m.CreationDate).HasColumnName("Metadata_CreationDate");
+                md.Property(m => m.ModificationDate).HasColumnName("Metadata_ModificationDate");
+                md.Property(m => m.Keywords)
+                    .HasColumnName("Metadata_Keywords")
+                    .HasConversion(
+                        v => string.Join(',', v!),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList()
+                    );
+            });
+
+        modelBuilder
+            .Entity<User>()
+            .ComplexProperty(u => u.RefreshTokens);
     }
 }

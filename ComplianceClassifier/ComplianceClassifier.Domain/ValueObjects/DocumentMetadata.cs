@@ -9,7 +9,7 @@ public class DocumentMetadata
     public string Author { get; }
     public DateTime CreationDate { get; }
     public DateTime ModificationDate { get; }
-    public List<string> Keywords { get; }
+    public List<string>? Keywords { get; }
 
     // For EF Core
     private DocumentMetadata() { }
@@ -25,7 +25,7 @@ public class DocumentMetadata
         Author = author;
         CreationDate = creationDate;
         ModificationDate = modificationDate;
-        Keywords = keywords ?? [];
+        Keywords = keywords;
     }
 
     // Value objects should be immutable, so we provide a method to create a new instance with modified values
