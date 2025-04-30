@@ -1,12 +1,11 @@
-namespace ComplianceClassifier.Domain.Enums
+namespace ComplianceClassifier.Domain.Enums;
+
+/// <summary>
+/// Represents the type of document file
+/// </summary>
+public enum FileType
 {
-    /// <summary>
-    /// Represents the type of document file
-    /// </summary>
-    public enum FileType
-    {
-        PDF,
-        DOCX,
-        TXT
-    }
+    PDF,
+    DOCX,
+    TXT
 }

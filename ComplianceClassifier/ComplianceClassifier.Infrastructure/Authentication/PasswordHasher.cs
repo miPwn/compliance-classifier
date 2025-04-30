@@ -2,76 +2,75 @@ using ComplianceClassifier.Application.Authentication.Interfaces;
 using ComplianceClassifier.Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace ComplianceClassifier.Infrastructure.Authentication
+namespace ComplianceClassifier.Infrastructure.Authentication;
+
+/// <summary>
+/// Implementation of the password hasher using BCrypt
+/// </summary>
+public class PasswordHasher : IPasswordHasher
 {
+    private readonly IUserPasswordRepository _userPasswordRepository;
+    private readonly ILogger<PasswordHasher> _logger;
+
     /// <summary>
-    /// Implementation of the password hasher using BCrypt
+    /// Initializes a new instance of the <see cref="PasswordHasher"/> class
     /// </summary>
-    public class PasswordHasher : IPasswordHasher
+    public PasswordHasher(
+        IUserPasswordRepository userPasswordRepository,
+        ILogger<PasswordHasher> logger)
     {
-        private readonly IUserPasswordRepository _userPasswordRepository;
-        private readonly ILogger<PasswordHasher> _logger;
+        _userPasswordRepository = userPasswordRepository ?? throw new ArgumentNullException(nameof(userPasswordRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+    }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PasswordHasher"/> class
-        /// </summary>
-        public PasswordHasher(
-            IUserPasswordRepository userPasswordRepository,
-            ILogger<PasswordHasher> logger)
+    /// <inheritdoc/>
+    public async Task HashPasswordAsync(string password, Guid userId)
+    {
+        if (string.IsNullOrEmpty(password))
         {
-            _userPasswordRepository = userPasswordRepository ?? throw new ArgumentNullException(nameof(userPasswordRepository));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            throw new ArgumentNullException(nameof(password));
         }
 
-        /// <inheritdoc/>
-        public async Task HashPasswordAsync(string password, Guid userId)
+        try
         {
-            if (string.IsNullOrEmpty(password))
-            {
-                throw new ArgumentNullException(nameof(password));
-            }
+            // Generate a salt and hash the password
+            string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
+            string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
 
-            try
-            {
-                // Generate a salt and hash the password
-                string salt = BCrypt.Net.BCrypt.GenerateSalt(12);
-                string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
+            // Store the hashed password
+            await _userPasswordRepository.StorePasswordAsync(userId, hashedPassword);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error hashing password for user {UserId}", userId);
+            throw;
+        }
+    }
 
-                // Store the hashed password
-                await _userPasswordRepository.StorePasswordAsync(userId, hashedPassword);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error hashing password for user {UserId}", userId);
-                throw;
-            }
+    /// <inheritdoc/>
+    public async Task<bool> VerifyPasswordAsync(string password, Guid userId)
+    {
+        if (string.IsNullOrEmpty(password))
+        {
+            return false;
         }
 
-        /// <inheritdoc/>
-        public async Task<bool> VerifyPasswordAsync(string password, Guid userId)
+        try
         {
-            if (string.IsNullOrEmpty(password))
+            // Get the stored hashed password
+            string storedHash = await _userPasswordRepository.GetPasswordHashAsync(userId);
+            if (string.IsNullOrEmpty(storedHash))
             {
                 return false;
             }
 
-            try
-            {
-                // Get the stored hashed password
-                string storedHash = await _userPasswordRepository.GetPasswordHashAsync(userId);
-                if (string.IsNullOrEmpty(storedHash))
-                {
-                    return false;
-                }
-
-                // Verify the password
-                return BCrypt.Net.BCrypt.Verify(password, storedHash);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error verifying password for user {UserId}", userId);
-                return false;
-            }
+            // Verify the password
+            return BCrypt.Net.BCrypt.Verify(password, storedHash);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error verifying password for user {UserId}", userId);
+            return false;
         }
     }
 }

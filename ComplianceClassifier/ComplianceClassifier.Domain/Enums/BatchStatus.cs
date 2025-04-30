@@ -1,13 +1,12 @@
-namespace ComplianceClassifier.Domain.Enums
+namespace ComplianceClassifier.Domain.Enums;
+
+/// <summary>
+/// Represents the processing status of a batch
+/// </summary>
+public enum BatchStatus
 {
-    /// <summary>
-    /// Represents the processing status of a batch
-    /// </summary>
-    public enum BatchStatus
-    {
-        Pending,
-        Processing,
-        Completed,
-        Error
-    }
+    Pending,
+    Processing,
+    Completed,
+    Error
 }

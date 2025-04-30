@@ -1,16 +1,15 @@
-using ComplianceClassifier.Domain.Aggregates.Document;
+using ComplianceClassifier.Domain.Aggregates;
 using ComplianceClassifier.Domain.Enums;
 
-namespace ComplianceClassifier.Domain.Interfaces
+namespace ComplianceClassifier.Domain.Interfaces;
+
+/// <summary>
+/// Repository interface for Document aggregate
+/// </summary>
+public interface IDocumentRepository : IRepository<Document>
 {
-    /// <summary>
-    /// Repository interface for Document aggregate
-    /// </summary>
-    public interface IDocumentRepository : IRepository<Document>
-    {
-        Task<IEnumerable<Document>> GetByBatchIdAsync(Guid batchId);
-        Task<Document> GetWithContentAsync(Guid id);
-        Task UpdateStatusAsync(Guid id, DocumentStatus status);
-        Task UpdateContentAsync(Guid id, string content);
-    }
+    Task<IEnumerable<Document>> GetByBatchIdAsync(Guid batchId);
+    Task<Document> GetWithContentAsync(Guid id);
+    Task UpdateStatusAsync(Guid id, DocumentStatus status);
+    Task UpdateContentAsync(Guid id, string content);
 }

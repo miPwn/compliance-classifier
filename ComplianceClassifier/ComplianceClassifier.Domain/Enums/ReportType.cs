@@ -1,11 +1,10 @@
-namespace ComplianceClassifier.Domain.Enums
+namespace ComplianceClassifier.Domain.Enums;
+
+/// <summary>
+/// Represents the type of report
+/// </summary>
+public enum ReportType
 {
-    /// <summary>
-    /// Represents the type of report
-    /// </summary>
-    public enum ReportType
-    {
-        SingleDocument,
-        BatchSummary
-    }
+    SingleDocument,
+    BatchSummary
 }

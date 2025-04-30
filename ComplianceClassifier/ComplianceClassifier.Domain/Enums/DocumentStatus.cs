@@ -1,13 +1,12 @@
-namespace ComplianceClassifier.Domain.Enums
+namespace ComplianceClassifier.Domain.Enums;
+
+/// <summary>
+/// Represents the processing status of a document
+/// </summary>
+public enum DocumentStatus
 {
-    /// <summary>
-    /// Represents the processing status of a document
-    /// </summary>
-    public enum DocumentStatus
-    {
-        Pending,
-        Processing,
-        Classified,
-        Error
-    }
+    Pending,
+    Processing,
+    Classified,
+    Error
 }
