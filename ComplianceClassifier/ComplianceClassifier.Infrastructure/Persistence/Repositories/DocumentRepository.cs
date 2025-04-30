@@ -17,7 +17,7 @@ public class DocumentRepository : IDocumentRepository
         _context = context ?? throw new ArgumentNullException(nameof(context));
     }
 
-    public async Task<Document?> GetByIdAsync(Guid id)
+    public async Task<Document> GetByIdAsync(Guid id)
     {
         return await _context.Documents
             .AsNoTracking()

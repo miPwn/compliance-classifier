@@ -19,7 +19,7 @@ public class Document
     public DocumentMetadata Metadata { get; private set; }
 
     // For EF Core
-    protected Document() { }
+    private Document() { }
 
     public Document(
         Guid documentId,
