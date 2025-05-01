@@ -1,10 +1,15 @@
+using System.Security.Claims;
+using System.Text.Encodings.Web;
 using ComplianceClassifier.API;
+using ComplianceClassifier.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ComplianceClassifier.Infrastructure.Persistence;
+using Microsoft.Extensions.Options;
 
 namespace ComplianceClassifier.IntegrationTests;
 
@@ -41,6 +46,21 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
                 context.UseInMemoryDatabase("IntegrationTestsDb");
             });
 
+            // Remove the existing authentication configuration
+            var authDescriptor = services.SingleOrDefault(
+                d => d.ServiceType == typeof(JwtBearerHandler));
+            if (authDescriptor != null)
+            {
+                services.Remove(authDescriptor);
+            }
+
+            // Add mock authentication
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "TestScheme";
+                options.DefaultChallengeScheme = "TestScheme";
+            }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("TestScheme", options => { });
+
             // Build the service provider
             var sp = services.BuildServiceProvider();
 
@@ -71,5 +91,23 @@ public class TestConnectionStringProvider : IConnectionStringProvider
     public string GetConnectionString()
     {
         return "Data Source=:memory:";
+    }
+}
+
+public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
+{
+    public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger, UrlEncoder encoder, ISystemClock clock)
+        : base(options, logger, encoder, clock)
+    {
+    }
+
+    protected override Task<AuthenticateResult> HandleAuthenticateAsync()
+    {
+        var claims = new[] { new Claim(ClaimTypes.Name, "TestUser") };
+        var identity = new ClaimsIdentity(claims, "TestScheme");
+        var principal = new ClaimsPrincipal(identity);
+        var ticket = new AuthenticationTicket(principal, "TestScheme");
+
+        return Task.FromResult(AuthenticateResult.Success(ticket));
     }
 }
